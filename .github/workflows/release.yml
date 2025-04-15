@@ -22,7 +22,12 @@ jobs:
           manifest-file: .release-please-manifest.json
 
       - name: 设置发布条件变量
-        run: echo "RELEASE_CREATED=$((steps.release.outputs['packages/lodash--release_created'] || steps.release.outputs['packages/express--release_created']))" >> $GITHUB_ENV
+        run: |
+          if [[ "${{ steps.release.outputs['packages/lodash--release_created'] }}" == "true" || "${{ steps.release.outputs['packages/express--release_created'] }}" == "true" ]]; then
+            echo "RELEASE_CREATED=true" >> $GITHUB_ENV
+          else
+            echo "RELEASE_CREATED=false" >> $GITHUB_ENV
+          fi
 
       - name: 检出代码
         uses: actions/checkout@v4

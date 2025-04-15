@@ -1,0 +1,22 @@
+{
+  "name": "esmify",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "shijin",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.19.86",
+    "neostandard": "^0.12.1",
+    "terser": "^5.39.0",
+    "tsup": "^8.4.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3",
+    "vite": "^6.2.6",
+    "vite-plugin-dts": "^4.5.3"
+  }
+}

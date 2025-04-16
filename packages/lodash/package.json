@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/lodash",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Use vite+tsup to recompile lodash into esm, which is smaller in size.",
   "keywords": [
     "karinjs",

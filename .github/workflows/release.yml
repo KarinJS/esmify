@@ -64,7 +64,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/lodash
-        run: pnpm build && pnpm pub
+        run: pnpm run build && pnpm run pub
 
       # 发布 express 包
       - name: 发布 express 包
@@ -72,4 +72,4 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/express
-        run: pnpm build && pnpm pub
+        run: pnpm run build && pnpm run pub

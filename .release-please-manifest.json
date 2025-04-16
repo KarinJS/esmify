@@ -3,6 +3,6 @@
   "packages/express": "1.0.2",
   "packages/dotenv": "1.1.1",
   "packages/jsonwebtoken": "1.1.0",
-  "packages/log4js": "1.1.1",
+  "packages/log4js": "1.1.2",
   "packages/redis": "1.1.0"
 }

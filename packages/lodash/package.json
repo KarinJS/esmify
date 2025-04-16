@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/lodash",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Use vite+tsup to recompile lodash into esm, which is smaller in size.",
   "keywords": [
     "karinjs",
@@ -17,7 +17,7 @@
   "license": "MIT",
   "author": "shijin",
   "type": "module",
-  "main": "./dist/index.js",  
+  "main": "./dist/index.js",
   "files": [
     "dist"
   ],
@@ -32,7 +32,7 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
-  },  
+  },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
     "lodash-es": "^4.17.21"

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/KarinJS/esmify/compare/log4js-v1.1.0...log4js-v1.1.1) (2025-04-16)
+
+
+### 🐛 Bug Fixes
+
+* **log4js:** Generated an empty chunk: "index". ([aac266e](https://github.com/KarinJS/esmify/commit/aac266e7fc89dc70b1a59fa39cc816e972e46cf9))
+
 ## [1.1.0](https://github.com/KarinJS/esmify/compare/log4js-v1.0.0...log4js-v1.1.0) (2025-04-16)
 
 

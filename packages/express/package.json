@@ -23,7 +23,8 @@
   ],
   "scripts": {
     "build": "vite build",
-    "pub": "npm publish --access public"
+    "pub": "npm publish --access public",
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/express/syncs\""
   },
   "engines": {
     "node": ">=18"

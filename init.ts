@@ -22,14 +22,15 @@ const pkg = (dir: string, name: string) => {
   "license": "MIT",
   "author": "shijin",
   "type": "module",
-  "main": "./dist/esm/index.js",
-  "types": "./dist/esm/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
-    "dist/esm"
+    "dist"
   ],
   "scripts": {    
     "build": "vite build && tsup",
-    "pub": "npm publish --access public"
+    "pub": "npm publish --access public",
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/${name}/syncs\""
   },
   "engines": {
     "node": ">=18"
@@ -83,7 +84,7 @@ export default defineConfig({
     minify: 'terser',
     commonjsOptions: {
       include: [
-        './node_modules/**',
+        /node_modules/,
       ]
     },
   }

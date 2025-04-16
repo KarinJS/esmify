@@ -1,5 +1,5 @@
-import dotenv from './dist/dotenv.js'
+import dotenv from './dist/index.js'
 const app = dotenv.default
 
 export default app
-export * from './dist/dotenv.js'
+export * from './dist/index.js'

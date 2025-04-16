@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/KarinJS/esmify/compare/lodash-v1.0.0...lodash-v1.0.1) (2025-04-16)
+
+
+### 🎡 Continuous Integration
+
+* fix ([6fb9a5e](https://github.com/KarinJS/esmify/commit/6fb9a5e68667deb1c4ab48a58c11bb2a2dd12b76))
+
 ## [1.0.0](https://github.com/KarinJS/esmify/compare/lodash-v0.0.1...lodash-v1.0.0) (2025-04-16)
 
 

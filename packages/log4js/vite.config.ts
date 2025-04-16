@@ -25,7 +25,9 @@ export default defineConfig({
     commonjsOptions: {
       include: [
         /node_modules/,
-      ]
+      ],
+      transformMixedEsModules: true,
+      defaultIsModuleExports: true
     },
   }
 })

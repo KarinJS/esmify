@@ -69,8 +69,8 @@ importers:
   packages/log4js:
     devDependencies:
       log4js:
-        specifier: ^6.9.1
-        version: 6.9.1
+        specifier: 6.8.0
+        version: 6.8.0
 
   packages/redis:
     devDependencies:
@@ -1652,8 +1652,8 @@ packages:
   lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
 
-  log4js@6.9.1:
-    resolution: {integrity: sha512-1somDdy9sChrr9/f4UlzhdaGfDR2c/SaD2a4T7qEkG4jTS57/B3qmnjLYePwQ8cqWnUHZI0iAKxMBpCZICiZ2g==}
+  log4js@6.8.0:
+    resolution: {integrity: sha512-g+V8gZyurIexrOvWQ+AcZsIvuK/lBnx2argejZxL4gVZ4Hq02kUYH6WZOnqxgBml+zzQZYdaEoTN84B6Hzm8Fg==}
     engines: {node: '>=8.0'}
 
   loose-envify@1.4.0:
@@ -4097,7 +4097,7 @@ snapshots:
 
   lodash@4.17.21: {}
 
-  log4js@6.9.1:
+  log4js@6.8.0:
     dependencies:
       date-format: 4.0.14
       debug: 4.4.0

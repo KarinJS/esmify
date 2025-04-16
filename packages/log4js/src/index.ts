@@ -4,11 +4,11 @@ const {
   getLogger,
   configure,
   isConfigured,
-  addLayout,
-  connectLogger,
-  recording,
   shutdown,
+  connectLogger,
   levels,
+  addLayout,
+  recording,
 } = log4js
 
 export {

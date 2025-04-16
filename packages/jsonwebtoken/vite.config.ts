@@ -1,5 +1,5 @@
+import fs from 'node:fs'
 import { defineConfig } from 'vite'
-import { copyFileSync } from 'node:fs'
 import { builtinModules } from 'node:module'
 
 export default defineConfig({
@@ -7,7 +7,7 @@ export default defineConfig({
     target: 'es2022',
     lib: {
       formats: ['es'],
-      fileName: 'lodash',
+      fileName: 'jsonwebtoken',
       entry: ['src/index.ts'],
     },
     emptyOutDir: true,
@@ -26,17 +26,17 @@ export default defineConfig({
     commonjsOptions: {
       include: [
         /node_modules/,
-      ],
+      ]
     },
   },
+  /** 编译成功之后将node_modules/@types/ms/index.d.ts 带有export这一行修改为export = ms */
   plugins: [
     {
       name: 'copy-types',
       writeBundle () {
-        copyFileSync(
-          'index.js',
-          'dist/index.js',
-        )
+        const dir = 'node_modules/@types/ms/index.d.ts'
+        const content = fs.readFileSync(dir, 'utf-8')
+        fs.writeFileSync(dir, content.replace(/export.*/, 'type StringValue = ms.StringValue\nexport { StringValue }'))
       }
     }
   ],

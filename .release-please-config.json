@@ -73,6 +73,34 @@
       "component": "express",
       "tag-separator": "-",
       "scope": "express"
+    },
+    "packages/dotenv": {
+      "release-type": "node",
+      "package-name": "@karinjs/dotenv",
+      "component": "dotenv",
+      "tag-separator": "-",
+      "scope": "dotenv"
+    },
+    "packages/jsonwebtoken": {
+      "release-type": "node",
+      "package-name": "@karinjs/jsonwebtoken",
+      "component": "jsonwebtoken",
+      "tag-separator": "-",
+      "scope": "jsonwebtoken"
+    },
+    "packages/log4js": {
+      "release-type": "node",
+      "package-name": "@karinjs/log4js",
+      "component": "log4js",
+      "tag-separator": "-",
+      "scope": "log4js"
+    },
+    "packages/redis": {
+      "release-type": "node",
+      "package-name": "@karinjs/redis",
+      "component": "redis",
+      "tag-separator": "-",
+      "scope": "redis"
     }
   },
   "commit-search-depth": 50

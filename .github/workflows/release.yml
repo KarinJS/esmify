@@ -17,6 +17,10 @@ jobs:
       releases_created: ${{ steps.release.outputs.releases_created }}
       lodash_release: ${{ steps.release.outputs['packages/lodash--release_created'] }}
       express_release: ${{ steps.release.outputs['packages/express--release_created'] }}
+      dotenv_release: ${{ steps.release.outputs['packages/dotenv--release_created'] }}
+      jsonwebtoken_release: ${{ steps.release.outputs['packages/jsonwebtoken--release_created'] }}
+      log4js_release: ${{ steps.release.outputs['packages/log4js--release_created'] }}
+      redis_release: ${{ steps.release.outputs['packages/redis--release_created'] }}
     steps:
       # 使用 release-please-action 动作来自动创建发布 PR
       - uses: googleapis/release-please-action@v4
@@ -32,6 +36,10 @@ jobs:
           echo "releases_created: ${{ steps.release.outputs.releases_created }}"
           echo "lodash_release: ${{ steps.release.outputs['packages/lodash--release_created'] }}"
           echo "express_release: ${{ steps.release.outputs['packages/express--release_created'] }}"
+          echo "dotenv_release: ${{ steps.release.outputs['packages/dotenv--release_created'] }}"
+          echo "jsonwebtoken_release: ${{ steps.release.outputs['packages/jsonwebtoken--release_created'] }}"
+          echo "log4js_release: ${{ steps.release.outputs['packages/log4js--release_created'] }}"
+          echo "redis_release: ${{ steps.release.outputs['packages/redis--release_created'] }}"
 
 # 只有当实际创建了发布时才执行发布任务
   publish:
@@ -72,4 +80,36 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/express
+        run: pnpm run build && pnpm run pub
+
+      # 发布 dotenv 包
+      - name: 发布 dotenv 包
+        if: ${{ needs.release-please.outputs.dotenv_release == 'true' }}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        working-directory: packages/dotenv
+        run: pnpm run build && pnpm run pub
+
+      # 发布 jsonwebtoken 包
+      - name: 发布 jsonwebtoken 包
+        if: ${{ needs.release-please.outputs.jsonwebtoken_release == 'true' }}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        working-directory: packages/jsonwebtoken
+        run: pnpm run build && pnpm run pub
+
+      # 发布 log4js 包
+      - name: 发布 log4js 包
+        if: ${{ needs.release-please.outputs.log4js_release == 'true' }}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        working-directory: packages/log4js
+        run: pnpm run build && pnpm run pub
+
+      # 发布 redis 包
+      - name: 发布 redis 包
+        if: ${{ needs.release-please.outputs.redis_release == 'true' }}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        working-directory: packages/redis
         run: pnpm run build && pnpm run pub

@@ -22,15 +22,16 @@ const pkg = (dir: string, name: string) => {
   "license": "MIT",
   "author": "shijin",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "index.js"
   ],
   "scripts": {    
     "build": "vite build && tsup",
     "pub": "npm publish --access public",
-    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/${name}/syncs\""
+    "sync": "curl -X PUT \\\"https://registry-direct.npmmirror.com/-/package/@karinjs/${name}/syncs\\\""
   },
   "engines": {
     "node": ">=18"
@@ -57,7 +58,7 @@ export default defineConfig({
   fs.writeFileSync(path.join(dir, 'tsup.config.ts'), template)
 }
 
-const vite = (dir: string) => {
+const vite = (dir: string, name: string) => {
   const template = `import { defineConfig } from 'vite'
 import { builtinModules } from 'node:module'
 
@@ -66,7 +67,7 @@ export default defineConfig({
     target: 'es2022',
     lib: {
       formats: ['es'],
-      fileName: 'index',
+      fileName: '${name}',
       entry: ['src/index.ts'],
     },
     emptyOutDir: true,
@@ -74,7 +75,7 @@ export default defineConfig({
     rollupOptions: {
       external: [
         ...builtinModules,
-        ...builtinModules.map((mod) => \`node: \${mod}\`),
+        ...builtinModules.map((mod) => \`node:\${mod}\`),
       ],
       output: {
         inlineDynamicImports: true,
@@ -94,6 +95,16 @@ export default defineConfig({
   fs.writeFileSync(path.join(dir, 'vite.config.ts'), template)
 }
 
+const main = (dir: string, name: string) => {
+  const data = `import ${name} from './dist/${name}.js'
+  
+const app = ${name}.default
+export default app
+export * from './dist/${name}.js'
+`
+  fs.writeFileSync(path.join(dir, 'index.js'), data)
+}
+
 (async () => {
   // tsx init.ts --name=yaml
   const name = process.argv[2]?.split('=')[1]
@@ -106,10 +117,13 @@ export default defineConfig({
   fs.mkdirSync(dir, { recursive: true })
   fs.mkdirSync(path.join(dir, 'src'), { recursive: true })
   fs.writeFileSync(path.join(dir, 'src', 'index.ts'), '')
+  fs.copyFileSync('tsconfig.json', path.join(dir, 'tsconfig.json'))
+  fs.writeFileSync(path.join(dir, 'index.js'), `export * from './dist/${name}.js'`)
 
   pkg(dir, name)
+  vite(dir, name)
+  main(dir, name)
   tsup(dir)
-  vite(dir)
 
   execSync(`pnpm add ${name} -F @karinjs/${name} -D`, { stdio: 'inherit' })
   console.log('完成')

@@ -1,0 +1,52 @@
+{
+  "name": "@karinjs/dotenv",
+  "version": "0.0.1",
+  "description": "Use vite+tsup to recompile dotenv into esm, which is smaller in size.",
+  "keywords": [
+    "karinjs",
+    "dotenv"
+  ],
+  "homepage": "https://github.com/KarinJS/dotenv",
+  "bugs": {
+    "url": "https://github.com/KarinJS/dotenv/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KarinJS/dotenv.git"
+  },
+  "license": "MIT",
+  "author": "shijin",
+  "type": "module",
+  "main": "./index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "index.js"
+  ],
+  "scripts": {
+    "build": "vite build && tsup",
+    "pub": "npm publish --access public",
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/dotenv/syncs\""
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "devDependencies": {
+    "dotenv": "^16.5.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./index.js"
+    },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "default": "./dist/config.js"
+    },
+    "./package.json": "./package.json"
+  }
+}

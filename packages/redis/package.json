@@ -1,0 +1,47 @@
+{
+  "name": "@karinjs/redis",
+  "version": "0.0.1",
+  "description": "Use vite+tsup to recompile redis into esm, which is smaller in size.",
+  "keywords": [
+    "karinjs",
+    "redis"
+  ],
+  "homepage": "https://github.com/KarinJS/redis",
+  "bugs": {
+    "url": "https://github.com/KarinJS/redis/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KarinJS/redis.git"
+  },
+  "license": "MIT",
+  "author": "shijin",
+  "type": "module",
+  "main": "./index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "index.js"
+  ],
+  "scripts": {
+    "build": "vite build && tsup",
+    "pub": "npm publish --access public",
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/redis/syncs\""
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "devDependencies": {
+    "@redis/bloom": "^1.2.0",
+    "@redis/client": "^1.6.0",
+    "@redis/graph": "^1.1.1",
+    "@redis/json": "^1.0.7",
+    "@redis/search": "^1.2.0",
+    "@redis/time-series": "^1.1.0",
+    "redis": "^4.7.0"
+  }
+}

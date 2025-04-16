@@ -34,18 +34,17 @@ jobs:
         run: |
           echo "release_created: ${{ steps.release.outputs.release_created }}"
           echo "releases_created: ${{ steps.release.outputs.releases_created }}"
-          echo "lodash_release: ${{ steps.release.outputs['packages/lodash--release_created'] }}"
-          echo "express_release: ${{ steps.release.outputs['packages/express--release_created'] }}"
-          echo "dotenv_release: ${{ steps.release.outputs['packages/dotenv--release_created'] }}"
-          echo "jsonwebtoken_release: ${{ steps.release.outputs['packages/jsonwebtoken--release_created'] }}"
-          echo "log4js_release: ${{ steps.release.outputs['packages/log4js--release_created'] }}"
-          echo "redis_release: ${{ steps.release.outputs['packages/redis--release_created'] }}"
+          echo "lodash_release: ${{ steps.release.outputs['lodash--release_created'] }}"
+          echo "express_release: ${{ steps.release.outputs['express--release_created'] }}"
+          echo "dotenv_release: ${{ steps.release.outputs['dotenv--release_created'] }}"
+          echo "jsonwebtoken_release: ${{ steps.release.outputs['jsonwebtoken--release_created'] }}"
+          echo "log4js_release: ${{ steps.release.outputs['log4js--release_created'] }}"
+          echo "redis_release: ${{ steps.release.outputs['redis--release_created'] }}"
 
 # 只有当实际创建了发布时才执行发布任务
   publish:
     needs: release-please
-    # 同时检查单数和复数形式，确保兼容性
-    if: ${{ needs.release-please.outputs.releases_created == 'true' || needs.release-please.outputs.release_created == 'true' }}
+    if: ${{ needs.release-please.outputs.lodash_release == 'true' || needs.release-please.outputs.express_release == 'true' || needs.release-please.outputs.dotenv_release == 'true' || needs.release-please.outputs.jsonwebtoken_release == 'true' || needs.release-please.outputs.log4js_release == 'true' || needs.release-please.outputs.redis_release == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码

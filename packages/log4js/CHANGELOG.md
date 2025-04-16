@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/KarinJS/esmify/compare/log4js-v1.1.1...log4js-v1.1.2) (2025-04-16)
+
+
+### 🐛 Bug Fixes
+
+* **log4js:** ci build error ([201f242](https://github.com/KarinJS/esmify/commit/201f24213fbbf36f5afe367ec20b16c0c7b6c5b0))
+
 ## [1.1.1](https://github.com/KarinJS/esmify/compare/log4js-v1.1.0...log4js-v1.1.1) (2025-04-16)
 
 

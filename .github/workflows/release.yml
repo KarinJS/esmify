@@ -49,6 +49,23 @@ jobs:
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
+            # 调试步骤 - 输出所有release-please-action的输出变量
+      - name: 输出发布状态
+        run: |
+          echo "release_created: ${{ steps.release.outputs.release_created }}"
+          echo "releases_created: ${{ steps.release.outputs.releases_created }}"
+          echo "lodash_release: ${{ steps.release.outputs['lodash--release_created'] }}"
+          echo "express_release: ${{ steps.release.outputs['express--release_created'] }}"
+          echo "dotenv_release: ${{ steps.release.outputs['dotenv--release_created'] }}"
+          echo "jsonwebtoken_release: ${{ steps.release.outputs['jsonwebtoken--release_created'] }}"
+          echo "log4js_release: ${{ steps.release.outputs['log4js--release_created'] }}"
+          echo "redis_release: ${{ steps.release.outputs['redis--release_created'] }}"
+          echo "lodash_release: ${{ steps.release.outputs['packages/lodash--release_created'] }}"
+          echo "express_release: ${{ steps.release.outputs['packages/express--release_created'] }}"
+          echo "dotenv_release: ${{ steps.release.outputs['packages/dotenv--release_created'] }}"
+          echo "jsonwebtoken_release: ${{ steps.release.outputs['packages/jsonwebtoken--release_created'] }}"
+          echo "log4js_release: ${{ steps.release.outputs['packages/log4js--release_created'] }}"
+          echo "redis_release: ${{ steps.release.outputs['packages/redis--release_created'] }}"
 
       - name: 设置 node
         uses: actions/setup-node@v4

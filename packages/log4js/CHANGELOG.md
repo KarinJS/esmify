@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/KarinJS/esmify/compare/log4js-v1.1.2...log4js-v1.1.3) (2025-04-16)
+
+
+### 🐛 Bug Fixes
+
+* **log4js:** 锁定版本6.8.0 ([0bf6e96](https://github.com/KarinJS/esmify/commit/0bf6e96798d3b9cf399599bdf4696c88ba996408))
+
 ## [1.1.2](https://github.com/KarinJS/esmify/compare/log4js-v1.1.1...log4js-v1.1.2) (2025-04-16)
 
 

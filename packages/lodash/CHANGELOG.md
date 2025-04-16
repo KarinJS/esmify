@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/KarinJS/esmify/compare/lodash-v1.0.1...lodash-v1.0.2) (2025-04-16)
+
+
+### 🐛 Bug Fixes
+
+* **lodash:** 修复默认导出 ([63b7b59](https://github.com/KarinJS/esmify/commit/63b7b596deaa225edb3425e7552c2a625a2529b6))
+
 ## [1.0.1](https://github.com/KarinJS/esmify/compare/lodash-v1.0.0...lodash-v1.0.1) (2025-04-16)
 
 

@@ -1,22 +1,7 @@
-import * as express from 'express'
-const {
+import {
   application,
   request,
   response,
-  // @ts-ignore
-  Route,
-  Router,
-  json,
-  raw,
-  text,
-  urlencoded,
-} = express
-
-export {
-  application,
-  request,
-  response,
-  // @ts-ignore
   Route,
   Router,
   json,
@@ -24,4 +9,19 @@ export {
   text,
   urlencoded,
   express,
+} from './express.js'
+
+const app = express.default
+
+export {
+  application,
+  request,
+  response,
+  Route,
+  Router,
+  json,
+  raw,
+  text,
+  urlencoded,
+  app as default,
 }

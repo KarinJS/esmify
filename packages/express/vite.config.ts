@@ -1,3 +1,4 @@
+import { copyFileSync } from 'fs'
 import { defineConfig } from 'vite'
 import { builtinModules } from 'node:module'
 
@@ -6,7 +7,7 @@ export default defineConfig({
     target: 'es2022',
     lib: {
       formats: ['es'],
-      fileName: 'index',
+      fileName: 'express',
       entry: ['src/index.ts'],
     },
     emptyOutDir: true,
@@ -30,4 +31,15 @@ export default defineConfig({
       defaultIsModuleExports: true    // 处理 module.exports
     },
   },
+  plugins: [
+    {
+      name: 'copy-types',
+      writeBundle () {
+        copyFileSync(
+          'index.js',
+          'dist/index.js',
+        )
+      }
+    }
+  ],
 })

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/KarinJS/esmify/compare/esmify-v1.0.2...esmify-v1.0.3) (2025-04-17)
+
+
+### 🎡 Continuous Integration
+
+* 固定版本 ([cc3a79b](https://github.com/KarinJS/esmify/commit/cc3a79b135507d2da97aea7ca7f7371326de8ea1))
+
 ## [1.0.2](https://github.com/KarinJS/esmify/compare/esmify-v1.0.1...esmify-v1.0.2) (2025-04-17)
 
 

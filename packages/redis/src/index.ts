@@ -3,12 +3,6 @@ import {
   createClient,
   createCluster,
 } from '@redis/client'
-export * from '@redis/client'
-export * from '@redis/bloom'
-export * from '@redis/graph'
-export * from '@redis/json'
-export * from '@redis/search'
-export * from '@redis/time-series'
 
 const {
   AbortError,
@@ -39,6 +33,12 @@ const {
   defineScript,
 } = redis
 
+export * from '@redis/client'
+export * from '@redis/bloom'
+export * from '@redis/graph'
+export * from '@redis/json'
+export * from '@redis/search'
+export * from '@redis/time-series'
 export {
   AbortError,
   AggregateGroupByReducers,

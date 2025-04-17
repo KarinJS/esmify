@@ -60,6 +60,13 @@
     }
   ],
   "packages": {
+    ".": {
+      "release-type": "node",
+      "package-name": "@karinjs/esmify",
+      "component": "esmify",
+      "tag-separator": "-",
+      "scope": "esmify"
+    },
     "packages/lodash": {
       "release-type": "node",
       "package-name": "@karinjs/lodash",

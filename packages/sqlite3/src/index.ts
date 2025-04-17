@@ -111,6 +111,6 @@ export {
 }
 
 export type {
-  RunResult,
   sqlite3,
+  RunResult,
 } from 'sqlite3'

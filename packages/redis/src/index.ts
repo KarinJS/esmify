@@ -1,4 +1,8 @@
 import * as redis from 'redis'
+import {
+  createClient,
+  createCluster,
+} from '@redis/client'
 export * from '@redis/client'
 export * from '@redis/bloom'
 export * from '@redis/graph'
@@ -32,9 +36,7 @@ const {
   TimeSeriesReducers,
   VectorAlgorithms,
   WatchError,
-  createClient,
-  createCluster,
-  defineScript
+  defineScript,
 } = redis
 
 export {
@@ -66,7 +68,7 @@ export {
   createClient,
   createCluster,
   defineScript,
-  redis as default
+  redis as default,
 }
 
 export type {

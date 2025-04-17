@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "init": "tsx init.ts",
-    "up-version": "node up-version.cjs"
+    "up-version": "node up-version.cjs",
+    "build": "pnpm -r build"
   },
   "keywords": [],
   "author": "shijin",

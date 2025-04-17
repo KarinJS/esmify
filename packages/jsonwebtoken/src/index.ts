@@ -1,16 +1,16 @@
 import * as jsonwebtoken from 'jsonwebtoken'
 
-const {
+import {
   sign,
   verify,
   decode,
-} = jsonwebtoken
+} from 'jsonwebtoken'
 
 export {
   sign,
   verify,
   decode,
-  jsonwebtoken as default
+  jsonwebtoken as default,
 }
 
 export type {

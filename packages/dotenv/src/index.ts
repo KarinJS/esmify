@@ -1,13 +1,16 @@
 import * as dotenv from 'dotenv'
 
-const {
+import {
   configDotenv,
-  // @ts-ignore
-  _configVault, _parseVault,
   config,
   decrypt,
   parse,
-  populate
+  populate,
+} from 'dotenv'
+
+const {
+  // @ts-ignore
+  _configVault, _parseVault,
 } = dotenv
 
 export {
@@ -17,7 +20,7 @@ export {
   decrypt,
   parse,
   populate,
-  dotenv as default
+  dotenv as default,
 }
 
 export type {

@@ -1,10 +1,7 @@
 import * as sqlite3 from 'sqlite3'
+import { Database, Statement, verbose, cached } from 'sqlite3'
 
 const {
-  cached,
-  verbose,
-  Statement,
-  Database,
   OPEN_READONLY,
   OPEN_READWRITE,
   OPEN_CREATE,

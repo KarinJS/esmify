@@ -1,5 +1,5 @@
 import * as express from 'express'
-const {
+import {
   application,
   request,
   response,
@@ -10,7 +10,7 @@ const {
   raw,
   text,
   urlencoded,
-} = express
+} from 'express'
 
 export {
   application,

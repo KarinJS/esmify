@@ -1,6 +1,5 @@
 import * as log4js from 'log4js'
-
-const {
+import {
   getLogger,
   configure,
   isConfigured,
@@ -9,7 +8,7 @@ const {
   levels,
   addLayout,
   recording,
-} = log4js
+} from 'log4js'
 
 export {
   getLogger,
@@ -21,7 +20,7 @@ export {
   shutdown,
   levels,
   log4js,
-  log4js as default
+  log4js as default,
 }
 
 export type {

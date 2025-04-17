@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/KarinJS/esmify/compare/esmify-v1.0.4...esmify-v1.0.5) (2025-04-17)
+
+
+### 🐛 Bug Fixes
+
+* ci ([5da8a7b](https://github.com/KarinJS/esmify/commit/5da8a7baf80d52d408cbec5f4c4afd91ec006370))
+
 ## [1.0.4](https://github.com/KarinJS/esmify/compare/esmify-v1.0.3...esmify-v1.0.4) (2025-04-17)
 
 

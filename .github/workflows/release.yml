@@ -21,6 +21,7 @@ jobs:
       jsonwebtoken_release: ${{ steps.release.outputs['packages/jsonwebtoken--release_created'] }}
       log4js_release: ${{ steps.release.outputs['packages/log4js--release_created'] }}
       redis_release: ${{ steps.release.outputs['packages/redis--release_created'] }}
+      sqlite3_release: ${{ steps.release.outputs['packages/sqlite3--release_created'] }}
     steps:
       # 使用 release-please-action 动作来自动创建发布 PR
       - uses: googleapis/release-please-action@v4
@@ -28,36 +29,15 @@ jobs:
         with:
           config-file: .release-please-config.json
           manifest-file: .release-please-manifest.json
-      
-      # 调试步骤 - 输出所有release-please-action的输出变量
-      - name: 输出发布状态
-        run: |
-          echo "release_created: ${{ steps.release.outputs.release_created }}"
-          echo "releases_created: ${{ steps.release.outputs.releases_created }}"
-          echo "lodash_release: ${{ steps.release.outputs['lodash--release_created'] }}"
-          echo "express_release: ${{ steps.release.outputs['express--release_created'] }}"
-          echo "dotenv_release: ${{ steps.release.outputs['dotenv--release_created'] }}"
-          echo "jsonwebtoken_release: ${{ steps.release.outputs['jsonwebtoken--release_created'] }}"
-          echo "log4js_release: ${{ steps.release.outputs['log4js--release_created'] }}"
-          echo "redis_release: ${{ steps.release.outputs['redis--release_created'] }}"
 
 # 只有当实际创建了发布时才执行发布任务
   publish:
     needs: release-please
-    if: ${{ needs.release-please.outputs.lodash_release == 'true' || needs.release-please.outputs.express_release == 'true' || needs.release-please.outputs.dotenv_release == 'true' || needs.release-please.outputs.jsonwebtoken_release == 'true' || needs.release-please.outputs.log4js_release == 'true' || needs.release-please.outputs.redis_release == 'true' }}
+    if: ${{ needs.release-please.outputs.releases_created == 'true' || needs.release-please.outputs.release_created == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
-            # 调试步骤 - 输出所有release-please-action的输出变量
-      - name: 输出发布状态
-        run: |
-          echo "lodash_release: ${{ needs.release-please.outputs.lodash_release }}"
-          echo "express_release: ${{ needs.release-please.outputs.express_release }}"
-          echo "dotenv_release: ${{ needs.release-please.outputs.dotenv_release }}"
-          echo "jsonwebtoken_release: ${{ needs.release-please.outputs.jsonwebtoken_release }}"
-          echo "log4js_release: ${{ needs.release-please.outputs.log4js_release }}"
-          echo "redis_release: ${{ needs.release-please.outputs.redis_release }}"
 
       - name: 设置 node
         uses: actions/setup-node@v4
@@ -120,4 +100,12 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/redis
+        run: pnpm run build && pnpm run pub
+
+      # 发布 sqlite3 包
+      - name: 发布 sqlite3 包
+        if: ${{ needs.release-please.outputs.sqlite3_release == 'true' }}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        working-directory: packages/sqlite3
         run: pnpm run build && pnpm run pub

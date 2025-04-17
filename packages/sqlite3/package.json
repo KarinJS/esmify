@@ -1,0 +1,48 @@
+{
+  "name": "@karinjs/sqlite3",
+  "version": "0.0.1",
+  "description": "Use vite+tsup to recompile sqlite3 into esm, which is smaller in size.",
+  "keywords": [
+    "karinjs",
+    "sqlite3"
+  ],
+  "homepage": "https://github.com/KarinJS/sqlite3",
+  "bugs": {
+    "url": "https://github.com/KarinJS/sqlite3/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KarinJS/sqlite3.git"
+  },
+  "license": "MIT",
+  "author": "shijin",
+  "type": "module",
+  "main": "./index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "index.js"
+  ],
+  "binary": {
+    "napi_versions": [
+      3,
+      6
+    ]
+  },
+  "scripts": {
+    "build": "vite build && tsup",
+    "pub": "npm publish --access public",
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/sqlite3/syncs\"",
+    "install": "npx @karinjs/prebuild-install -r napi --pkg_version=5.1.7 --pkg_name=sqlite3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "devDependencies": {
+    "sqlite3": "^5.1.7"
+  }
+}

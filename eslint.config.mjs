@@ -20,7 +20,6 @@ const ignores = [
   'logs',
   'data',
   'lib',
-  'dist',
   '**/dist/**',
 ]
 

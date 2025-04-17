@@ -101,6 +101,13 @@
       "component": "redis",
       "tag-separator": "-",
       "scope": "redis"
+    },
+    "packages/sqlite3": {
+      "release-type": "node",
+      "package-name": "@karinjs/sqlite3",
+      "component": "sqlite3",
+      "tag-separator": "-",
+      "scope": "sqlite3"
     }
   },
   "commit-search-depth": 50

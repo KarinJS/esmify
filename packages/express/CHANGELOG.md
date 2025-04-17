@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/KarinJS/esmify/compare/express-v1.0.2...express-v1.0.3) (2025-04-17)
+
+
+### 🐛 Bug Fixes
+
+* 修正导出 ([863c527](https://github.com/KarinJS/esmify/commit/863c5277ce43452de4f98214b9d25df28ea121b6))
+
 ## [1.0.2](https://github.com/KarinJS/esmify/compare/express-v1.0.1...express-v1.0.2) (2025-04-16)
 
 

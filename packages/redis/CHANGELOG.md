@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/KarinJS/esmify/compare/redis-v1.1.2...redis-v1.1.3) (2025-04-17)
+
+
+### 🐛 Bug Fixes
+
+* lock ([4abddd1](https://github.com/KarinJS/esmify/commit/4abddd102cca4c5ab9d9c1ee5966fc5cd67489c6))
+
 ## [1.1.2](https://github.com/KarinJS/esmify/compare/redis-v1.1.1...redis-v1.1.2) (2025-04-17)
 
 

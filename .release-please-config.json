@@ -115,6 +115,13 @@
       "component": "sqlite3",
       "tag-separator": "-",
       "scope": "sqlite3"
+    },
+    "packages/ws": {
+      "release-type": "node",
+      "package-name": "@karinjs/ws",
+      "component": "ws",
+      "tag-separator": "-",
+      "scope": "ws"
     }
   },
   "commit-search-depth": 50

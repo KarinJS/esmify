@@ -120,7 +120,7 @@ const release = (_: string, name: string) => {
   fs.writeFileSync('.release-please-config.json', JSON.stringify(config, null, 2))
 
   const manifest = JSON.parse(fs.readFileSync('.release-please-manifest.json', 'utf-8'))
-  manifest.packages[`packages/${name}`] = '0.0.1'
+  manifest[`packages/${name}`] = '0.0.1'
   fs.writeFileSync('.release-please-manifest.json', JSON.stringify(manifest, null, 2))
 }
 

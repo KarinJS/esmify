@@ -1,0 +1,53 @@
+{
+  "name": "@karinjs/ws",
+  "version": "0.0.1",
+  "description": "Use vite+tsup to recompile ws into esm, which is smaller in size.",
+  "keywords": [
+    "karinjs",
+    "ws"
+  ],
+  "homepage": "https://github.com/KarinJS/ws",
+  "bugs": {
+    "url": "https://github.com/KarinJS/ws/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KarinJS/ws.git"
+  },
+  "license": "MIT",
+  "author": "shijin",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build && tsup",
+    "pub": "npm publish --access public",
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/ws/syncs\""
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.18.1",
+    "ws": "^8.18.1"
+  },
+  "peerDependencies": {
+    "bufferutil": "^4.0.1",
+    "utf-8-validate": ">=5.0.2"
+  },
+  "peerDependenciesMeta": {
+    "bufferutil": {
+      "optional": true
+    },
+    "utf-8-validate": {
+      "optional": true
+    }
+  }
+}

@@ -3,15 +3,11 @@ on:
   push:
     branches:
       - main
-
-# 赋予 release-please-action 权限
 permissions:
   contents: write
   pull-requests: write
 jobs:
-  # 设置 release-please 任务
   release-please:
-    # 设置任务运行环境为 ubuntu-latest
     runs-on: ubuntu-latest
     outputs:
       releases_created: ${{ steps.release.outputs.releases_created }}
@@ -22,90 +18,77 @@ jobs:
       log4js_release: ${{ steps.release.outputs['packages/log4js--release_created'] }}
       redis_release: ${{ steps.release.outputs['packages/redis--release_created'] }}
       sqlite3_release: ${{ steps.release.outputs['packages/sqlite3--release_created'] }}
+      ws_rerelease: ${{ steps.release.outputs['packages/ws--release_created'] }}
     steps:
-      # 使用 release-please-action 动作来自动创建发布 PR
       - uses: googleapis/release-please-action@v4
         id: release
         with:
           config-file: .release-please-config.json
           manifest-file: .release-please-manifest.json
-
-# 只有当实际创建了发布时才执行发布任务
   publish:
     needs: release-please
-    if: ${{ needs.release-please.outputs.releases_created == 'true' || needs.release-please.outputs.release_created == 'true' }}
+    if: ${{ needs.release-please.outputs.releases_created == 'true' ||
+      needs.release-please.outputs.release_created == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
-
       - name: 设置 node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: 'https://registry.npmjs.org'
-
+          registry-url: https://registry.npmjs.org
       - name: 设置 pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 9
-
-      # 安装所有依赖
       - name: 安装依赖
         run: pnpm install
-
-      # 发布 lodash 包
       - name: 发布 lodash 包
         if: ${{ needs.release-please.outputs.lodash_release == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/lodash
         run: pnpm run build && pnpm run pub
-
-      # 发布 express 包
       - name: 发布 express 包
         if: ${{ needs.release-please.outputs.express_release == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/express
         run: pnpm run build && pnpm run pub
-
-      # 发布 dotenv 包
       - name: 发布 dotenv 包
         if: ${{ needs.release-please.outputs.dotenv_release == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/dotenv
         run: pnpm run build && pnpm run pub
-
-      # 发布 jsonwebtoken 包
       - name: 发布 jsonwebtoken 包
         if: ${{ needs.release-please.outputs.jsonwebtoken_release == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/jsonwebtoken
         run: pnpm run build && pnpm run pub
-
-      # 发布 log4js 包
       - name: 发布 log4js 包
         if: ${{ needs.release-please.outputs.log4js_release == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/log4js
         run: pnpm run build && pnpm run pub
-
-      # 发布 redis 包
       - name: 发布 redis 包
         if: ${{ needs.release-please.outputs.redis_release == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/redis
         run: pnpm run build && pnpm run pub
-
-      # 发布 sqlite3 包
       - name: 发布 sqlite3 包
         if: ${{ needs.release-please.outputs.sqlite3_release == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/sqlite3
+        run: pnpm run build && pnpm run pub
+      - name: 发布 ws 包
+        if: ${{ needs.release-please.outputs.ws_rerelease == 'true' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        working-directory: packages/ws
         run: pnpm run build && pnpm run pub

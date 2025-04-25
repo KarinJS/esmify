@@ -122,6 +122,13 @@
       "component": "ws",
       "tag-separator": "-",
       "scope": "ws"
+    },
+    "packages/node-pty": {
+      "release-type": "node",
+      "package-name": "@karinjs/node-pty",
+      "component": "node-pty",
+      "tag-separator": "-",
+      "scope": "node-pty"
     }
   },
   "commit-search-depth": 50

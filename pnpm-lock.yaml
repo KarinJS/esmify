@@ -4,6 +4,8 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+pnpmfileChecksum: imvfufzeqsj3j4k2qoldxs6gvy
+
 importers:
 
   .:
@@ -35,6 +37,12 @@ importers:
       yaml:
         specifier: ^2.7.1
         version: 2.7.1
+
+  packages/@homebridge-node-pty-prebuilt-multiarch:
+    devDependencies:
+      '@homebridge/node-pty-prebuilt-multiarch':
+        specifier: ^0.12.0
+        version: 0.12.0
 
   packages/dotenv:
     devDependencies:
@@ -343,6 +351,9 @@ packages:
 
   '@gar/promisify@1.1.3':
     resolution: {integrity: sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==}
+
+  '@homebridge/node-pty-prebuilt-multiarch@0.12.0':
+    resolution: {integrity: sha512-hJCGcfOnMeRh2KUdWPlVN/1egnfqI4yxgpDhqHSkF2DLn5fiJNdjEHHlcM1K2w9+QBmRE2D/wfmM4zUOb8aMyQ==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -2973,6 +2984,11 @@ snapshots:
 
   '@gar/promisify@1.1.3':
     optional: true
+
+  '@homebridge/node-pty-prebuilt-multiarch@0.12.0':
+    dependencies:
+      node-addon-api: 7.1.1
+      prebuild-install: 7.1.3
 
   '@humanfs/core@0.19.1': {}
 

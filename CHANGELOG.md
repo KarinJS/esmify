@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0](https://github.com/KarinJS/esmify/compare/esmify-v1.2.0...esmify-v1.3.0) (2025-04-26)
+
+
+### ✨ Features
+
+* `node-pty` ([b892f36](https://github.com/KarinJS/esmify/commit/b892f362c6a2866c071c991fe3cf403e44388702))
+
+
+### 🐛 Bug Fixes
+
+* 修复包名处理逻辑，确保名称中的斜杠被替换为短横线 ([b7077b9](https://github.com/KarinJS/esmify/commit/b7077b98223a846ed2f5ac0a5b511431544e1611))
+
 ## [1.2.0](https://github.com/KarinJS/esmify/compare/esmify-v1.1.0...esmify-v1.2.0) (2025-04-25)
 
 

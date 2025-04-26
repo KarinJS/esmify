@@ -8,5 +8,5 @@
   "packages/redis": "1.1.3",
   "packages/sqlite3": "0.1.3",
   "packages/ws": "1.2.0",
-  "packages/node-pty": "1.1.0"
+  "packages/node-pty": "1.0.4"
 }

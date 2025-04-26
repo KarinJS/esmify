@@ -38,12 +38,6 @@ importers:
         specifier: ^2.7.1
         version: 2.7.1
 
-  packages/@homebridge-node-pty-prebuilt-multiarch:
-    devDependencies:
-      '@homebridge/node-pty-prebuilt-multiarch':
-        specifier: ^0.12.0
-        version: 0.12.0
-
   packages/dotenv:
     devDependencies:
       dotenv:
@@ -82,6 +76,12 @@ importers:
       log4js:
         specifier: 6.8.0
         version: 6.8.0
+
+  packages/node-pty:
+    devDependencies:
+      '@homebridge/node-pty-prebuilt-multiarch':
+        specifier: ^0.12.0
+        version: 0.12.0
 
   packages/redis:
     devDependencies:

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/KarinJS/esmify/compare/esmify-v1.3.0...esmify-v1.3.1) (2025-04-26)
+
+
+### 🐛 Bug Fixes
+
+* lock ([2bb1693](https://github.com/KarinJS/esmify/commit/2bb1693ac6f3b74f317012ff08120b6e51d0762b))
+
 ## [1.3.0](https://github.com/KarinJS/esmify/compare/esmify-v1.2.0...esmify-v1.3.0) (2025-04-26)
 
 

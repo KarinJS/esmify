@@ -23,6 +23,8 @@ ESMify 是一个将 CommonJS 包转换成 ESM（ECMAScript Modules）模块的�
 
 以下是各个包转换前后的体积对比（数据参考自 [@pkg-size.dev](https://pkg-size.dev/)）：
 
+> 特别声明: 此处的计算都是不计算`二进制`文件的体积
+
 | 原始包名称      | 原始体积 | 转换后包名称             | 转换后体积 | 减少比例 | types |
 | --------------- | -------- | ------------------------ | ---------- | -------- | ----- |
 | [lodash-es]     | ~636KB   | [@karinjs/lodash]        | ~210KB     | ~67%     | ❌     |
@@ -37,6 +39,7 @@ ESMify 是一个将 CommonJS 包转换成 ESM（ECMAScript Modules）模块的�
 | [node-schedule] | ~4.6MB   | [@karinjs/node-schedule] | ~323KB     | ~93%     | ✅     |
 | [ws]            | ~147KB   | [@karinjs/ws]            | ~154KB     | ~0%      | ✅     |
 | [axios]         | ~2.7MB   | [@karinjs/axios]         | ~100KB     | ~96.3%   | ✅     |
+| [node-pty]      | ~8.4MB   | [@karinjs/node-pty]      | ~33KB      | ~96.3%   | ✅     |
 
 ## 无缝升级指南
 
@@ -137,6 +140,7 @@ pnpm add lodash@npm:@karinjs/lodash
 <summary>sqlite3</summary>
 
 > 内置类型
+> 默认使用阿里云镜像源进行下载二进制
 
 | 版本  | 原始版本 | 备注 |
 | ----- | -------- | ---- |
@@ -196,6 +200,18 @@ pnpm add lodash@npm:@karinjs/lodash
 
 > 内置类型
 > 仓库地址: https://github.com/KarinJS/axios
+
+</details>
+
+<details>
+<summary>node-pty</summary>
+
+> 提供多平台预编译二进制文件 默认使用阿里云镜像源进行下载
+> 根据 `@homebridge/node-pty-prebuilt-multiarch` 进行转换
+
+| 版本  | 原始版本 | 备注                       |
+| ----- | -------- | -------------------------- |
+| 1.0.4 | 0.12.0   | 提供多平台预编译二进制文件 |
 
 </details>
 
@@ -264,6 +280,7 @@ pnpm run init axios
 [node-schedule]: https://www.npmjs.com/package/node-schedule
 [ws]: https://www.npmjs.com/package/ws
 [axios]: https://www.npmjs.com/package/axios
+[node-pty]: https://www.npmjs.com/package/node-pty
 
 [@karinjs/lodash]: https://www.npmjs.com/package/@karinjs/lodash
 [@karinjs/express]: https://www.npmjs.com/package/@karinjs/express
@@ -277,3 +294,4 @@ pnpm run init axios
 [@karinjs/node-schedule]: https://www.npmjs.com/package/@karinjs/node-schedule
 [@karinjs/ws]: https://www.npmjs.com/package/@karinjs/ws
 [@karinjs/axios]: https://www.npmjs.com/package/@karinjs/axios
+[@karinjs/node-pty]: https://www.npmjs.com/package/@karinjs/node-pty

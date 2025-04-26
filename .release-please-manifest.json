@@ -1,5 +1,5 @@
 {
-  ".": "1.1.0",
+  ".": "1.2.0",
   "packages/lodash": "1.1.1",
   "packages/express": "1.0.3",
   "packages/dotenv": "1.1.2",

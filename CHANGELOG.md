@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/KarinJS/esmify/compare/esmify-v1.1.0...esmify-v1.2.0) (2025-04-25)
+
+
+### ✨ Features
+
+* `node-pty` ([#16](https://github.com/KarinJS/esmify/issues/16)) ([5acad35](https://github.com/KarinJS/esmify/commit/5acad3597252309a7ecc4e853d26dbc4e831e0de))
+
 ## [1.1.0](https://github.com/KarinJS/esmify/compare/esmify-v1.0.5...esmify-v1.1.0) (2025-04-24)
 
 

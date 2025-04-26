@@ -161,7 +161,7 @@ const files = (dir: string, name: string) => {
 
 (async () => {
   // pnpm run init <name>
-  const name = process.argv[2]
+  const name = process.argv[2]?.replace(/\//g, '-')
   if (!name) {
     console.error('Please provide a name for the package.')
     process.exit(1)
@@ -176,6 +176,6 @@ const files = (dir: string, name: string) => {
   ci(dir, name)
   tsup(dir)
 
-  execSync(`pnpm add ${name} -F @karinjs/${name} -D`, { stdio: 'inherit' })
+  execSync(`pnpm add ${process.argv[2]} -F @karinjs/${name} -D`, { stdio: 'inherit' })
   console.log('完成')
 })()

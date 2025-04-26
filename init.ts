@@ -161,10 +161,14 @@ const files = (dir: string, name: string) => {
 
 (async () => {
   // pnpm run init <name>
-  const name = process.argv[2]?.replace(/\//g, '-')
+  let name = process.argv[2]
   if (!name) {
     console.error('Please provide a name for the package.')
     process.exit(1)
+  }
+
+  if (name.includes('@')) {
+    name = name.split('/')[1]
   }
 
   const dir = path.resolve(process.cwd(), 'packages', name)

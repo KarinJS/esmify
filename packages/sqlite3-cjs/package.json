@@ -17,7 +17,7 @@
   "license": "MIT",
   "author": "shijin",
   "main": "./lib/sqlite3.js",
-  "types": "./dist/sqlite3.d.ts",
+  "types": "./lib/sqlite3.d.ts",
   "files": [
     "lib"
   ],

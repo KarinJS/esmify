@@ -20,6 +20,7 @@ jobs:
       sqlite3_release: ${{ steps.release.outputs['packages/sqlite3--release_created'] }}
       ws_rerelease: ${{ steps.release.outputs['packages/ws--release_created'] }}
       node-pty_rerelease: ${{ steps.release.outputs['packages/node-pty--release_created'] }}
+      sqlite3-cjs_release: ${{ steps.release.outputs['packages/sqlite3-cjs--release_created'] }}
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
@@ -79,6 +80,12 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/redis
+        run: pnpm run build && pnpm run pub
+      - name: 发布 sqlite3-cjs 包
+        if: ${{ needs.release-please.outputs.sqlite3-cjs_release == 'true' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        working-directory: packages/sqlite3-cjs
         run: pnpm run build && pnpm run pub
       - name: 发布 sqlite3 包
         if: ${{ needs.release-please.outputs.sqlite3_release == 'true' }}

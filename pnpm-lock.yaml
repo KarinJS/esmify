@@ -113,6 +113,16 @@ importers:
         specifier: 5.1.7
         version: 5.1.7
 
+  packages/sqlite3-cjs:
+    dependencies:
+      bindings:
+        specifier: ^1.5.0
+        version: 1.5.0
+    devDependencies:
+      sqlite3:
+        specifier: 5.1.7
+        version: 5.1.7
+
   packages/ws:
     dependencies:
       bufferutil:

@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.4.0](https://github.com/KarinJS/esmify/compare/esmify-v1.3.1...esmify-v1.4.0) (2025-04-28)
+
+
+### ✨ Features
+
+* `sqlite-cjs` ([00e679d](https://github.com/KarinJS/esmify/commit/00e679d2638f1562136b0851225edc55d4fe4c1c))
+
+
+### 🐛 Bug Fixes
+
+* **sqlite3-cjs:** 修正类型入口错误 ([129dbd1](https://github.com/KarinJS/esmify/commit/129dbd19ad0515fce124436e42b7fb4049637448))
+
 ## [1.3.1](https://github.com/KarinJS/esmify/compare/esmify-v1.3.0...esmify-v1.3.1) (2025-04-26)
 
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.3](https://github.com/KarinJS/esmify/compare/esmify-v1.5.2...esmify-v1.5.3) (2025-05-03)
+
+
+### 🐛 Bug Fixes
+
+* form-data 、 ([7891090](https://github.com/KarinJS/esmify/commit/7891090c1827b9f5e94b2068a54fa0646b5ef104))
+* 给点面子大哥 ([655be75](https://github.com/KarinJS/esmify/commit/655be75e0198652aaf8b34032eae9052e3361bce))
+
 ## [1.5.2](https://github.com/KarinJS/esmify/compare/esmify-v1.5.1...esmify-v1.5.2) (2025-05-03)
 
 

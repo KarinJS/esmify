@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/form-data",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Use vite+tsup to recompile form-data into esm, which is smaller in size.",
   "keywords": [
     "karinjs",

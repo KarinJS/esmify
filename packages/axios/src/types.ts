@@ -1,15 +1,10 @@
-import _axios from 'axios'
 import * as axios from 'axios'
-
-const {
+import {
   Axios,
   AxiosError,
   CanceledError,
   isCancel,
-  CancelToken,
-  VERSION,
   all,
-  Cancel,
   isAxiosError,
   spread,
   toFormData,
@@ -18,7 +13,7 @@ const {
   formToJSON,
   getAdapter,
   mergeConfig,
-} = _axios
+} from 'axios'
 
 export default axios.default
 export {
@@ -26,10 +21,7 @@ export {
   AxiosError,
   CanceledError,
   isCancel,
-  CancelToken,
-  VERSION,
   all,
-  Cancel,
   isAxiosError,
   spread,
   toFormData,
@@ -41,6 +33,8 @@ export {
 }
 
 export type {
+  CancelToken,
+  Cancel,
   AxiosHeaderValue,
   RawAxiosRequestHeaders,
   AxiosRequestHeaders,

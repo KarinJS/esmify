@@ -1,3 +1,4 @@
+import _axios from 'axios'
 import * as axios from 'axios'
 
 const {
@@ -17,10 +18,10 @@ const {
   formToJSON,
   getAdapter,
   mergeConfig,
-} = axios.default
+} = _axios
 
+export default axios.default
 export {
-  axios as default,
   Axios,
   AxiosError,
   CanceledError,

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.6](https://github.com/KarinJS/esmify/compare/axios-v1.1.5...axios-v1.1.6) (2025-05-03)
+
+
+### 🐛 Bug Fixes
+
+* **axios:** types ([313be52](https://github.com/KarinJS/esmify/commit/313be525f2b3e5f8e0b499e3cc39f46246d2024b))
+
 ## [1.1.5](https://github.com/KarinJS/esmify/compare/axios-v1.1.4...axios-v1.1.5) (2025-05-03)
 
 

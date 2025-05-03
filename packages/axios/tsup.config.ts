@@ -4,6 +4,6 @@ export default defineConfig({
   entry: ['src/types.ts'],
   format: ['esm'],
   dts: { resolve: true, only: true },
-  clean: true,
+  clean: false,
   outDir: 'dist',
 })

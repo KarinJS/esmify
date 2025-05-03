@@ -136,6 +136,20 @@
       "component": "sqlite3-cjs",
       "tag-separator": "-",
       "scope": "sqlite3-cjs"
+    },
+    "packages/axios": {
+      "release-type": "node",
+      "package-name": "@karinjs/axios",
+      "component": "axios",
+      "tag-separator": "-",
+      "scope": "axios"
+    },
+    "packages/form-data": {
+      "release-type": "node",
+      "package-name": "@karinjs/form-data",
+      "component": "form-data",
+      "tag-separator": "-",
+      "scope": "form-data"
     }
   },
   "commit-search-depth": 50

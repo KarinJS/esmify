@@ -1,0 +1,40 @@
+{
+  "name": "@karinjs/form-data",
+  "version": "0.0.1",
+  "description": "Use vite+tsup to recompile form-data into esm, which is smaller in size.",
+  "keywords": [
+    "karinjs",
+    "form-data"
+  ],
+  "homepage": "https://github.com/KarinJS/form-data",
+  "bugs": {
+    "url": "https://github.com/KarinJS/form-data/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KarinJS/form-data.git"
+  },
+  "license": "MIT",
+  "author": "shijin",
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/types.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build && tsup",
+    "pub": "npm publish --access public",
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/form-data/syncs\""
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "devDependencies": {
+    "form-data": "^4.0.2"
+  }
+}

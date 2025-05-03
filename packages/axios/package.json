@@ -1,0 +1,44 @@
+{
+  "name": "@karinjs/axios",
+  "version": "0.0.1",
+  "description": "Use vite+tsup to recompile axios into esm, which is smaller in size.",
+  "keywords": [
+    "karinjs",
+    "axios"
+  ],
+  "homepage": "https://github.com/KarinJS/axios",
+  "bugs": {
+    "url": "https://github.com/KarinJS/axios/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KarinJS/axios.git"
+  },
+  "license": "MIT",
+  "author": "shijin",
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/types.d.ts",
+  "files": [
+    "dist",
+    "index.js"
+  ],
+  "scripts": {
+    "build": "vite build && tsup",
+    "pub": "pnpm publish --access public",
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/axios/syncs\""
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "dependencies": {
+    "form-data": "workspace:../form-data"
+  },
+  "devDependencies": {
+    "axios": "1.8.4"
+  }
+}

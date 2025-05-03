@@ -21,6 +21,8 @@ jobs:
       ws_rerelease: ${{ steps.release.outputs['packages/ws--release_created'] }}
       node-pty_rerelease: ${{ steps.release.outputs['packages/node-pty--release_created'] }}
       sqlite3-cjs_release: ${{ steps.release.outputs['packages/sqlite3-cjs--release_created'] }}
+      axios_rerelease: ${{ steps.release.outputs['packages/axios--release_created'] }}
+      form-data_rerelease: ${{ steps.release.outputs['packages/form-data--release_created'] }}
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
@@ -29,7 +31,8 @@ jobs:
           manifest-file: .release-please-manifest.json
   publish:
     needs: release-please
-    if: ${{ needs.release-please.outputs.releases_created == 'true' || needs.release-please.outputs.release_created == 'true' }}
+    if: ${{ needs.release-please.outputs.releases_created == 'true' ||
+      needs.release-please.outputs.release_created == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码
@@ -104,4 +107,16 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/node-pty
+        run: pnpm run build && pnpm run pub
+      - name: 发布 axios 包
+        if: ${{ needs.release-please.outputs.axios_rerelease == 'true' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        working-directory: packages/axios
+        run: pnpm run build && pnpm run pub
+      - name: 发布 form-data 包
+        if: ${{ needs.release-please.outputs.form-data_rerelease == 'true' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        working-directory: packages/form-data
         run: pnpm run build && pnpm run pub

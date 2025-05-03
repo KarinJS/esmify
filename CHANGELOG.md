@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.2](https://github.com/KarinJS/esmify/compare/esmify-v1.5.1...esmify-v1.5.2) (2025-05-03)
+
+
+### 🐛 Bug Fixes
+
+* axios必须后编译 ([abbe66b](https://github.com/KarinJS/esmify/commit/abbe66bf15a1d8cf9f3d4022813000e88a4949d4))
+
 ## [1.5.1](https://github.com/KarinJS/esmify/compare/esmify-v1.5.0...esmify-v1.5.1) (2025-05-03)
 
 

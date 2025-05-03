@@ -16,7 +16,7 @@ export default defineConfig({
     target: 'node18',
     lib: {
       formats: ['es'],
-      fileName: () => 'axios.mjs',
+      fileName: () => 'index.mjs',
       entry: ['src/index.ts'],
     },
     emptyOutDir: true,

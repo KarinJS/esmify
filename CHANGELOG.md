@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.7](https://github.com/KarinJS/esmify/compare/esmify-v1.5.6...esmify-v1.5.7) (2025-05-03)
+
+
+### 🐛 Bug Fixes
+
+* **axios:** 修复文件名称错误 ([786ff31](https://github.com/KarinJS/esmify/commit/786ff31054fba751643d1e90db94bccc2882ec69))
+
 ## [1.5.6](https://github.com/KarinJS/esmify/compare/esmify-v1.5.5...esmify-v1.5.6) (2025-05-03)
 
 

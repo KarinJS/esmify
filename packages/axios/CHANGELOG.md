@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.7](https://github.com/KarinJS/esmify/compare/axios-v1.1.6...axios-v1.1.7) (2025-05-03)
+
+
+### 🐛 Bug Fixes
+
+* **axios:** 修复文件名称错误 ([786ff31](https://github.com/KarinJS/esmify/commit/786ff31054fba751643d1e90db94bccc2882ec69))
+
 ## [1.1.6](https://github.com/KarinJS/esmify/compare/axios-v1.1.5...axios-v1.1.6) (2025-05-03)
 
 

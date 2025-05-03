@@ -1,4 +1,4 @@
-import * as axios from 'axios/index.js'
+import * as axios from 'axios'
 
 const {
   Axios,

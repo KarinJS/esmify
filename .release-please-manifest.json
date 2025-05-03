@@ -1,5 +1,5 @@
 {
-  ".": "1.5.0",
+  ".": "1.5.1",
   "packages/lodash": "1.1.1",
   "packages/express": "1.0.3",
   "packages/dotenv": "1.1.2",
@@ -10,6 +10,6 @@
   "packages/ws": "1.2.0",
   "packages/node-pty": "1.1.0",
   "packages/sqlite3-cjs": "0.1.0",
-  "packages/axios": "1.1.0",
+  "packages/axios": "1.1.1",
   "packages/form-data": "0.1.0"
 }

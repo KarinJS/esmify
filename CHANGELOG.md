@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/KarinJS/esmify/compare/esmify-v1.5.0...esmify-v1.5.1) (2025-05-03)
+
+
+### 🐛 Bug Fixes
+
+* **axios:** 修复缺少的依赖 ([b41334d](https://github.com/KarinJS/esmify/commit/b41334dda39dfc5b3c71770c6f108332e02a0860))
+
 ## [1.5.0](https://github.com/KarinJS/esmify/compare/esmify-v1.4.0...esmify-v1.5.0) (2025-05-03)
 
 

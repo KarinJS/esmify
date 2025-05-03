@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/KarinJS/esmify/compare/axios-v1.1.1...axios-v1.1.2) (2025-05-03)
+
+
+### 🐛 Bug Fixes
+
+* axios必须后编译 ([abbe66b](https://github.com/KarinJS/esmify/commit/abbe66bf15a1d8cf9f3d4022813000e88a4949d4))
+
 ## [1.1.1](https://github.com/KarinJS/esmify/compare/axios-v1.1.0...axios-v1.1.1) (2025-05-03)
 
 

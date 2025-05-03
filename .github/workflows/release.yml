@@ -111,6 +111,7 @@ jobs:
 
       - name: 编译 form-data 包
         run: pnpm run build
+        working-directory: packages/form-data
         if: ${{ needs.release-please.outputs.form-data_rerelease == 'true' || needs.release-please.outputs.axios_rerelease == 'true' }}
 
       - name: 发布 form-data 包

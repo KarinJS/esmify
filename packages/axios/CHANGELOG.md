@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/KarinJS/esmify/compare/axios-v1.1.2...axios-v1.1.3) (2025-05-03)
+
+
+### 🐛 Bug Fixes
+
+* 给点面子大哥 ([655be75](https://github.com/KarinJS/esmify/commit/655be75e0198652aaf8b34032eae9052e3361bce))
+
 ## [1.1.2](https://github.com/KarinJS/esmify/compare/axios-v1.1.1...axios-v1.1.2) (2025-05-03)
 
 

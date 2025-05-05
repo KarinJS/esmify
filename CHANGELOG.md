@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.8](https://github.com/KarinJS/esmify/compare/esmify-v1.5.7...esmify-v1.5.8) (2025-05-05)
+
+
+### 🐛 Bug Fixes
+
+* **axios:** 使用官方提供类型 ([7878088](https://github.com/KarinJS/esmify/commit/787808897ac83215a9078662d85bc16b6e3842cb))
+
 ## [1.5.7](https://github.com/KarinJS/esmify/compare/esmify-v1.5.6...esmify-v1.5.7) (2025-05-03)
 
 

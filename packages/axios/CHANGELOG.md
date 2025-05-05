@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.8](https://github.com/KarinJS/esmify/compare/axios-v1.1.7...axios-v1.1.8) (2025-05-05)
+
+
+### 🐛 Bug Fixes
+
+* **axios:** 使用官方提供类型 ([7878088](https://github.com/KarinJS/esmify/commit/787808897ac83215a9078662d85bc16b6e3842cb))
+
 ## [1.1.7](https://github.com/KarinJS/esmify/compare/axios-v1.1.6...axios-v1.1.7) (2025-05-03)
 
 

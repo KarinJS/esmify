@@ -41,4 +41,15 @@ export default defineConfig({
       defaultIsModuleExports: true,
     },
   },
+  /**
+   * 编译结束插件
+   */
+  plugins: [
+    {
+      name: 'axios-plugin',
+      closeBundle () {
+        fs.cpSync('./node_modules/axios/index.d.ts', './dist/index.d.ts')
+      },
+    },
+  ],
 })

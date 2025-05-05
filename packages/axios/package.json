@@ -18,13 +18,13 @@
   "author": "shijin",
   "type": "module",
   "main": "./dist/index.mjs",
-  "types": "./dist/types.d.ts",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist",
     "index.js"
   ],
   "scripts": {
-    "build": "vite build && tsup",
+    "build": "vite build",
     "pub": "pnpm publish --access public",
     "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/axios/syncs\""
   },

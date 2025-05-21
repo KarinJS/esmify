@@ -34,6 +34,7 @@ ESMify 是一个将 CommonJS 包转换成 ESM（ECMAScript Modules）模块的�
 | [log4js]        | ~519KB   | [@karinjs/log4js]        | ~225KB     | ~56.6%   | ✅     |
 | [redis]         | ~991KB   | [@karinjs/redis]         | ~1MB       | ~0%      | ✅     |
 | [sqlite3]       | ~6.9MB   | [@karinjs/sqlite3]       | ~2.1MB     | ~69.6%   | ✅     |
+| [sqlite3-cjs]   | ~6.9MB   | [@karinjs/sqlite3-cjs]   | ~2.1MB     | ~69.6%   | ✅     |
 | [moment]        | ~4.4MB   | [@karinjs/moment]        | ~526KB     | ~88%     | ✅     |
 | [art-template]  | ~8.3MB   | [@karinjs/art-template]  | ~400KB     | ~95.2%   | ✅     |
 | [node-schedule] | ~4.6MB   | [@karinjs/node-schedule] | ~323KB     | ~93%     | ✅     |
@@ -162,6 +163,18 @@ pnpm add lodash@npm:@karinjs/lodash
 </details>
 
 <details>
+<summary>sqlite3-cjs</summary>
+
+> 内置类型
+> 默认使用阿里云镜像源进行下载二进制
+
+| 版本  | 原始版本 | 备注 |
+| ----- | -------- | ---- |
+| 0.1.0 | 5.1.7    |      |
+
+</details>
+
+<details>
 <summary>moment</summary>
 
 > 内置类型
@@ -201,7 +214,6 @@ pnpm add lodash@npm:@karinjs/lodash
 <summary>ws</summary>
 
 > 内置类型
-> 仓库地址: https://github.com/KarinJS/ws
 
 | 版本  | 原始版本 | 备注 |
 | ----- | -------- | ---- |
@@ -213,7 +225,11 @@ pnpm add lodash@npm:@karinjs/lodash
 <summary>axios</summary>
 
 > 内置类型
-> 仓库地址: https://github.com/KarinJS/axios
+
+| 版本  | 原始版本 | 备注 |
+| ----- | -------- | ---- |
+| 1.1.8 | 1.8.4    |      |
+| 1.2.0 | 1.9.0    |      |
 
 </details>
 

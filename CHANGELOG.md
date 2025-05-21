@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.6.0](https://github.com/KarinJS/esmify/compare/esmify-v1.5.8...esmify-v1.6.0) (2025-05-21)
+
+
+### ✨ Features
+
+* **axios:** 1.9.0 ([7c1f2b2](https://github.com/KarinJS/esmify/commit/7c1f2b2f76588295bb9e1a9adfc2a93021a99ff4))
+
+
+### 🐛 Bug Fixes
+
+* lock ([8e928b2](https://github.com/KarinJS/esmify/commit/8e928b22fad896f760165e81558b04c7de17583c))
+
 ## [1.5.8](https://github.com/KarinJS/esmify/compare/esmify-v1.5.7...esmify-v1.5.8) (2025-05-05)
 
 

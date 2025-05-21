@@ -190,6 +190,7 @@ pnpm add lodash@npm:@karinjs/lodash
 
 > 内置类型
 > 仓库地址: https://github.com/KarinJS/node-schedule
+
 | 版本  | 原始版本 | 备注 |
 | ----- | -------- | ---- |
 | 1.1.0 | 2.1.1    |      |

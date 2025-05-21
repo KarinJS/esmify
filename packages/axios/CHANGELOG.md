@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/KarinJS/esmify/compare/axios-v1.1.8...axios-v1.2.0) (2025-05-21)
+
+
+### ✨ Features
+
+* **axios:** 1.9.0 ([7c1f2b2](https://github.com/KarinJS/esmify/commit/7c1f2b2f76588295bb9e1a9adfc2a93021a99ff4))
+
 ## [1.1.8](https://github.com/KarinJS/esmify/compare/axios-v1.1.7...axios-v1.1.8) (2025-05-05)
 
 

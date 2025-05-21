@@ -41,6 +41,19 @@ ESMify 是一个将 CommonJS 包转换成 ESM（ECMAScript Modules）模块的�
 | [axios]         | ~2.7MB   | [@karinjs/axios]         | ~100KB     | ~96.3%   | ✅     |
 | [node-pty]      | ~8.4MB   | [@karinjs/node-pty]      | ~33KB      | ~96.3%   | ✅     |
 
+## 特别声明
+
+对于`lodash`和`express`，推荐使用别名安装，因为需要处理类型问题。
+
+```bash
+npm install lodash@npm:@karinjs/lodash
+npm install express@npm:@karinjs/express
+
+# types
+npm install @types/lodash
+npm install @types/express
+```
+
 ## 无缝升级指南
 
 你可以通过以下方式无缝升级到 ESM 版本，无需修改任何代码：

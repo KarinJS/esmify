@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/log4js-cjs",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "description": "Use vite+tsup to recompile log4js into cjs, which is smaller in size.",
   "keywords": [
     "karinjs",

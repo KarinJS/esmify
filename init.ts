@@ -14,13 +14,13 @@ const pkg = (dir: string, name: string) => {
     "karinjs",
     "${name}"
   ],
-  "homepage": "https://github.com/KarinJS/${name}",
+  "homepage": "https://github.com/KarinJS/esmify",
   "bugs": {
-    "url": "https://github.com/KarinJS/${name}/issues"
+    "url": "https://github.com/KarinJS/esmify/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KarinJS/${name}.git"
+    "url": "git+https://github.com/KarinJS/esmify.git"
   },
   "license": "MIT",
   "author": "shijin",

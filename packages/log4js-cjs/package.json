@@ -1,0 +1,41 @@
+{
+  "name": "@karinjs/log4js-cjs",
+  "version": "1.0.0",
+  "description": "Use vite+tsup to recompile log4js into cjs, which is smaller in size.",
+  "keywords": [
+    "karinjs",
+    "log4js"
+  ],
+  "homepage": "https://github.com/KarinJS/log4js",
+  "bugs": {
+    "url": "https://github.com/KarinJS/log4js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KarinJS/log4js.git"
+  },
+  "license": "MIT",
+  "author": "shijin",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "index.js"
+  ],
+  "scripts": {
+    "build": "vite build && tsup",
+    "pub": "npm publish --access public",
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/log4js/syncs\""
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "devDependencies": {
+    "log4js": "6.9.1"
+  }
+}

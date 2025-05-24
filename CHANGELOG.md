@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/KarinJS/esmify/compare/esmify-v1.6.0...esmify-v1.7.0) (2025-05-24)
+
+
+### ✨ Features
+
+* log4js-cjs ([187abc2](https://github.com/KarinJS/esmify/commit/187abc291903bbeb607710cfcc19c324c4672d2d))
+
 ## [1.6.0](https://github.com/KarinJS/esmify/compare/esmify-v1.5.8...esmify-v1.6.0) (2025-05-21)
 
 

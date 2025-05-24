@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.1](https://github.com/KarinJS/esmify/compare/esmify-v1.7.0...esmify-v1.7.1) (2025-05-24)
+
+
+### 🐛 Bug Fixes
+
+* ci错误 ([2431e17](https://github.com/KarinJS/esmify/commit/2431e17b8718b91170d5c70522713d222ffb2dcc))
+
 ## [1.7.0](https://github.com/KarinJS/esmify/compare/esmify-v1.6.0...esmify-v1.7.0) (2025-05-24)
 
 

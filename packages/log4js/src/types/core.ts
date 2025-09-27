@@ -21,7 +21,7 @@ export interface LayoutsParam {
   coloredLayout: LayoutFunction
   dummyLayout: LayoutFunction
   addLayout: (name: string, serializerGenerator: LayoutFunction) => void
-  layout: (name: string, config: PatternToken) => LayoutFunction
+  layout: (name: string, config?: Record<string, unknown>) => LayoutFunction | undefined
 }
 
 export interface PatternToken {

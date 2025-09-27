@@ -2,16 +2,12 @@
  * Console appender - 输出到stdout/stderr
  */
 import LoggingEvent from '../LoggingEvent'
-import type { AppenderFunction, LayoutsParam, PatternToken } from '../types/core'
+import type { AppenderFunction, LayoutsParam } from '../types/core'
+import type { ConsoleAppender } from '../types/appenders'
 
-interface ConsoleAppenderConfig {
-  type: 'console'
-  layout?: Record<string, unknown>
-}
-
-const configure = (config: ConsoleAppenderConfig, layouts: LayoutsParam): AppenderFunction => {
+const configure = (config: ConsoleAppender, layouts: LayoutsParam): AppenderFunction => {
   const layoutType = (config.layout?.type as string) || 'colored'
-  const layout = layouts.layout(layoutType, config.layout as PatternToken)
+  const layout = layouts.layout(layoutType, config.layout as Record<string, unknown>) || layouts.colouredLayout
 
   return (loggingEvent: LoggingEvent): void => {
     // ERROR和FATAL级别输出到stderr，其他输出到stdout

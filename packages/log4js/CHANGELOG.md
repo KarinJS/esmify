@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/KarinJS/esmify/compare/log4js-v1.2.0...log4js-v1.3.0) (2025-09-27)
+
+
+### ✨ Features
+
+* 更新log4js类型定义，支持ESM模块，移除tsdown配置文件 ([a8b99bd](https://github.com/KarinJS/esmify/commit/a8b99bd6540845cbaa5a16f1120688532212e842))
+
 ## [1.2.0](https://github.com/KarinJS/esmify/compare/log4js-v1.1.4...log4js-v1.2.0) (2025-09-27)
 
 

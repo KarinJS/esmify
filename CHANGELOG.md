@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0](https://github.com/KarinJS/esmify/compare/esmify-v1.8.0...esmify-v1.9.0) (2025-09-27)
+
+
+### ✨ Features
+
+* 更新log4js类型定义，支持ESM模块，移除tsdown配置文件 ([a8b99bd](https://github.com/KarinJS/esmify/commit/a8b99bd6540845cbaa5a16f1120688532212e842))
+
 ## [1.8.0](https://github.com/KarinJS/esmify/compare/esmify-v1.7.1...esmify-v1.8.0) (2025-09-27)
 
 

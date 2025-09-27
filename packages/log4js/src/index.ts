@@ -1,5 +1,7 @@
-import * as log4js from 'log4js'
-import {
+import log4js from './log4js'
+
+export default log4js
+export const {
   getLogger,
   configure,
   isConfigured,
@@ -8,58 +10,10 @@ import {
   levels,
   addLayout,
   recording,
-} from 'log4js'
+} = log4js
 
-export {
-  getLogger,
-  configure,
-  isConfigured,
-  addLayout,
-  connectLogger,
-  recording,
-  shutdown,
-  levels,
-  log4js,
-  log4js as default,
-}
-
-export type {
-  Log4js,
-  BasicLayout,
-  ColoredLayout,
-  MessagePassThroughLayout,
-  DummyLayout,
-  Level,
-  CallStack,
-  LoggingEvent,
-  Token,
-  PatternLayout,
-  CustomLayout,
-  Layout,
-  CategoryFilterAppender,
-  NoLogFilterAppender,
-  ConsoleAppender,
-  FileAppender,
-  SyncfileAppender,
-  DateFileAppender,
-  LogLevelFilterAppender,
-  MultiFileAppender,
-  MultiprocessAppender,
-  RecordingAppender,
-  StandardErrorAppender,
-  StandardOutputAppender,
-  TCPAppender,
-  CustomAppender,
-  Appenders,
-  AppenderModule,
-  AppenderFunction,
-  Config,
-  LayoutsParam,
-  PatternToken,
-  LayoutFunction,
-  Appender,
-  Levels,
-  Configuration,
-  Recording,
-  Logger,
-} from 'log4js'
+// Export types from our own implementations
+export type { CallStack } from './logger'
+export type { default as Level } from './levels'
+export type { default as Logger } from './logger'
+export type { default as LoggingEvent } from './LoggingEvent'

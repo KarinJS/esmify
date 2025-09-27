@@ -123,13 +123,6 @@
       "tag-separator": "-",
       "scope": "ws"
     },
-    "packages/node-pty": {
-      "release-type": "node",
-      "package-name": "@karinjs/node-pty",
-      "component": "node-pty",
-      "tag-separator": "-",
-      "scope": "node-pty"
-    },
     "packages/sqlite3-cjs": {
       "release-type": "node",
       "package-name": "@karinjs/sqlite3-cjs",
@@ -150,13 +143,6 @@
       "component": "form-data",
       "tag-separator": "-",
       "scope": "form-data"
-    },
-    "packages/log4js-cjs": {
-      "release-type": "node",
-      "package-name": "@karinjs/log4js-cjs",
-      "component": "log4js-cjs",
-      "tag-separator": "-",
-      "scope": "log4js-cjs"
     }
   },
   "commit-search-depth": 50

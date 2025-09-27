@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/KarinJS/esmify/compare/log4js-v1.1.4...log4js-v1.2.0) (2025-09-27)
+
+
+### ✨ Features
+
+* log4js + ts + esm + node18 -&gt; @karinjs/log4js ([203295e](https://github.com/KarinJS/esmify/commit/203295e02044c06cb42eccf6b27dba72a78db447))
+
 ## [1.1.4](https://github.com/KarinJS/esmify/compare/log4js-v1.1.3...log4js-v1.1.4) (2025-04-17)
 
 

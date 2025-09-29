@@ -1,0 +1,62 @@
+{
+  "name": "@karinjs/qs",
+  "version": "0.0.1",
+  "description": "Modern qs, ts + esm + node v18+.",
+  "keywords": [
+    "karinjs",
+    "qs"
+  ],
+  "homepage": "https://github.com/KarinJS/esmify",
+  "bugs": {
+    "url": "https://github.com/KarinJS/esmify/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KarinJS/esmify.git"
+  },
+  "license": "MIT",
+  "author": "shijin",
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc && tsdown",
+    "test": "tsx test/utils.ts && tsx test/parse.ts && tsx test/stringify.ts",
+    "prepublishOnly": "npm run test",
+    "pub": "npm publish --access public",
+    "sync": "curl -X PUT \\\"https://registry-direct.npmmirror.com/-/package/@karinjs/qs/syncs\\\""
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "devDependencies": {
+    "tape": "^5.7.2",
+    "@types/tape": "^5.0.4",
+    "object-inspect": "^1.13.2",
+    "safer-buffer": "^2.1.2",
+    "for-each": "^0.3.3",
+    "es-value-fixtures": "^1.4.2",
+    "has-property-descriptors": "^1.0.2",
+    "iconv-lite": "^0.6.3",
+    "mock-property": "^1.0.3",
+    "has-override-mistake": "^1.0.1",
+    "has-proto": "^1.1.0"
+  },
+  "dependencies": {
+    "side-channel": "^1.1.0"
+  }
+}

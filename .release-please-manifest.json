@@ -11,5 +11,6 @@
   "packages/node-pty": "1.1.0",
   "packages/sqlite3-cjs": "0.1.0",
   "packages/axios": "1.2.0",
-  "packages/form-data": "1.1.0"
+  "packages/form-data": "1.1.0",
+  "packages/qs": "0.0.1"
 }

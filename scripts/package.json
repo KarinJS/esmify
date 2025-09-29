@@ -1,0 +1,44 @@
+{
+  "name": "@karinjs/${name}",
+  "version": "0.0.1",
+  "description": "Modern ${name}, ts + esm + node v18+.",
+  "keywords": [
+    "karinjs",
+    "${name}"
+  ],
+  "homepage": "https://github.com/KarinJS/esmify",
+  "bugs": {
+    "url": "https://github.com/KarinJS/esmify/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KarinJS/esmify.git"
+  },
+  "license": "MIT",
+  "author": "shijin",
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc && tsdown",
+    "pub": "npm publish --access public",
+    "sync": "curl -X PUT \\\"https://registry-direct.npmmirror.com/-/package/@karinjs/${name}/syncs\\\""
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    }
+  }
+}

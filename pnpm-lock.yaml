@@ -128,10 +128,6 @@ importers:
         version: 6.9.1
 
   packages/qs:
-    dependencies:
-      side-channel:
-        specifier: ^1.1.0
-        version: 1.1.0
     devDependencies:
       '@types/tape':
         specifier: ^5.0.4
@@ -163,6 +159,9 @@ importers:
       safer-buffer:
         specifier: ^2.1.2
         version: 2.1.2
+      side-channel:
+        specifier: ^1.1.0
+        version: 1.1.0
       tape:
         specifier: ^5.7.2
         version: 5.9.0

@@ -1,5 +1,5 @@
 import test from 'tape'
-import * as qs from '../src/index.js'
+import * as qs from '../dist/index.mjs'
 
 test('parse() basic tests', function (t) {
   t.deepEqual(qs.parse('0=foo'), { 0: 'foo' })

@@ -1,5 +1,5 @@
 import test from 'tape'
-import * as qs from '../src/index.js'
+import * as qs from '../dist/index.mjs'
 
 test('stringify() basic tests', function (t) {
   t.equal(qs.stringify({ foo: 'bar' }), 'foo=bar')

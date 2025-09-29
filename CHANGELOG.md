@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0](https://github.com/KarinJS/esmify/compare/esmify-v1.9.0...esmify-v1.10.0) (2025-09-29)
+
+
+### ✨ Features
+
+* qs ([5514b81](https://github.com/KarinJS/esmify/commit/5514b811e3a658cc3c612b14dd4d9737cc5b3f35))
+
 ## [1.9.0](https://github.com/KarinJS/esmify/compare/esmify-v1.8.0...esmify-v1.9.0) (2025-09-27)
 
 

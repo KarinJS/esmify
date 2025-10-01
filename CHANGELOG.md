@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.1](https://github.com/KarinJS/esmify/compare/esmify-v1.10.0...esmify-v1.10.1) (2025-09-29)
+
+
+### 🐛 Bug Fixes
+
+* qs size ([07d2d1e](https://github.com/KarinJS/esmify/commit/07d2d1ebc97b28661d13466a437f95357c21add2))
+
 ## [1.10.0](https://github.com/KarinJS/esmify/compare/esmify-v1.9.0...esmify-v1.10.0) (2025-09-29)
 
 

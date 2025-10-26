@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.2](https://github.com/KarinJS/esmify/compare/esmify-v1.10.1...esmify-v1.10.2) (2025-10-26)
+
+
+### 🐛 Bug Fixes
+
+* 将 Configuration.appenders 设为必需，并在创建默认类别时传入空 appenders ([86296b4](https://github.com/KarinJS/esmify/commit/86296b4f25e38b1fd1b7699262bef0f43021d054))
+
 ## [1.10.1](https://github.com/KarinJS/esmify/compare/esmify-v1.10.0...esmify-v1.10.1) (2025-09-29)
 
 

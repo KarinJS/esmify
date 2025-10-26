@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/KarinJS/esmify/compare/log4js-v1.3.0...log4js-v1.3.1) (2025-10-26)
+
+
+### 🐛 Bug Fixes
+
+* 将 Configuration.appenders 设为必需，并在创建默认类别时传入空 appenders ([86296b4](https://github.com/KarinJS/esmify/commit/86296b4f25e38b1fd1b7699262bef0f43021d054))
+
 ## [1.3.0](https://github.com/KarinJS/esmify/compare/log4js-v1.2.0...log4js-v1.3.0) (2025-09-27)
 
 

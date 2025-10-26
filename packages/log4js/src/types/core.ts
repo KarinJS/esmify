@@ -46,7 +46,7 @@ export interface CategoryConfig {
 }
 
 export interface Configuration {
-  appenders?: { [name: string]: AppenderConfig }
+  appenders: { [name: string]: AppenderConfig }
   categories: {
     [name: string]: CategoryConfig
   }

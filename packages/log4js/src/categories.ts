@@ -197,7 +197,7 @@ const configForCategory = (category: string): CategoryConfig => {
     }
   } else {
     if (!categories.has('default')) {
-      setup({ categories: { default: { appenders: ['out'], level: 'OFF' } } })
+      setup({ categories: { default: { appenders: ['out'], level: 'OFF' } }, appenders: {} })
     }
     debug('configForCategory: cloning default category')
     sourceCategoryConfig = { ...categories.get('default')! }

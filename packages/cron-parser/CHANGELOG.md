@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/KarinJS/esmify/compare/cron-parser-v0.1.0...cron-parser-v0.1.1) (2025-10-27)
+
+
+### 🐛 Bug Fixes
+
+* build ([feac681](https://github.com/KarinJS/esmify/commit/feac681531b07e455451da468ee944e034ab9fe6))
+
 ## [0.1.0](https://github.com/KarinJS/esmify/compare/cron-parser-v0.0.1...cron-parser-v0.1.0) (2025-10-27)
 
 

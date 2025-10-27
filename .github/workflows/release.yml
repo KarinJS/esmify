@@ -113,17 +113,17 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/node-pty
         run: pnpm i -F @karinjs/node-pty && pnpm run build && pnpm run pub
-      - name: 编译 form-data 包
-        run: pnpm i -F @karinjs/form-data && pnpm run build
-        working-directory: packages/form-data
-        if: ${{ needs.release-please.outputs.form-data_rerelease == 'true' ||
-          needs.release-please.outputs.axios_rerelease == 'true' }}
-      - name: 发布 form-data 包
-        if: ${{ needs.release-please.outputs.form-data_rerelease == 'true' }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        working-directory: packages/form-data
-        run: pnpm run pub
+      # - name: 编译 form-data 包
+      #   run: pnpm i -F @karinjs/form-data && pnpm run build
+      #   working-directory: packages/form-data
+      #   if: ${{ needs.release-please.outputs.form-data_rerelease == 'true' ||
+      #     needs.release-please.outputs.axios_rerelease == 'true' }}
+      # - name: 发布 form-data 包
+      #   if: ${{ needs.release-please.outputs.form-data_rerelease == 'true' }}
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      #   working-directory: packages/form-data
+      # run: pnpm run pub
       - name: 发布 axios 包
         if: ${{ needs.release-please.outputs.axios_rerelease == 'true' }}
         env:

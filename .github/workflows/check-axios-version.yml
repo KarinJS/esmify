@@ -34,14 +34,13 @@ jobs:
           registry-url: "https://registry.npmjs.org"
 
       - name: 安装依赖
-        run: pnpm i -F esmify
+        run: pnpm i -F esmify && pnpm i -F @karinjs/axios
 
       - name: 执行版本检查
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/axios
         run: pnpm run check:version
-        continue-on-error: true
 
       - name: 检查文件变更
         id: git-check

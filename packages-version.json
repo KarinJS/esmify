@@ -30,7 +30,7 @@
     "1.1.0": "art-template@4.13.2"
   },
   "@karinjs/node-schedule": {
-    "1.0.1": "node-schedule@2.1.1"
+    "1.1.1": "node-schedule@2.1.1"
   },
   "@karinjs/ws": {
     "1.1.0": "ws@8.16.0"

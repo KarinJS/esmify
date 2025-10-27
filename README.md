@@ -58,6 +58,7 @@ ESMify 是一个将 CommonJS 包转换成 ESM（ECMAScript Modules）模块的�
 | [axios]         | ~2.7MB   | [@karinjs/axios]         | ~100KB     | ~96.3%   | ✅     |
 | [node-pty]      | ~8.4MB   | [@karinjs/node-pty]      | ~33KB      | ~96.3%   | ✅     |
 | [qs] **🔥**      | ~307KB   | [@karinjs/qs]            | ~27KB      | ~91.2%   | ✅     |
+| [long-timeout] **🔥** | ~8.1KB   | [@karinjs/long-timeout]  | ~2KB       | ~75.3%   | ✅     |
 
 > **🔥 标记说明**：带有 🔥 标记的包表示进行了完全的 TypeScript + ESM + Node.js 18+ 重构，而非简单的打包器转译。
 
@@ -202,9 +203,9 @@ app.listen(3000, () => {
 <summary>log4js</summary>
 
 > 内置类型
-> 
+>
 > **🔥 特别声明：此包做了完全的 TypeScript + ESM + Node.js 18+ 迁移，而不是利用打包器简单进行了转译。**
-> 
+>
 > - ✅ 完整的 TypeScript 重写，实现 100% 类型安全
 > - ✅ 原生 ESM 模块系统支持
 > - ✅ Node.js 18+ 现代化 API 适配
@@ -257,7 +258,7 @@ app.listen(3000, () => {
 <summary>moment</summary>
 
 > 内置类型
-> 仓库地址: https://github.com/KarinJS/moment
+> 仓库地址: <https://github.com/KarinJS/moment>
 
 | 版本  | 原始版本 | 备注 |
 | ----- | -------- | ---- |
@@ -269,7 +270,7 @@ app.listen(3000, () => {
 <summary>art-template</summary>
 
 > 内置类型
-> 仓库地址: https://github.com/KarinJS/art-template
+> 仓库地址: <https://github.com/KarinJS/art-template>
 
 | 版本  | 原始版本 | 备注 |
 | ----- | -------- | ---- |
@@ -281,7 +282,7 @@ app.listen(3000, () => {
 <summary>node-schedule</summary>
 
 > 内置类型
-> 仓库地址: https://github.com/KarinJS/node-schedule
+> 仓库地址: <https://github.com/KarinJS/node-schedule>
 
 | 版本  | 原始版本 | 备注 |
 | ----- | -------- | ---- |
@@ -350,9 +351,9 @@ app.listen(3000, () => {
 <summary>qs</summary>
 
 > 内置类型
-> 
+>
 > **🔥 特别声明：此包做了完全的 TypeScript + ESM + Node.js 18+ 迁移，而不是利用打包器简单进行了转译。**
-> 
+>
 > - ✅ 完整的 TypeScript 重写，实现 100% 类型安全
 > - ✅ 原生 ESM 模块系统支持  
 > - ✅ Node.js 18+ 现代化 API 适配
@@ -364,6 +365,27 @@ app.listen(3000, () => {
 | 版本  | 原始版本 | 备注                                      |
 | ----- | -------- | ----------------------------------------- |
 | 0.0.1 | 6.14.0   | 完全 TS+ESM+Node18 重构，非简单转译版本 |
+
+</details>
+
+<details>
+<summary>long-timeout</summary>
+
+> 内置类型
+>
+> **🔥 特别声明：此包做了完全的 TypeScript + ESM + Node.js 18+ 迁移，而不是利用打包器简单进行了转译。**
+>
+> - ✅ 完整的 TypeScript 重写，实现 100% 类型安全
+> - ✅ 原生 ESM 模块系统支持
+> - ✅ Node.js 18+ 现代化 API 适配
+> - ✅ 突破 Node.js 原生定时器 24.8 天限制，支持任意长度的定时器
+> - ✅ 完全兼容原有 API，无需修改代码
+> - ✅ 零依赖，体积减少 75.3%
+> - ✅ 功能测试验证，与原包 100% 兼容
+
+| 版本  | 原始版本 | 备注                                      |
+| ----- | -------- | ----------------------------------------- |
+| 0.0.1 | 0.1.1    | 完全 TS+ESM+Node18 重构，非简单转译版本 |
 
 </details>
 
@@ -423,6 +445,7 @@ pnpm run init <package-name>
 ```
 
 **参数说明：**
+
 - `<package-name>`：要转换的 npm 包名称（不带 @karinjs/ 前缀）
 
 #### 📝 完整示例：新增 qs 包
@@ -452,6 +475,7 @@ packages/qs/
 ```
 
 **自动配置内容：**
+
 - ✅ **package.json**：预配置 @karinjs/qs 包名、版本、脚本等
 - ✅ **TypeScript 配置**：包含现代化的 TS 配置
 - ✅ **构建工具**：tsdown (推荐) 或 vite/tsup 配置
@@ -519,6 +543,7 @@ test('basic functionality', (t) => {
 ##### 6. 更新文档
 
 在根目录 `README.md` 中添加新包的信息：
+
 - 更新包体积对比表格
 - 添加包详情说明
 - 添加使用示例
@@ -526,12 +551,14 @@ test('basic functionality', (t) => {
 #### 🛠️ init 脚本的高级功能
 
 **支持的配置选项：**
+
 - 自动检测原包的 TypeScript 支持
 - 根据包类型选择合适的构建工具
 - 预配置常见的包转换模板
 - 自动处理复杂依赖关系
 
 **生成的文件模板：**
+
 - **简单转换**：直接重新导出原包 API
 - **类型增强**：添加完整的 TypeScript 类型
 - **功能增强**：优化 API 设计和性能
@@ -591,11 +618,10 @@ test('basic functionality', (t) => {
 - [问题反馈](https://github.com/KarinJS/esmify/issues)
 - [贡献指南](https://github.com/KarinJS/esmify/blob/main/CONTRIBUTING.md)
 
-## 免责声明
+[qs]: https://www.npmjs.com/package/qs
+[long-timeout]: https://www.npmjs.com/package/long-timeout
 
-1. 本仓库提供的所有模块均为自动化转换生成，可能存在与原模块不完全兼容的情况。
-2. 用户在使用这些模块时，应当自行进行充分测试，确保满足生产环境需求。
-3. 本仓库及开发团队不对使用这些模块产生的任何问题负责。
+[@karinjs/lodash]: https://www.npmjs.com/package/@karinjs/lodash
 4. 建议在非关键业务场景下使用，或在充分测试后用于生产环境。
 5. 如遇到问题，建议回退使用原模块，或自行修复问题。
 
@@ -607,16 +633,11 @@ test('basic functionality', (t) => {
 [redis]: https://www.npmjs.com/package/redis
 [sqlite3]: https://www.npmjs.com/package/sqlite3
 [moment]: https://www.npmjs.com/package/moment
-[art-template]: https://www.npmjs.com/package/art-template
-[node-schedule]: https://www.npmjs.com/package/node-schedule
-[ws]: https://www.npmjs.com/package/ws
+[@karinjs/qs]: https://www.npmjs.com/package/@karinjs/qs
+[@karinjs/long-timeout]: https://www.npmjs.com/package/@karinjs/long-timeout
 [axios]: https://www.npmjs.com/package/axios
 [node-pty]: https://www.npmjs.com/package/node-pty
-[form-data]: https://www.npmjs.com/package/form-data
-[yaml]: https://www.npmjs.com/package/yaml
-[qs]: https://www.npmjs.com/package/qs
 
-[@karinjs/lodash]: https://www.npmjs.com/package/@karinjs/lodash
 [@karinjs/express]: https://www.npmjs.com/package/@karinjs/express
 [@karinjs/dotenv]: https://www.npmjs.com/package/@karinjs/dotenv
 [@karinjs/jsonwebtoken]: https://www.npmjs.com/package/@karinjs/jsonwebtoken
@@ -629,6 +650,3 @@ test('basic functionality', (t) => {
 [@karinjs/ws]: https://www.npmjs.com/package/@karinjs/ws
 [@karinjs/axios]: https://www.npmjs.com/package/@karinjs/axios
 [@karinjs/node-pty]: https://www.npmjs.com/package/@karinjs/node-pty
-[@karinjs/form-data]: https://www.npmjs.com/package/@karinjs/form-data
-[@karinjs/yaml]: https://www.npmjs.com/package/@karinjs/yaml
-[@karinjs/qs]: https://www.npmjs.com/package/@karinjs/qs

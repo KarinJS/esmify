@@ -25,6 +25,7 @@ jobs:
       axios_rerelease: ${{ steps.release.outputs['packages/axios--release_created'] }}
       form-data_rerelease: ${{ steps.release.outputs['packages/form-data--release_created'] }}
       qs_rerelease: ${{ steps.release.outputs['packages/qs--release_created'] }}
+      long-timeout_rerelease: ${{ steps.release.outputs['packages/long-timeout--release_created'] }}
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
@@ -132,4 +133,10 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/qs
+        run: pnpm run build && pnpm run pub
+      - name: 发布 long-timeout 包
+        if: ${{ needs.release-please.outputs.long-timeout_rerelease == 'true' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        working-directory: packages/long-timeout
         run: pnpm run build && pnpm run pub

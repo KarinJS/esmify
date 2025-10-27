@@ -150,6 +150,13 @@
       "component": "qs",
       "tag-separator": "-",
       "scope": "qs"
+    },
+    "packages/long-timeout": {
+      "release-type": "node",
+      "package-name": "@karinjs/long-timeout",
+      "component": "long-timeout",
+      "tag-separator": "-",
+      "scope": "long-timeout"
     }
   },
   "commit-search-depth": 50

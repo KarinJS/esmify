@@ -179,7 +179,7 @@ async function publishVersion (axiosVersion: string): Promise<void> {
 
   // 2. 安装依赖
   console.log('\n步骤 1/4: 安装依赖')
-  execCommand('npx pnpm i -F @karinjs/axios', ROOT_DIR)
+  execCommand('npx pnpm i -F @karinjs/axios --no-frozen-lockfile', ROOT_DIR)
 
   // 3. 构建
   console.log('\n步骤 2/4: 构建项目')

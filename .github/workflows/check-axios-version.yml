@@ -34,7 +34,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
 
       - name: 安装依赖
-        run: pnpm i -F esmify && pnpm i -F @karinjs/axios
+        run: pnpm install -F esmify && cd packages/axios && pnpm i -F @karinjs/axios
 
       - name: 执行版本检查
         env:

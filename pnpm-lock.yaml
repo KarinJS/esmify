@@ -37,9 +37,6 @@ importers:
 
   packages/axios:
     devDependencies:
-      '@types/node':
-        specifier: ^18.19.86
-        version: 18.19.86
       axios:
         specifier: 1.9.0
         version: 1.9.0

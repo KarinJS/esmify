@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.12.0](https://github.com/KarinJS/esmify/compare/esmify-v1.11.0...esmify-v1.12.0) (2025-10-27)
+
+
+### ✨ Features
+
+* 添加 @karinjs/cron-parser 包 ([7781718](https://github.com/KarinJS/esmify/commit/7781718ccc238c6f1b6ccded3a9788357b2301ea))
+* 添加 @karinjs/node-schedule包 ([323e9a7](https://github.com/KarinJS/esmify/commit/323e9a79cb488b342b17af5d192e6750c06b9eb4))
+
+
+### 📝 Documentation
+
+* 补充 README 自动化与透明度声明、详细免责声明与许可证说明（中英双语）；修复 packages-version.json 末尾换行 ([380be89](https://github.com/KarinJS/esmify/commit/380be897581f7895b6e83152f1341a739619999a))
+
+
+### 🎫 Chores
+
+* 从 tsconfig.json 移除 include/exclude，简化编译文件匹配 ([a78f18c](https://github.com/KarinJS/esmify/commit/a78f18c794b3240b6adc955f1d77f85bb1464d56))
+
 ## [1.11.0](https://github.com/KarinJS/esmify/compare/esmify-v1.10.2...esmify-v1.11.0) (2025-10-27)
 
 

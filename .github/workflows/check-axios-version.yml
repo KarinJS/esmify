@@ -34,7 +34,28 @@ jobs:
           registry-url: "https://registry.npmjs.org"
 
       - name: 安装依赖
-        run: pnpm install -F esmify && cd packages/axios && pnpm i -F @karinjs/axios
+        run: |
+          max_attempts=3
+          attempt=1
+
+          while [ $attempt -le $max_attempts ]; do
+            echo "尝试安装依赖 (第 $attempt 次)..."
+            
+            if pnpm install -F esmify -F @karinjs/axios; then
+              echo "✅ 依赖安装成功"
+              exit 0
+            else
+              echo "❌ 第 $attempt 次安装失败"
+              if [ $attempt -lt $max_attempts ]; then
+                echo "等待 5 秒后重试..."
+                sleep 5
+              fi
+              attempt=$((attempt + 1))
+            fi
+          done
+
+          echo "❌ 依赖安装失败，已尝试 $max_attempts 次"
+          exit 1
 
       - name: 执行版本检查
         env:

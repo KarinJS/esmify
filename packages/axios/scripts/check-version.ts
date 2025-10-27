@@ -241,7 +241,7 @@ async function main () {
   // 更新 release manifest
   const finalPackageJson = readJson<PackageJson>(PACKAGE_JSON_PATH)
   updateReleaseManifest(finalPackageJson.version)
-  execCommand('npx pnpm run sync', ROOT_DIR)
+  execCommand('npx pnpm run sync', PACKAGE_DIR)
 }
 
 main()

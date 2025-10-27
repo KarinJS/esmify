@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/long-timeout",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Modern long-timeout, ts + esm + node v18+.",
   "keywords": [
     "karinjs",

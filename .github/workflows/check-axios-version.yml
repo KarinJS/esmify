@@ -45,8 +45,13 @@ jobs:
       - name: 检查文件变更
         id: git-check
         run: |
-          git diff --exit-code || echo "has_changes=true" >> $GITHUB_OUTPUT
-          git diff --cached --exit-code || echo "has_changes=true" >> $GITHUB_OUTPUT
+          if git diff --exit-code packages-version.json > /dev/null 2>&1; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ packages-version.json 没有变更，跳过PR创建"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "✅ 检测到 packages-version.json 有变更"
+          fi
 
       - name: 提交变更并创建 PR
         if: steps.git-check.outputs.has_changes == 'true'

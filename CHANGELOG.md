@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.12.1](https://github.com/KarinJS/esmify/compare/esmify-v1.12.0...esmify-v1.12.1) (2025-10-27)
+
+
+### 🐛 Bug Fixes
+
+* **axios:** 切换为 tsdown 构建，移除旧源码/构建配置并添加同步与测试脚本 ([6b5c10b](https://github.com/KarinJS/esmify/commit/6b5c10b1304b9616de0eee3a2d806391a6ac6bac))
+* **axios:** 在发布脚本中加入测试步骤并修正测试脚本导入与退出码 ([1dd1e3f](https://github.com/KarinJS/esmify/commit/1dd1e3f750b1aa3f9aff71b81fa7e3d0a7d3dc49))
+* build ([feac681](https://github.com/KarinJS/esmify/commit/feac681531b07e455451da468ee944e034ab9fe6))
+
+
+### 📝 Documentation
+
+* version ([6194086](https://github.com/KarinJS/esmify/commit/61940867204cf4548588fcec4f2416c91c1927f1))
+
+
+### 🎡 Continuous Integration
+
+* **axios:** 添加定时检查 axios 版本的 GH Actions 工作流，新增 check-version 脚本并移除本地 sync 脚本 ([31ecf05](https://github.com/KarinJS/esmify/commit/31ecf050880d628516e61a65eafa06f2bfe09ac8))
+
 ## [1.12.0](https://github.com/KarinJS/esmify/compare/esmify-v1.11.0...esmify-v1.12.0) (2025-10-27)
 
 

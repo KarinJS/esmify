@@ -1,0 +1,68 @@
+{
+  "name": "@karinjs/cron-parser",
+  "version": "0.0.1",
+  "description": "Modern cron-parser, ts + esm + node v18+.",
+  "keywords": [
+    "karinjs",
+    "cron-parser"
+  ],
+  "homepage": "https://github.com/KarinJS/esmify",
+  "bugs": {
+    "url": "https://github.com/KarinJS/esmify/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KarinJS/esmify.git"
+  },
+  "license": "MIT",
+  "author": "shijin",
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc && tsdown",
+    "pub": "npm publish --access public",
+    "sync": "curl -X PUT \\\"https://registry-direct.npmmirror.com/-/package/@karinjs/cron-parser/syncs\\\"",
+    "bench": "cross-env node --loader tsx/esm benchmarks/index.ts",
+    "bench:pattern": "cross-env node --loader tsx/esm benchmarks/pattern.ts",
+    "test:unit": "cross-env TZ=UTC jest",
+    "test:coverage": "cross-env TZ=UTC jest --coverage",
+    "generate-badges": "jest-coverage-badges",
+    "test:types": "npm run build && tsd",
+    "test": "cross-env TZ=UTC npm run lint && npm run test:types && npm run test:coverage && npm run generate-badges"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "devDependencies": {
+    "@tsd/typescript": "^5.8.2",
+    "@types/jest": "^29.5.14",
+    "@types/luxon": "^3.6.2",
+    "@typescript-eslint/eslint-plugin": "^8.29.0",
+    "@typescript-eslint/parser": "^8.29.0",
+    "chalk": "^5.4.1",
+    "cli-table3": "^0.6.5",
+    "cross-env": "^7.0.3",
+    "jest": "^29.7.0",
+    "jest-coverage-badges": "^1.0.0",
+    "luxon": "^3.7.2",
+    "sinon": "^20.0.0",
+    "ts-jest": "^29.3.1",
+    "tsd": "^0.31.2",
+    "typescript": "^5.8.2"
+  }
+}

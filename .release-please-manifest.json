@@ -13,5 +13,6 @@
   "packages/axios": "1.2.0",
   "packages/form-data": "1.1.0",
   "packages/qs": "0.1.1",
-  "packages/long-timeout": "0.1.0"
+  "packages/long-timeout": "0.1.0",
+  "packages/cron-parser": "0.0.1"
 }

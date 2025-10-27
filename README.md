@@ -59,6 +59,7 @@ ESMify 是一个将 CommonJS 包转换成 ESM（ECMAScript Modules）模块的�
 | [node-pty]      | ~8.4MB   | [@karinjs/node-pty]      | ~33KB      | ~96.3%   | ✅     |
 | [qs] **🔥**      | ~307KB   | [@karinjs/qs]            | ~27KB      | ~91.2%   | ✅     |
 | [long-timeout] **🔥** | ~8.1KB   | [@karinjs/long-timeout]  | ~2KB       | ~75.3%   | ✅     |
+| [cron-parser]   | ~203KB   | [@karinjs/cron-parser]   |       | ~77.8%   | ✅     |
 
 > **🔥 标记说明**：带有 🔥 标记的包表示进行了完全的 TypeScript + ESM + Node.js 18+ 重构，而非简单的打包器转译。
 
@@ -389,6 +390,26 @@ app.listen(3000, () => {
 
 </details>
 
+<details>
+<summary>cron-parser</summary>
+
+> 内置类型
+>
+> 原包源码本身就是 TypeScript，但打包后输出的是 CommonJS 格式。此版本移除了所有 CJS 代码，仅打包为纯粹的 ESM 模块。
+>
+> - ✅ 纯 ESM 模块，完全移除 CommonJS
+> - ✅ 原生 TypeScript 源码，完整类型支持
+> - ✅ Node.js 18+ 现代化构建
+> - ✅ 完全兼容原有 API，无需修改代码
+> - ✅ 体积减少 77.8%，更小的打包体积
+> - ✅ 支持 cron 表达式解析和计算
+
+| 版本  | 原始版本 | 备注                           |
+| ----- | -------- | ------------------------------ |
+| 0.0.1 | 4.9.0    | 纯 ESM 版本，移除所有 CJS 代码 |
+
+</details>
+
 ## ❓ 常见问题 (FAQ)
 
 ### Q: 转换后的包是否与原包 100% 兼容？
@@ -620,6 +641,7 @@ test('basic functionality', (t) => {
 
 [qs]: https://www.npmjs.com/package/qs
 [long-timeout]: https://www.npmjs.com/package/long-timeout
+[cron-parser]: https://www.npmjs.com/package/cron-parser
 
 [@karinjs/lodash]: https://www.npmjs.com/package/@karinjs/lodash
 4. 建议在非关键业务场景下使用，或在充分测试后用于生产环境。
@@ -635,6 +657,7 @@ test('basic functionality', (t) => {
 [moment]: https://www.npmjs.com/package/moment
 [@karinjs/qs]: https://www.npmjs.com/package/@karinjs/qs
 [@karinjs/long-timeout]: https://www.npmjs.com/package/@karinjs/long-timeout
+[@karinjs/cron-parser]: https://www.npmjs.com/package/@karinjs/cron-parser
 [axios]: https://www.npmjs.com/package/axios
 [node-pty]: https://www.npmjs.com/package/node-pty
 

@@ -26,6 +26,7 @@ jobs:
       form-data_rerelease: ${{ steps.release.outputs['packages/form-data--release_created'] }}
       qs_rerelease: ${{ steps.release.outputs['packages/qs--release_created'] }}
       long-timeout_rerelease: ${{ steps.release.outputs['packages/long-timeout--release_created'] }}
+      cron-parser_rerelease: ${{ steps.release.outputs['packages/cron-parser--release_created'] }}
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
@@ -139,4 +140,10 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/long-timeout
+        run: pnpm run build && pnpm run pub
+      - name: 发布 cron-parser 包
+        if: ${{ needs.release-please.outputs.cron-parser_rerelease == 'true' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        working-directory: packages/cron-parser
         run: pnpm run build && pnpm run pub

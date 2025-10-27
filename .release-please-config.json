@@ -157,6 +157,13 @@
       "component": "long-timeout",
       "tag-separator": "-",
       "scope": "long-timeout"
+    },
+    "packages/cron-parser": {
+      "release-type": "node",
+      "package-name": "@karinjs/cron-parser",
+      "component": "cron-parser",
+      "tag-separator": "-",
+      "scope": "cron-parser"
     }
   },
   "commit-search-depth": 50

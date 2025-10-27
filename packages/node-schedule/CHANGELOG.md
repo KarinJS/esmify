@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/KarinJS/esmify/compare/node-schedule-v1.1.1...node-schedule-v1.1.2) (2025-10-27)
+
+
+### 🐛 Bug Fixes
+
+* lock ([463d69b](https://github.com/KarinJS/esmify/commit/463d69b4e823f9f79dc8bb36b6897c8b61d085c2))
+
 ## [1.1.1](https://github.com/KarinJS/esmify/compare/node-schedule-v1.1.0...node-schedule-v1.1.1) (2025-10-27)
 
 

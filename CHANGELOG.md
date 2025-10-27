@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.2](https://github.com/KarinJS/esmify/compare/esmify-v1.12.1...esmify-v1.12.2) (2025-10-27)
+
+
+### 🐛 Bug Fixes
+
+* lock ([84e1973](https://github.com/KarinJS/esmify/commit/84e1973fcd4b1ab7ec4387a2c6c16f053b125a6e))
+
 ## [1.12.1](https://github.com/KarinJS/esmify/compare/esmify-v1.12.0...esmify-v1.12.1) (2025-10-27)
 
 

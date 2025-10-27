@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/KarinJS/esmify/compare/axios-v1.2.1...axios-v1.2.2) (2025-10-27)
+
+
+### 🐛 Bug Fixes
+
+* lock ([84e1973](https://github.com/KarinJS/esmify/commit/84e1973fcd4b1ab7ec4387a2c6c16f053b125a6e))
+
 ## [1.2.1](https://github.com/KarinJS/esmify/compare/axios-v1.2.0...axios-v1.2.1) (2025-10-27)
 
 

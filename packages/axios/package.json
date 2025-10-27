@@ -24,9 +24,10 @@
     "index.js"
   ],
   "scripts": {
-    "build": "vite build",
+    "build": "tsdown",
     "pub": "pnpm publish --access public",
-    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/axios/syncs\""
+    "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/axios/syncs\"",
+    "check:version": "tsx scripts/check-version.ts"
   },
   "engines": {
     "node": ">=18"
@@ -35,12 +36,7 @@
     "access": "public",
     "registry": "https://registry.npmjs.org"
   },
-  "dependencies": {
-    "form-data": "workspace:../form-data"
-  },
   "devDependencies": {
-    "axios": "1.9.0",
-    "follow-redirects": "^1.15.6",
-    "proxy-from-env": "^1.1.0"
+    "axios": "1.9.0"
   }
 }

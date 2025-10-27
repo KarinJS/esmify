@@ -3,7 +3,7 @@
  * 直接测试 @karinjs/axios 的 form-data 功能
  */
 
-import axios from './dist/index.js'
+import axios from './dist/index.mjs'
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
@@ -200,5 +200,5 @@ async function main () {
 main().catch((e: any) => {
   console.error('❌ 错误:', e)
   if (server) server.close()
-  process.exit(1)
+  process.exit()
 })

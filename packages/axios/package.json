@@ -27,7 +27,8 @@
     "build": "tsdown",
     "pub": "pnpm publish --access public",
     "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/axios/syncs\"",
-    "check:version": "tsx scripts/check-version.ts"
+    "check:version": "tsx scripts/check-version.ts",
+    "test": "tsx test-form-data.ts"
   },
   "engines": {
     "node": ">=18"

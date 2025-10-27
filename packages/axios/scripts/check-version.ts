@@ -159,18 +159,22 @@ async function publishVersion (axiosVersion: string): Promise<void> {
   updatePackageJson(axiosVersion, packageVersion)
 
   // 2. 安装依赖
-  console.log('\n步骤 1/3: 安装依赖')
+  console.log('\n步骤 1/4: 安装依赖')
   execCommand('npx pnpm i -F @karinjs/axios', ROOT_DIR)
 
   // 3. 构建
-  console.log('\n步骤 2/3: 构建项目')
+  console.log('\n步骤 2/4: 构建项目')
   execCommand('npx pnpm run build', PACKAGE_DIR)
 
-  // 4. 发布
-  console.log('\n步骤 3/3: 发布到 npm')
+  // 4. 测试
+  console.log('\n步骤 3/4: 运行测试')
+  execCommand('npx pnpm run test', PACKAGE_DIR)
+
+  // 5. 发布
+  console.log('\n步骤 4/4: 发布到 npm')
   execCommand('npx pnpm run pub', PACKAGE_DIR)
 
-  // 5. 更新版本记录
+  // 6. 更新版本记录
   updatePackagesVersion(axiosVersion, packageVersion)
 
   console.log(`\n✅ 成功发布 @karinjs/axios@${packageVersion} (axios@${axiosVersion})`)

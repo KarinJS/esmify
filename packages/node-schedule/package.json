@@ -1,0 +1,59 @@
+{
+  "name": "@karinjs/node-schedule",
+  "version": "1.0.1",
+  "description": "Modern node-schedule, ts + esm + node v18+.",
+  "keywords": [
+    "karinjs",
+    "node-schedule"
+  ],
+  "homepage": "https://github.com/KarinJS/esmify",
+  "bugs": {
+    "url": "https://github.com/KarinJS/esmify/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KarinJS/esmify.git"
+  },
+  "license": "MIT",
+  "author": "shijin",
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc && tsdown",
+    "pub": "pnpm publish --access public",
+    "sync": "curl -X PUT \\\"https://registry-direct.npmmirror.com/-/package/@karinjs/node-schedule/syncs\\\"",
+    "test": "tsx node_modules/tape/bin/tape test/**/*.ts",
+    "coveralls": "nyc report --reporter=lcov",
+    "test:coverage": "nyc tsx node_modules/tape/bin/tape test/**/*.ts"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/sinon": "^17.0.4",
+    "@types/tape": "^5.8.1",
+    "airtap": "^4.0.4",
+    "cron-parser": "workspace:../cron-parser",
+    "eslint": "^8.3.0",
+    "mocha": "^11.7.4",
+    "nyc": "^15.1.0",
+    "sinon": "^9.2.4",
+    "tape": "^5.9.0"
+  }
+}

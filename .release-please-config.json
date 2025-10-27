@@ -164,6 +164,13 @@
       "component": "cron-parser",
       "tag-separator": "-",
       "scope": "cron-parser"
+    },
+    "packages/node-schedule": {
+      "release-type": "node",
+      "package-name": "@karinjs/node-schedule",
+      "component": "node-schedule",
+      "tag-separator": "-",
+      "scope": "node-schedule"
     }
   },
   "commit-search-depth": 50

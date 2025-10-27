@@ -16,10 +16,10 @@
     "@types/node": "^18.19.86",
     "neostandard": "^0.12.1",
     "terser": "^5.39.0",
-    "tsdown": "^0.15.5",
+    "tsdown": "^0.15.10",
     "tsup": "^8.4.0",
     "tsx": "^4.19.3",
-    "typescript": "^5.9.2",
-    "yaml": "^2.7.1"
+    "typescript": "^5.9.3",
+    "yaml": "^2.8.1"
   }
 }

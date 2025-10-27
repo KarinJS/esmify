@@ -14,5 +14,6 @@
   "packages/form-data": "1.1.0",
   "packages/qs": "0.1.1",
   "packages/long-timeout": "0.1.0",
-  "packages/cron-parser": "0.0.1"
+  "packages/cron-parser": "0.0.1",
+  "packages/node-schedule": "1.0.1"
 }

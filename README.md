@@ -53,7 +53,7 @@ ESMify 是一个将 CommonJS 包转换成 ESM（ECMAScript Modules）模块的�
 | [sqlite3-cjs]   | ~6.9MB   | [@karinjs/sqlite3-cjs]   | ~2.1MB     | ~69.6%   | ✅     |
 | [moment]        | ~4.4MB   | [@karinjs/moment]        | ~526KB     | ~88%     | ✅     |
 | [art-template]  | ~8.3MB   | [@karinjs/art-template]  | ~400KB     | ~95.2%   | ✅     |
-| [node-schedule] | ~4.6MB   | [@karinjs/node-schedule] | ~323KB     | ~93%     | ✅     |
+| [node-schedule] **🔥** | ~4.6MB   | [@karinjs/node-schedule] | ~323KB     | ~93%     | ✅     |
 | [ws]            | ~147KB   | [@karinjs/ws]            | ~154KB     | ~0%      | ✅     |
 | [axios]         | ~2.7MB   | [@karinjs/axios]         | ~100KB     | ~96.3%   | ✅     |
 | [node-pty]      | ~8.4MB   | [@karinjs/node-pty]      | ~33KB      | ~96.3%   | ✅     |
@@ -151,264 +151,22 @@ app.listen(3000, () => {
 })
 ```
 
-## package
+## 📦 包版本映射
 
-> ![IMPORTANT]
-> 版本号映射和一些备注。
+> [!NOTE]
+> 详细的版本号映射和备注信息请查看 [packages-version.json](./packages-version.json) 文件。
 
-<details>
-<summary>lodash-es</summary>
+### 特别说明
 
-> 此包的类型转换存在问题，请单独安装`@types/lodash`
+**🔥 完全重构的包（TypeScript + ESM + Node.js 18+）：**
 
-| 版本  | 原始版本 | 备注 |
-| ----- | -------- | ---- |
-| 1.1.1 | 4.17.21  |      |
+- **@karinjs/log4js** - 完整的 TypeScript 重写，工业级类型安全，体积减少 56.6%
+- **@karinjs/qs** - 零 `any` 类型，包含完整单元测试，体积减少 91.2%
+- **@karinjs/long-timeout** - 零依赖，突破 24.8 天定时器限制，体积减少 75.3%
+- **@karinjs/node-schedule** - 零依赖，完全迁移到当前仓库，纯 TypeScript 重写，体积减少 93%
+- **@karinjs/cron-parser** - 纯 ESM 模块，移除所有 CJS 代码，体积减少 77.8%
 
-</details>
-
-<details>
-<summary>express</summary>
-
-> 此包的类型转换存在问题，请单独安装`@types/express`
-
-| 版本  | 原始版本 | 备注 |
-| ----- | -------- | ---- |
-| 1.0.3 | 4.18.2   |      |
-
-</details>
-
-<details>
-<summary>dotenv</summary>
-
-> 内置类型
-
-| 版本  | 原始版本 | 备注 |
-| ----- | -------- | ---- |
-| 1.1.2 | 16.3.1   |      |
-
-</details>
-
-<details>
-<summary>jsonwebtoken</summary>
-
-> 内置类型
-
-| 版本  | 原始版本 | 备注 |
-| ----- | -------- | ---- |
-| 1.1.1 | 9.0.2    |      |
-
-</details>
-
-<details>
-<summary>log4js</summary>
-
-> 内置类型
->
-> **🔥 特别声明：此包做了完全的 TypeScript + ESM + Node.js 18+ 迁移，而不是利用打包器简单进行了转译。**
->
-> - ✅ 完整的 TypeScript 重写，实现 100% 类型安全
-> - ✅ 原生 ESM 模块系统支持
-> - ✅ Node.js 18+ 现代化 API 适配
-> - ✅ 零 `any` 类型，工业级类型安全标准
-> - ✅ 完全兼容原有 API，无需修改代码
-> - ✅ 性能优化，体积减少 56.6%
-
-| 版本  | 原始版本 | 备注                                    |
-| ----- | -------- | --------------------------------------- |
-| 1.1.4 | 6.9.1    | 完全 TS+ESM+Node18 重构，非简单转译版本 |
-
-</details>
-
-<details>
-<summary>redis</summary>
-
-> 内置类型
-
-| 版本  | 原始版本 | 备注 |
-| ----- | -------- | ---- |
-| 1.1.3 | 4.6.11   |      |
-
-</details>
-
-<details>
-<summary>sqlite3</summary>
-
-> 内置类型
-> 默认使用阿里云镜像源进行下载二进制
-
-| 版本  | 原始版本 | 备注 |
-| ----- | -------- | ---- |
-| 0.1.3 | 5.1.7    |      |
-
-</details>
-
-<details>
-<summary>sqlite3-cjs</summary>
-
-> 内置类型
-> 默认使用阿里云镜像源进行下载二进制
-
-| 版本  | 原始版本 | 备注 |
-| ----- | -------- | ---- |
-| 0.1.0 | 5.1.7    |      |
-
-</details>
-
-<details>
-<summary>moment</summary>
-
-> 内置类型
-> 仓库地址: <https://github.com/KarinJS/moment>
-
-| 版本  | 原始版本 | 备注 |
-| ----- | -------- | ---- |
-| 1.1.0 | 2.30.1   |      |
-
-</details>
-
-<details>
-<summary>art-template</summary>
-
-> 内置类型
-> 仓库地址: <https://github.com/KarinJS/art-template>
-
-| 版本  | 原始版本 | 备注 |
-| ----- | -------- | ---- |
-| 1.1.0 | 4.13.2   |      |
-
-</details>
-
-<details>
-<summary>node-schedule</summary>
-
-> 内置类型
-> 仓库地址: <https://github.com/KarinJS/node-schedule>
-
-| 版本  | 原始版本 | 备注 |
-| ----- | -------- | ---- |
-| 1.1.0 | 2.1.1    |      |
-
-</details>
-
-<details>
-<summary>ws</summary>
-
-> 内置类型
-
-| 版本  | 原始版本 | 备注 |
-| ----- | -------- | ---- |
-| 1.1.0 | 8.16.0   |      |
-
-</details>
-
-<details>
-<summary>axios</summary>
-
-> 内置类型
-
-| 版本  | 原始版本 | 备注 |
-| ----- | -------- | ---- |
-| 1.1.8 | 1.8.4    |      |
-| 1.2.0 | 1.9.0    |      |
-
-</details>
-
-<details>
-<summary>node-pty</summary>
-
-> 提供多平台预编译二进制文件 默认使用阿里云镜像源进行下载
-> 根据 `@homebridge/node-pty-prebuilt-multiarch` 进行转换
-
-| 版本  | 原始版本 | 备注                       |
-| ----- | -------- | -------------------------- |
-| 1.0.4 | 0.12.0   | 提供多平台预编译二进制文件 |
-
-</details>
-
-<details>
-<summary>form-data</summary>
-
-> 内置类型
-
-| 版本  | 原始版本 | 备注 |
-| ----- | -------- | ---- |
-| 1.0.0 | 4.0.1    |      |
-
-</details>
-
-<details>
-<summary>yaml</summary>
-
-> 内置类型
-
-| 版本  | 原始版本 | 备注 |
-| ----- | -------- | ---- |
-| 1.0.0 | 2.7.1    |      |
-
-</details>
-
-<details>
-<summary>qs</summary>
-
-> 内置类型
->
-> **🔥 特别声明：此包做了完全的 TypeScript + ESM + Node.js 18+ 迁移，而不是利用打包器简单进行了转译。**
->
-> - ✅ 完整的 TypeScript 重写，实现 100% 类型安全
-> - ✅ 原生 ESM 模块系统支持  
-> - ✅ Node.js 18+ 现代化 API 适配
-> - ✅ 零 `any` 类型，工业级类型安全标准
-> - ✅ 完全兼容原有 API，无需修改代码
-> - ✅ 性能优化，体积减少 91.2%
-> - ✅ 包含完整的单元测试，使用 tsx + tape 现代化测试框架
-
-| 版本  | 原始版本 | 备注                                      |
-| ----- | -------- | ----------------------------------------- |
-| 0.0.1 | 6.14.0   | 完全 TS+ESM+Node18 重构，非简单转译版本 |
-
-</details>
-
-<details>
-<summary>long-timeout</summary>
-
-> 内置类型
->
-> **🔥 特别声明：此包做了完全的 TypeScript + ESM + Node.js 18+ 迁移，而不是利用打包器简单进行了转译。**
->
-> - ✅ 完整的 TypeScript 重写，实现 100% 类型安全
-> - ✅ 原生 ESM 模块系统支持
-> - ✅ Node.js 18+ 现代化 API 适配
-> - ✅ 突破 Node.js 原生定时器 24.8 天限制，支持任意长度的定时器
-> - ✅ 完全兼容原有 API，无需修改代码
-> - ✅ 零依赖，体积减少 75.3%
-> - ✅ 功能测试验证，与原包 100% 兼容
-
-| 版本  | 原始版本 | 备注                                      |
-| ----- | -------- | ----------------------------------------- |
-| 0.0.1 | 0.1.1    | 完全 TS+ESM+Node18 重构，非简单转译版本 |
-
-</details>
-
-<details>
-<summary>cron-parser</summary>
-
-> 内置类型
->
-> 原包源码本身就是 TypeScript，但打包后输出的是 CommonJS 格式。此版本移除了所有 CJS 代码，仅打包为纯粹的 ESM 模块。
->
-> - ✅ 纯 ESM 模块，完全移除 CommonJS
-> - ✅ 原生 TypeScript 源码，完整类型支持
-> - ✅ Node.js 18+ 现代化构建
-> - ✅ 完全兼容原有 API，无需修改代码
-> - ✅ 体积减少 77.8%，更小的打包体积
-> - ✅ 支持 cron 表达式解析和计算
-
-| 版本  | 原始版本 | 备注                           |
-| ----- | -------- | ------------------------------ |
-| 0.0.1 | 4.9.0    | 纯 ESM 版本，移除所有 CJS 代码 |
-
-</details>
+这些包不是简单的打包器转译，而是基于现代标准的完全重构。
 
 ## ❓ 常见问题 (FAQ)
 

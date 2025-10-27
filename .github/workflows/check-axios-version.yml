@@ -1,0 +1,109 @@
+name: 检查 Axios 版本
+
+on:
+  schedule:
+    # 每天凌晨0点执行 (UTC时间，北京时间+8小时)
+    - cron: "0 16 * * *" # UTC 16:00 = 北京时间 00:00
+  workflow_dispatch: # 允许手动触发
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: 安装 pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: 安装依赖
+        run: pnpm i -F esmify
+
+      - name: 执行版本检查
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        working-directory: packages/axios
+        run: pnpm run check:version
+        continue-on-error: true
+
+      - name: 检查文件变更
+        id: git-check
+        run: |
+          git diff --exit-code || echo "has_changes=true" >> $GITHUB_OUTPUT
+          git diff --cached --exit-code || echo "has_changes=true" >> $GITHUB_OUTPUT
+
+      - name: 提交变更并创建 PR
+        if: steps.git-check.outputs.has_changes == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 配置Git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # 创建新分支
+          BRANCH_NAME="chore/axios-version-update-$(date +%Y%m%d-%H%M%S)"
+          git checkout -b "$BRANCH_NAME"
+
+          # 提交变更
+          git add .
+          git commit -m "chore(axios): update axios version and sync packages
+
+          - Auto-updated by GitHub Actions
+          - Date: $(date +'%Y-%m-%d %H:%M:%S')"
+
+          # 推送分支
+          git push origin "$BRANCH_NAME"
+
+          # 创建PR
+          gh pr create \
+            --title "chore(axios): Auto update axios version - $(date +%Y-%m-%d)" \
+            --body "## 自动更新 axios 版本
+
+          本PR由GitHub Actions自动创建，用于同步最新的axios版本。
+
+          ### 变更内容
+          - 更新了 \`packages/axios/package.json\` 中的 axios 版本
+          - 更新了 \`packages-version.json\` 中的版本记录
+          - 构建并发布了新版本到 npm
+
+          ### 执行时间
+          $(date +'%Y-%m-%d %H:%M:%S')
+
+          ### 相关日志
+          请查看 [GitHub Actions 运行日志](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) 获取详细信息。
+
+          ---
+          🤖 此PR由自动化工作流创建" \
+            --base main \
+            --head "$BRANCH_NAME"
+
+      - name: 生成摘要
+        if: always()
+        run: |
+          echo "## 执行结果" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.git-check.outputs.has_changes }}" == "true" ]; then
+            echo "✅ 检测到新版本并已创建PR" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ 没有检测到新版本" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "执行时间: $(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY

@@ -83,10 +83,10 @@ async function getAxiosVersions (): Promise<string[]> {
   })
 }
 
-function getNewVersions (allVersions: string[], currentVersion: string): string[] {
+async function getNewVersions (allVersions: string[], currentVersion: string): Promise<string[]> {
   console.log(`当前 devDependencies 中的版本: ${currentVersion}`)
 
-  // 获取已发布的版本
+  // 第一步：从 packages-version.json 获取已发布的版本
   const packagesVersions = readJson<PackageVersions>(PACKAGES_VERSION_PATH)
   const publishedAxiosVersions = new Set<string>()
 
@@ -100,9 +100,28 @@ function getNewVersions (allVersions: string[], currentVersion: string): string[
     })
   }
 
-  console.log('已发布的 axios 版本:', Array.from(publishedAxiosVersions))
+  console.log('packages-version.json 中已记录的 axios 版本:', Array.from(publishedAxiosVersions))
 
-  // 过滤出未发布的版本，并且版本号要大于当前版本
+  // 第二步：从 npm 获取 @karinjs/axios 已发布的版本
+  try {
+    console.log('正在从 npm 获取 @karinjs/axios 的已发布版本...')
+    const response = await fetch('https://registry.npmjs.org/@karinjs/axios')
+    const data = await response.json() as NpmVersionInfo
+    const karinAxiosVersions = Object.keys(data.versions)
+
+    // 将 npm 上的版本也加入到已发布列表中
+    karinAxiosVersions.forEach(v => {
+      publishedAxiosVersions.add(v)
+    })
+
+    console.log(`npm 上 @karinjs/axios 已发布 ${karinAxiosVersions.length} 个版本`)
+  } catch (error) {
+    console.warn('⚠️  获取 npm 上的 @karinjs/axios 版本失败，将仅使用本地记录:', error instanceof Error ? error.message : String(error))
+  }
+
+  console.log('合并后的已发布版本总数:', publishedAxiosVersions.size)
+
+  // 第三步：过滤出未发布的版本，并且版本号要大于当前版本
   const newVersions = allVersions.filter(v => {
     // 排除已发布的版本
     if (publishedAxiosVersions.has(v)) {
@@ -172,7 +191,7 @@ async function publishVersion (axiosVersion: string): Promise<void> {
 
   // 5. 发布
   console.log('\n步骤 4/4: 发布到 npm')
-  execCommand('npx pnpm run pub', PACKAGE_DIR)
+  execCommand('npx pnpm publish --access public --no-git-checks', PACKAGE_DIR)
 
   // 6. 更新版本记录
   updatePackagesVersion(axiosVersion, packageVersion)
@@ -192,7 +211,7 @@ async function main () {
   console.log(`共找到 ${allVersions.length} 个稳定版本`)
 
   // 获取需要发布的新版本
-  const newVersions = getNewVersions(allVersions, currentVersion)
+  const newVersions = await getNewVersions(allVersions, currentVersion)
 
   if (newVersions.length === 0) {
     console.log('\n没有新版本需要发布')

@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/node-schedule",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Modern node-schedule, ts + esm + node v18+.",
   "keywords": [
     "karinjs",

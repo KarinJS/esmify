@@ -3,13 +3,33 @@
 > 将常用 CJS 包转换为 ESM 格式，大幅度缩减包体积
 
 > [!IMPORTANT]
-> **自动化与透明度声明**
+> **自动化与透明度声明 | Automation and Transparency Statement**
 >
 > 本仓库所有模块的转换和发布流程均通过 GitHub Actions 实现自动化，所有操作日志和构建过程均可在仓库的 Actions 页面查看，确保完全透明。
 >
-> **使用风险提示**
+> All module conversion and publishing processes in this repository are automated through GitHub Actions. All operation logs and build processes can be viewed on the repository's Actions page, ensuring complete transparency.
 >
-> 转换后的模块虽然经过基础测试，但仍建议用户在生产环境使用前进行充分测试。由于模块转换的复杂性，我们无法保证转换后的模块与原模块 100% 兼容。用户在使用过程中遇到任何问题，本仓库及开发团队不承担任何责任。
+> **免责声明 | Disclaimer**
+>
+> 1. **版权声明 | Copyright**: 本仓库不拥有任何原始包的版权。所有转换的包均基于其原始包的开源许可证进行转换和分发。原始包的版权、许可证及所有权利归其各自的原作者和维护者所有。本仓库仅提供格式转换服务，不改变原始包的许可证性质。
+>
+>    This repository does not own the copyright of any original packages. All converted packages are converted and distributed based on the open source licenses of their original packages. The copyright, license, and all rights of the original packages belong to their respective original authors and maintainers. This repository only provides format conversion services and does not change the license nature of the original packages.
+>
+> 2. **使用风险 | Usage Risk**: 转换后的模块虽然经过基础测试，但由于模块转换的复杂性，我们无法保证转换后的模块与原模块 100% 兼容。建议用户在生产环境使用前进行充分测试。
+>
+>    Although the converted modules have undergone basic testing, due to the complexity of module conversion, we cannot guarantee that the converted modules are 100% compatible with the original modules. Users are advised to conduct thorough testing before using them in production environments.
+>
+> 3. **责任限制 | Limitation of Liability**: 用户在使用本仓库提供的任何包时，即表示同意自行承担所有风险。本仓库、开发团队及贡献者不对使用这些包所产生的任何直接、间接、偶然、特殊或后果性损害承担任何责任，包括但不限于：数据丢失、业务中断、利润损失等。
+>
+>    By using any packages provided by this repository, users agree to assume all risks. This repository, the development team, and contributors shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from the use of these packages, including but not limited to: data loss, business interruption, loss of profits, etc.
+>
+> 4. **按现状提供 | As-Is Basis**: 所有包均按"现状"提供，不提供任何明示或暗示的保证，包括但不限于对适销性、特定用途适用性和非侵权性的保证。
+>
+>    All packages are provided on an "as-is" basis, without any express or implied warranties, including but not limited to warranties of merchantability, fitness for a particular purpose, and non-infringement.
+>
+> 5. **许可证遵循 | License Compliance**: 所有转换后的包必须遵循其源仓库的许可证条款。用户在使用时应当遵守原始包开发者和维护者制定的所有许可证条款和条件。本仓库不对用户违反原始许可证的行为承担任何责任。
+>
+>    All converted packages must comply with the license terms of their source repositories. Users should comply with all license terms and conditions established by the original package developers and maintainers when using them. This repository is not responsible for any violations of the original licenses by users.
 
 ## 简介
 
@@ -386,9 +406,23 @@ test('basic functionality', (t) => {
 
 感谢所有为这个项目做出贡献的开发者！
 
-## 📄 许可证
+## 📄 许可证 | License
 
 本项目采用 [MIT](LICENSE) 许可证。
+
+**重要提示 | Important Notice**:
+
+- 本仓库的代码（转换脚本、配置文件等）采用 MIT 许可证
+- **各个转换后的包严格遵循其原始包的许可证**，所有权利归原始包的开发者和维护者所有
+- 使用任何转换后的包前，请务必查看并遵守其源仓库的许可证条款
+- 本仓库不改变、不声明、也不拥有任何原始包的许可证权利
+
+**License Information**:
+
+- The code in this repository (conversion scripts, configuration files, etc.) is licensed under the MIT License
+- **Each converted package strictly follows the license of its original package**, and all rights belong to the developers and maintainers of the original packages
+- Before using any converted package, please be sure to review and comply with the license terms of its source repository
+- This repository does not change, claim, or own any license rights of the original packages
 
 ## 🔗 相关链接
 

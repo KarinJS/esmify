@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.12.4](https://github.com/KarinJS/esmify/compare/esmify-v1.12.3...esmify-v1.12.4) (2025-10-27)
+
+
+### 🎫 Chores
+
+* **axios:** 改进变更检测并更新 packages-version.json 中的 axios 版本 ([97d56b4](https://github.com/KarinJS/esmify/commit/97d56b45ea320d3e80c0bc7b60731170c5b48550))
+
+
+### 🎡 Continuous Integration
+
+* axios ([f0f5b00](https://github.com/KarinJS/esmify/commit/f0f5b000c5e6c89d026328fd990f3613a66768af))
+
 ## [1.12.3](https://github.com/KarinJS/esmify/compare/esmify-v1.12.2...esmify-v1.12.3) (2025-10-27)
 
 

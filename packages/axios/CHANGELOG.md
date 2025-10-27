@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.4](https://github.com/KarinJS/esmify/compare/axios-v1.2.3...axios-v1.2.4) (2025-10-27)
+
+
+### 🎡 Continuous Integration
+
+* axios ([f0f5b00](https://github.com/KarinJS/esmify/commit/f0f5b000c5e6c89d026328fd990f3613a66768af))
+
 ## [1.2.3](https://github.com/KarinJS/esmify/compare/axios-v1.2.2...axios-v1.2.3) (2025-10-27)
 
 

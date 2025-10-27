@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/axios",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Use vite+tsup to recompile axios into esm, which is smaller in size.",
   "keywords": [
     "karinjs",

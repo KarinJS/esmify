@@ -10,7 +10,6 @@
   "packages/ws": "1.2.0",
   "packages/node-pty": "1.1.0",
   "packages/sqlite3-cjs": "0.1.0",
-  "packages/axios": "1.13.1",
   "packages/form-data": "1.1.0",
   "packages/qs": "0.1.1",
   "packages/long-timeout": "0.1.0",

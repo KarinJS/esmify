@@ -2,3 +2,4 @@ node_modules
 dist
 build
 /packages/log4js/.nyc_output
+/packages/log4js/lib

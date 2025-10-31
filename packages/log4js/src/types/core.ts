@@ -6,7 +6,7 @@ import type Level from '../levels'
 // Appender related types
 export type AppenderFunction = (logEvent: LoggingEvent) => void
 
-export type LayoutFunction = (logEvent: LoggingEvent) => string
+export type LayoutFunction = (logEvent: LoggingEvent, timezoneOffset?: number) => string
 
 // Re-export and enhance official types for internal use
 export interface AppenderModule {

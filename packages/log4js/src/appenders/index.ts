@@ -6,7 +6,19 @@ import Level from '../levels'
 import * as layouts from '../layouts'
 import * as adapters from './adapters'
 import * as stdout from './stdout'
+import * as stderr from './stderr'
 import * as console from './console'
+import * as file from './file'
+import * as dateFile from './dateFile'
+import * as fileSync from './fileSync'
+import * as tcp from './tcp'
+import * as tcpServer from './tcp-server'
+import * as logLevelFilter from './logLevelFilter'
+import * as categoryFilter from './categoryFilter'
+import * as noLogFilter from './noLogFilter'
+import * as multiFile from './multiFile'
+import * as multiprocess from './multiprocess'
+import * as recording from './recording'
 import type { AppenderFunction, Configuration, AppenderConfig } from '../types/core'
 
 // Extended appender config that might have a type with configure method
@@ -25,9 +37,21 @@ interface AppenderModule {
 const debug = debugFactory('log4js:appenders')
 
 // pre-load the core appenders so that webpack can find them
-const coreAppenders = new Map<string, { configure: (...args: unknown[]) => AppenderFunction }>()
-coreAppenders.set('stdout', stdout as { configure: (...args: unknown[]) => AppenderFunction })
-coreAppenders.set('console', console as { configure: (...args: unknown[]) => AppenderFunction })
+const coreAppenders = new Map<string, { configure: (...args: unknown[]) => AppenderFunction | Promise<AppenderFunction> | { shutdown: (cb: () => void) => void } }>()
+coreAppenders.set('stdout', stdout as any)
+coreAppenders.set('stderr', stderr as any)
+coreAppenders.set('console', console as any)
+coreAppenders.set('file', file as any)
+coreAppenders.set('dateFile', dateFile as any)
+coreAppenders.set('fileSync', fileSync as any)
+coreAppenders.set('tcp', tcp as any)
+coreAppenders.set('tcp-server', tcpServer as any)
+coreAppenders.set('logLevelFilter', logLevelFilter as any)
+coreAppenders.set('categoryFilter', categoryFilter as any)
+coreAppenders.set('noLogFilter', noLogFilter as any)
+coreAppenders.set('multiFile', multiFile as any)
+coreAppenders.set('multiprocess', multiprocess as any)
+coreAppenders.set('recording', recording as any)
 
 const appenders = new Map<string, AppenderFunction>()
 
@@ -126,7 +150,7 @@ const createAppender = async (name: string, config: Configuration): Promise<Appe
     `${name}: appenderModule is ${JSON.stringify(appenderModule)}`
   )
   return clustering.onlyOnMaster(
-    () => {
+    async () => {
       debug(
         `calling appenderModule.configure for ${name} / ${appenderConfig.type}`
       )
@@ -134,14 +158,17 @@ const createAppender = async (name: string, config: Configuration): Promise<Appe
         ...appenderConfig,
         type: typeof appenderConfig.type === 'string' ? appenderConfig.type : appenderConfig.type.constructor.name || 'custom',
       }
-      return moduleWithAppender.configure(
+      const result = moduleWithAppender.configure(
         adapters.modifyConfig(configForAdapter as AppenderConfig),
         layouts,
         (appender: string) => getAppender(appender, config),
         Level
       )
+      // Handle both sync and async configure functions
+      return result instanceof Promise ? await result : result
     },
-    /* istanbul ignore next: fn never gets called by non-master yet needed to pass config validation */() => { }
+    /* istanbul ignore next: fn never gets called by non-master yet needed to pass config validation */
+    undefined
   )
 }
 
@@ -169,7 +196,7 @@ const setup = (config?: Configuration): void => {
       if (appenderConfig) {
         const appenderModule = coreAppenders.get(appenderConfig.type)
         if (appenderModule) {
-          const appender = clustering.onlyOnMaster(
+          const appenderResult = clustering.onlyOnMaster(
             () => {
               debug(`calling appenderModule.configure for ${name} / ${appenderConfig.type}`)
               return appenderModule.configure(
@@ -181,8 +208,9 @@ const setup = (config?: Configuration): void => {
             },
             () => { }
           )
-          if (appender) {
-            appenders.set(name, appender)
+          // Only set if not a Promise (sync appenders only in setup)
+          if (appenderResult && !(appenderResult instanceof Promise)) {
+            appenders.set(name, appenderResult as AppenderFunction)
             debug(`Created appender ${name}`)
           }
         }

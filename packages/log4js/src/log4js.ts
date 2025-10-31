@@ -29,7 +29,7 @@ import * as categories from './categories'
 import Logger from './logger'
 import * as clustering from './clustering'
 import connectLogger from './connect-logger'
-import recordingModule from './appenders/recording'
+import * as recordingModule from './appenders/recording'
 import type { AppenderFunction, Configuration } from './types/core'
 import type LoggingEvent from './LoggingEvent'
 
@@ -89,8 +89,22 @@ function isConfigured (): boolean {
   return enabled
 }
 
-function recording (): typeof recordingModule {
-  return recordingModule
+function recording (): {
+  configure: typeof recordingModule.configure
+  shutdown: typeof recordingModule.shutdown
+  playback: typeof recordingModule.playback
+  reset: typeof recordingModule.reset
+  replay: typeof recordingModule.replay
+  erase: typeof recordingModule.erase
+} {
+  return {
+    configure: recordingModule.configure,
+    shutdown: recordingModule.shutdown,
+    playback: recordingModule.playback,
+    reset: recordingModule.reset,
+    replay: recordingModule.replay,
+    erase: recordingModule.erase,
+  }
 }
 
 /**

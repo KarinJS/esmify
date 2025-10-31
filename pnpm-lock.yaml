@@ -4,7 +4,7 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-pnpmfileChecksum: sha256-EqEHmg59iM3uQszWgEzJYPGQHKTzT8QBzoRLCsfTqh8=
+pnpmfileChecksum: imvfufzeqsj3j4k2qoldxs6gvy
 
 importers:
 
@@ -138,10 +138,6 @@ importers:
         version: 4.17.21
 
   packages/log4js:
-    dependencies:
-      debug:
-        specifier: ^4.3.4
-        version: 4.4.3(supports-color@8.1.1)
     devDependencies:
       '@types/debug':
         specifier: ^4.1.12
@@ -149,6 +145,9 @@ importers:
       date-format:
         specifier: ^4.0.14
         version: 4.0.14
+      debug:
+        specifier: ^4.4.3
+        version: 4.4.3(supports-color@8.1.1)
       flatted:
         specifier: ^3.2.7
         version: 3.3.3

@@ -1,10 +1,19 @@
 import type LoggingEvent from '../LoggingEvent'
-import type { AppenderFunction } from '../types/core'
+import type { AppenderFunction, LayoutFunction, LayoutsParam } from '../types/core'
+import type { StandardOutputAppender } from '../types/appenders'
 
-function configure (): AppenderFunction {
-  return function (logEvent: LoggingEvent) {
-    process.stdout.write(logEvent.data.map(item => String(item)).join(' ') + '\n')
+function stdoutAppender (layout: LayoutFunction, timezoneOffset?: number): AppenderFunction {
+  return (loggingEvent: LoggingEvent) => {
+    process.stdout.write(`${layout(loggingEvent, timezoneOffset)}\n`)
   }
+}
+
+function configure (config: StandardOutputAppender, layouts: LayoutsParam): AppenderFunction {
+  let layout = layouts.colouredLayout
+  if (config.layout) {
+    layout = layouts.layout(config.layout.type, config.layout as Record<string, unknown>) || layout
+  }
+  return stdoutAppender(layout, config.timezoneOffset)
 }
 
 export { configure }

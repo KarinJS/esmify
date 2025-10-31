@@ -70,6 +70,8 @@ export interface FileAppender {
   fileNameSep?: string
   // (defaults to false) remove embedded ANSI color sequence
   removeColor?: boolean
+  // timezone offset in minutes
+  timezoneOffset?: number
 }
 
 /**
@@ -87,6 +89,14 @@ export interface SyncfileAppender {
   backups?: number
   // (defaults to BasicLayout)
   layout?: Layout
+  // (defaults to utf-8)
+  encoding?: string
+  // (defaults to 0o600)
+  mode?: number
+  // (defaults to a)
+  flags?: string
+  // timezone offset in minutes
+  timezoneOffset?: number
 }
 
 /**
@@ -118,6 +128,10 @@ export interface DateFileAppender {
   numBackups?: number
   // (defaults to false) include the pattern in the name of the current log file
   alwaysIncludePattern?: boolean
+  // maximum size for log file (for use with date rolling)
+  maxLogSize?: number | string
+  // timezone offset in minutes
+  timezoneOffset?: number
 }
 
 /**
@@ -150,6 +164,19 @@ export interface MultiFileAppender {
   extension?: string
   // (defaults to BasicLayout)
   layout?: Layout
+  // timeout in milliseconds to close unused file appenders
+  timeout?: number
+  // other file appender options
+  maxLogSize?: number | string
+  backups?: number
+  encoding?: string
+  mode?: number
+  flags?: string
+  compress?: boolean
+  keepFileExt?: boolean
+  fileNameSep?: string
+  removeColor?: boolean
+  timezoneOffset?: number
 }
 
 /**
@@ -176,6 +203,8 @@ export interface MultiprocessAppender {
  */
 export interface RecordingAppender {
   type: 'recording'
+  // maximum number of events to record (optional, unlimited if not specified)
+  maxLength?: number
 }
 
 /**
@@ -187,6 +216,8 @@ export interface StandardErrorAppender {
   type: 'stderr'
   // (defaults to ColoredLayout)
   layout?: Layout
+  // timezone offset in minutes
+  timezoneOffset?: number
 }
 
 /**
@@ -198,6 +229,8 @@ export interface StandardOutputAppender {
   type: 'stdout'
   // (defaults to ColoredLayout)
   layout?: Layout
+  // timezone offset in minutes
+  timezoneOffset?: number
 }
 
 /**
@@ -217,6 +250,21 @@ export interface TCPAppender {
   layout?: Layout
   // (defaults to utf-8)
   encoding?: string
+}
+
+/**
+ * TCP Server Appender
+ *
+ * @see https://log4js-node.github.io/log4js-node/tcp-server.html
+ */
+export interface TCPServerAppender {
+  type: 'tcp-server'
+  // (defaults to 5000)
+  port?: number
+  // (defaults to localhost)
+  host?: string
+  // the name of the appender to send received log events to
+  appender?: string
 }
 
 /**
@@ -253,6 +301,7 @@ export interface Appenders {
   StandardErrorAppender: StandardErrorAppender
   StandardOutputAppender: StandardOutputAppender
   TCPAppender: TCPAppender
+  TCPServerAppender: TCPServerAppender
   CustomAppender: CustomAppender
 }
 

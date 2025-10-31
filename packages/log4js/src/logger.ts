@@ -232,44 +232,62 @@ export default class Logger {
       throw new TypeError('Invalid type passed to setParseCallStackFunction')
     }
   }
-}
 
-function addLevelMethods (target: string): void {
-  const level = Level.getLevel(target)
-  if (!level) return
+  // Level check methods
+  isTraceEnabled (): boolean {
+    return this.isLevelEnabled(Level.getLevel('TRACE')!)
+  }
 
-  const levelStrLower = level.toString().toLowerCase()
-  const levelMethod = levelStrLower.replace(/_([a-z])/g, (g) =>
-    g[1].toUpperCase()
-  )
-  const isLevelMethod = levelMethod[0].toUpperCase() + levelMethod.slice(1);
-  (Logger.prototype as unknown as Record<string, unknown>)[`is${isLevelMethod}Enabled`] = function (this: Logger) { return this.isLevelEnabled(level) };
-  (Logger.prototype as unknown as Record<string, unknown>)[levelMethod] = function (this: Logger, ...args: LogData) { this.log(level, ...args) }
-}
+  isDebugEnabled (): boolean {
+    return this.isLevelEnabled(Level.getLevel('DEBUG')!)
+  }
 
-Level.levels.forEach((level) => addLevelMethods(level.levelStr))
+  isInfoEnabled (): boolean {
+    return this.isLevelEnabled(Level.getLevel('INFO')!)
+  }
 
-configuration.addListener(() => {
-  Level.levels.forEach((level) => addLevelMethods(level.levelStr))
-})
+  isWarnEnabled (): boolean {
+    return this.isLevelEnabled(Level.getLevel('WARN')!)
+  }
 
-// Add TypeScript declarations for dynamically added methods
-declare module './logger' {
-  export default interface Logger {
-    isTraceEnabled (): boolean
-    isDebugEnabled (): boolean
-    isInfoEnabled (): boolean
-    isWarnEnabled (): boolean
-    isErrorEnabled (): boolean
-    isFatalEnabled (): boolean
-    isMarkEnabled (): boolean
+  isErrorEnabled (): boolean {
+    return this.isLevelEnabled(Level.getLevel('ERROR')!)
+  }
 
-    trace (message: unknown, ...args: LogData): void
-    debug (message: unknown, ...args: LogData): void
-    info (message: unknown, ...args: LogData): void
-    warn (message: unknown, ...args: LogData): void
-    error (message: unknown, ...args: LogData): void
-    fatal (message: unknown, ...args: LogData): void
-    mark (message: unknown, ...args: LogData): void
+  isFatalEnabled (): boolean {
+    return this.isLevelEnabled(Level.getLevel('FATAL')!)
+  }
+
+  isMarkEnabled (): boolean {
+    return this.isLevelEnabled(Level.getLevel('MARK')!)
+  }
+
+  // Logging methods
+  trace (message: unknown, ...args: LogData): void {
+    this.log(Level.getLevel('TRACE')!, message, ...args)
+  }
+
+  debug (message: unknown, ...args: LogData): void {
+    this.log(Level.getLevel('DEBUG')!, message, ...args)
+  }
+
+  info (message: unknown, ...args: LogData): void {
+    this.log(Level.getLevel('INFO')!, message, ...args)
+  }
+
+  warn (message: unknown, ...args: LogData): void {
+    this.log(Level.getLevel('WARN')!, message, ...args)
+  }
+
+  error (message: unknown, ...args: LogData): void {
+    this.log(Level.getLevel('ERROR')!, message, ...args)
+  }
+
+  fatal (message: unknown, ...args: LogData): void {
+    this.log(Level.getLevel('FATAL')!, message, ...args)
+  }
+
+  mark (message: unknown, ...args: LogData): void {
+    this.log(Level.getLevel('MARK')!, message, ...args)
   }
 }

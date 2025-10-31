@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.3](https://github.com/KarinJS/esmify/compare/log4js-v1.3.2...log4js-v1.3.3) (2025-10-31)
+
+
+### 🐛 Bug Fixes
+
+* types ([2ec7c87](https://github.com/KarinJS/esmify/commit/2ec7c8726fde0ddf2d05b17e4f76cc1bd5910913))
+
 ## [1.3.2](https://github.com/KarinJS/esmify/compare/log4js-v1.3.1...log4js-v1.3.2) (2025-10-31)
 
 

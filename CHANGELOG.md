@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.12.5](https://github.com/KarinJS/esmify/compare/esmify-v1.12.4...esmify-v1.12.5) (2025-10-31)
+
+
+### 🐛 Bug Fixes
+
+* log4js ([207123a](https://github.com/KarinJS/esmify/commit/207123ae2a67486ed9598011ac5631935eace966))
+
+
+### 🎫 Chores
+
+* **axios:** update axios version and sync packages ([#45](https://github.com/KarinJS/esmify/issues/45)) ([0eb66d7](https://github.com/KarinJS/esmify/commit/0eb66d79480260f2921b4b0d7a799f7f0f93b301))
+* **release:** 从 .release-please-config.json 和 .release-please-manifest.json 中移除 packages/axios ([905bcb2](https://github.com/KarinJS/esmify/commit/905bcb2038bb1e37f0b9d868f561f3541c550c45))
+
 ## [1.12.4](https://github.com/KarinJS/esmify/compare/esmify-v1.12.3...esmify-v1.12.4) (2025-10-27)
 
 

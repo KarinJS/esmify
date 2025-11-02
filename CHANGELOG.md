@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.7](https://github.com/KarinJS/esmify/compare/esmify-v1.12.6...esmify-v1.12.7) (2025-11-02)
+
+
+### 🐛 Bug Fixes
+
+* **log4js:** 将 appender 加载改为同步并重构 logger/类型/测试 ([ed30feb](https://github.com/KarinJS/esmify/commit/ed30febc0b551decb87a6a8c1bf892b00468fcc1))
+
 ## [1.12.6](https://github.com/KarinJS/esmify/compare/esmify-v1.12.5...esmify-v1.12.6) (2025-10-31)
 
 

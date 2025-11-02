@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.4](https://github.com/KarinJS/esmify/compare/log4js-v1.3.3...log4js-v1.3.4) (2025-11-02)
+
+
+### 🐛 Bug Fixes
+
+* **log4js:** 将 appender 加载改为同步并重构 logger/类型/测试 ([ed30feb](https://github.com/KarinJS/esmify/commit/ed30febc0b551decb87a6a8c1bf892b00468fcc1))
+
 ## [1.3.3](https://github.com/KarinJS/esmify/compare/log4js-v1.3.2...log4js-v1.3.3) (2025-10-31)
 
 

@@ -22,13 +22,13 @@ function logLevelFilter (
   }
 }
 
-async function configure (
+function configure (
   config: LogLevelFilterAppender,
   _layouts: unknown,
-  findAppender: (name: string) => Promise<AppenderFunction | false>,
+  findAppender: (name: string) => AppenderFunction | false,
   levels: Levels
-): Promise<AppenderFunction> {
-  const appender = await findAppender(config.appender)
+): AppenderFunction {
+  const appender = findAppender(config.appender)
   if (!appender) {
     throw new Error(`Appender "${config.appender}" not found`)
   }

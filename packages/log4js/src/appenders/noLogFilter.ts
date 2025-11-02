@@ -42,12 +42,12 @@ function noLogFilter (
   }
 }
 
-async function configure (
+function configure (
   config: NoLogFilterAppender,
   _layouts: unknown,
-  findAppender: (name: string) => Promise<AppenderFunction | false>
-): Promise<AppenderFunction> {
-  const appender = await findAppender(config.appender)
+  findAppender: (name: string) => AppenderFunction | false
+): AppenderFunction {
+  const appender = findAppender(config.appender)
   if (!appender) {
     throw new Error(`Appender "${config.appender}" not found`)
   }

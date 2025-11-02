@@ -20,16 +20,16 @@ function categoryFilter (
   }
 }
 
-async function configure (
+function configure (
   config: CategoryFilterAppender,
   _layouts: unknown,
-  findAppender: (name: string) => Promise<AppenderFunction | false>
-): Promise<AppenderFunction> {
-  const appender = await findAppender(config.appender || '')
+  findAppender: (name: string) => AppenderFunction | false
+): AppenderFunction {
+  const appender = findAppender(config.appender)
   if (!appender) {
     throw new Error(`Appender "${config.appender}" not found`)
   }
-  return categoryFilter(config.exclude || [], appender)
+  return categoryFilter(config.exclude, appender)
 }
 
 export { configure }

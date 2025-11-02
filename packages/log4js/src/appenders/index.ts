@@ -37,7 +37,7 @@ interface AppenderModule {
 const debug = debugFactory('log4js:appenders')
 
 // pre-load the core appenders so that webpack can find them
-const coreAppenders = new Map<string, { configure: (...args: unknown[]) => AppenderFunction | Promise<AppenderFunction> | { shutdown: (cb: () => void) => void } }>()
+const coreAppenders = new Map<string, { configure: (...args: unknown[]) => AppenderFunction | { shutdown: (cb: () => void) => void } }>()
 coreAppenders.set('stdout', stdout as any)
 coreAppenders.set('stderr', stderr as any)
 coreAppenders.set('console', console as any)
@@ -55,7 +55,7 @@ coreAppenders.set('recording', recording as any)
 
 const appenders = new Map<string, AppenderFunction>()
 
-const tryLoading = async (modulePath: string, config: Configuration): Promise<unknown> => {
+const tryLoading = (modulePath: string, config: Configuration): unknown => {
   let resolvedPath: string
   try {
     const modulePathCJS = `${modulePath}.cjs`
@@ -66,7 +66,8 @@ const tryLoading = async (modulePath: string, config: Configuration): Promise<un
     debug('Loading module from ', modulePath)
   }
   try {
-    return await import(resolvedPath)
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require(resolvedPath)
   } catch (e: unknown) {
     // if the module was found, and we still got an error, then raise it
     const error = e as { code?: string }
@@ -79,26 +80,26 @@ const tryLoading = async (modulePath: string, config: Configuration): Promise<un
   }
 }
 
-const loadAppenderModule = async (type: string, config: Configuration): Promise<unknown> => {
+const loadAppenderModule = (type: string, config: Configuration): unknown => {
   return coreAppenders.get(type) ||
-    await tryLoading(`./${type}`, config) ||
-    await tryLoading(type, config) ||
+    tryLoading(`./${type}`, config) ||
+    tryLoading(type, config) ||
     (process.mainModule &&
       process.mainModule.filename &&
-      await tryLoading(join(dirname(process.mainModule.filename), type), config)) ||
-    await tryLoading(join(process.cwd(), type), config)
+      tryLoading(join(dirname(process.mainModule.filename), type), config)) ||
+    tryLoading(join(process.cwd(), type), config)
 }
 
 const appendersLoading = new Set<string>()
 
-const getAppender = async (name: string, config: Configuration): Promise<AppenderFunction | false> => {
+const getAppender = (name: string, config: Configuration): AppenderFunction | false => {
   if (appenders.has(name)) return appenders.get(name)!
   if (!config.appenders || !config.appenders[name]) return false
   if (appendersLoading.has(name)) { throw new Error(`Dependency loop detected for appender ${name}.`) }
   appendersLoading.add(name)
 
   debug(`Creating appender ${name}`)
-  const appender = await createAppender(name, config)
+  const appender = createAppender(name, config)
   appendersLoading.delete(name)
   if (appender) {
     appenders.set(name, appender)
@@ -107,14 +108,14 @@ const getAppender = async (name: string, config: Configuration): Promise<Appende
   return false
 }
 
-const createAppender = async (name: string, config: Configuration): Promise<AppenderFunction | undefined> => {
+const createAppender = (name: string, config: Configuration): AppenderFunction | undefined => {
   if (!config.appenders) return undefined
   const appenderConfig = config.appenders[name] as ExtendedAppenderConfig
   if (!appenderConfig) return undefined
 
   const appenderModule = typeof appenderConfig.type === 'object' && 'configure' in appenderConfig.type
     ? appenderConfig.type
-    : await loadAppenderModule(appenderConfig.type as string, config)
+    : loadAppenderModule(appenderConfig.type as string, config)
   configuration.throwExceptionIf(
     config,
     configuration.not(appenderModule),
@@ -150,7 +151,7 @@ const createAppender = async (name: string, config: Configuration): Promise<Appe
     `${name}: appenderModule is ${JSON.stringify(appenderModule)}`
   )
   return clustering.onlyOnMaster(
-    async () => {
+    () => {
       debug(
         `calling appenderModule.configure for ${name} / ${appenderConfig.type}`
       )
@@ -158,17 +159,15 @@ const createAppender = async (name: string, config: Configuration): Promise<Appe
         ...appenderConfig,
         type: typeof appenderConfig.type === 'string' ? appenderConfig.type : appenderConfig.type.constructor.name || 'custom',
       }
-      const result = moduleWithAppender.configure(
+      return moduleWithAppender.configure(
         adapters.modifyConfig(configForAdapter as AppenderConfig),
         layouts,
         (appender: string) => getAppender(appender, config),
         Level
       )
-      // Handle both sync and async configure functions
-      return result instanceof Promise ? await result : result
     },
     /* istanbul ignore next: fn never gets called by non-master yet needed to pass config validation */
-    undefined
+    () => { }
   )
 }
 
@@ -191,30 +190,7 @@ const setup = (config?: Configuration): void => {
       config.appenders?.[name]?.type === 'tcp-server' ||
       config.appenders?.[name]?.type === 'multiprocess'
     ) {
-      // Create appender synchronously for now
-      const appenderConfig = config.appenders?.[name]
-      if (appenderConfig) {
-        const appenderModule = coreAppenders.get(appenderConfig.type)
-        if (appenderModule) {
-          const appenderResult = clustering.onlyOnMaster(
-            () => {
-              debug(`calling appenderModule.configure for ${name} / ${appenderConfig.type}`)
-              return appenderModule.configure(
-                adapters.modifyConfig(appenderConfig as AppenderConfig),
-                layouts,
-                (appenderName: string) => appenders.get(appenderName),
-                Level
-              )
-            },
-            () => { }
-          )
-          // Only set if not a Promise (sync appenders only in setup)
-          if (appenderResult && !(appenderResult instanceof Promise)) {
-            appenders.set(name, appenderResult as AppenderFunction)
-            debug(`Created appender ${name}`)
-          }
-        }
-      }
+      getAppender(name, config)
     }
   })
 }

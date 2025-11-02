@@ -10,9 +10,9 @@ import type { Layout } from './layouts'
 export interface CategoryFilterAppender {
   type: 'categoryFilter'
   // the category (or categories if you provide an array of values) that will be excluded from the appender.
-  exclude?: string | string[]
+  exclude: string | string[]
   // the name of the appender to filter. see https://log4js-node.github.io/log4js-node/layouts.html
-  appender?: string
+  appender: string
 }
 
 /**

@@ -13,15 +13,15 @@ interface PackageJson {
   [key: string]: any
 }
 
-interface PackageVersions {
-  [key: string]: {
-    [version: string]: string
-  }
-}
+// interface PackageVersions {
+//   [key: string]: {
+//     [version: string]: string
+//   }
+// }
 
-interface ReleaseManifest {
-  [key: string]: string
-}
+// interface ReleaseManifest {
+//   [key: string]: string
+// }
 
 interface NpmVersionInfo {
   versions: {
@@ -35,8 +35,6 @@ const __dirname = dirname(__filename)
 const ROOT_DIR = resolve(__dirname, '../../..')
 const PACKAGE_DIR = resolve(__dirname, '..')
 const PACKAGE_JSON_PATH = resolve(PACKAGE_DIR, 'package.json')
-const PACKAGES_VERSION_PATH = resolve(ROOT_DIR, 'packages-version.json')
-const RELEASE_MANIFEST_PATH = resolve(ROOT_DIR, '.release-please-manifest.json')
 
 function readJson<T> (path: string): T {
   return JSON.parse(readFileSync(path, 'utf-8'))
@@ -87,18 +85,8 @@ async function getNewVersions (allVersions: string[], currentVersion: string): P
   console.log(`当前 devDependencies 中的版本: ${currentVersion}`)
 
   // 第一步：从 packages-version.json 获取已发布的版本
-  const packagesVersions = readJson<PackageVersions>(PACKAGES_VERSION_PATH)
+  // const packagesVersions = readJson<PackageVersions>(PACKAGES_VERSION_PATH)
   const publishedAxiosVersions = new Set<string>()
-
-  if (packagesVersions['@karinjs/axios']) {
-    Object.values(packagesVersions['@karinjs/axios']).forEach(axiosVersion => {
-      // 从 "axios@x.y.z" 中提取版本号
-      const match = axiosVersion.match(/^axios@(.+)$/)
-      if (match) {
-        publishedAxiosVersions.add(match[1])
-      }
-    })
-  }
 
   console.log('packages-version.json 中已记录的 axios 版本:', Array.from(publishedAxiosVersions))
 
@@ -149,22 +137,22 @@ function updatePackageJson (axiosVersion: string, packageVersion: string): void 
 }
 
 function updatePackagesVersion (axiosVersion: string, packageVersion: string): void {
-  const packagesVersions = readJson<PackageVersions>(PACKAGES_VERSION_PATH)
+  // const packagesVersions = readJson<PackageVersions>(PACKAGES_VERSION_PATH)
 
-  if (!packagesVersions['@karinjs/axios']) {
-    packagesVersions['@karinjs/axios'] = {}
-  }
+  // if (!packagesVersions['@karinjs/axios']) {
+  //   packagesVersions['@karinjs/axios'] = {}
+  // }
 
-  packagesVersions['@karinjs/axios'][packageVersion] = `axios@${axiosVersion}`
-  writeJson(PACKAGES_VERSION_PATH, packagesVersions)
+  // packagesVersions['@karinjs/axios'][packageVersion] = `axios@${axiosVersion}`
+  // writeJson(PACKAGES_VERSION_PATH, packagesVersions)
   console.log(`已更新 packages-version.json: ${packageVersion} -> axios@${axiosVersion}`)
 }
 
 function updateReleaseManifest (packageVersion: string): void {
-  const manifest = readJson<ReleaseManifest>(RELEASE_MANIFEST_PATH)
-  manifest['packages/axios'] = packageVersion
-  writeJson(RELEASE_MANIFEST_PATH, manifest)
-  console.log(`已更新 .release-please-manifest.json: packages/axios -> ${packageVersion}`)
+  // const manifest = readJson<ReleaseManifest>(RELEASE_MANIFEST_PATH)
+  // manifest['packages/axios'] = packageVersion
+  // writeJson(RELEASE_MANIFEST_PATH, manifest)
+  // console.log(`已更新 .release-please-manifest.json: packages/axios -> ${packageVersion}`)
 }
 
 async function publishVersion (axiosVersion: string): Promise<void> {

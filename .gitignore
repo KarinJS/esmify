@@ -4,3 +4,4 @@ build
 /packages/log4js/.nyc_output
 /packages/log4js/lib
 *.log
+/packages/log4js/logs

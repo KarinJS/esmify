@@ -1,236 +1,345 @@
-import { resolve, join, dirname } from 'node:path'
-import debugFactory from 'debug'
-import * as configuration from '../configuration'
-import * as clustering from '../clustering'
-import Level from '../levels'
-import * as layouts from '../layouts'
-import * as adapters from './adapters'
-import * as stdout from './stdout'
-import * as stderr from './stderr'
-import * as console from './console'
-import * as file from './file'
-import * as dateFile from './dateFile'
-import * as fileSync from './fileSync'
-import * as tcp from './tcp'
-import * as tcpServer from './tcp-server'
-import * as logLevelFilter from './logLevelFilter'
-import * as categoryFilter from './categoryFilter'
-import * as noLogFilter from './noLogFilter'
-import * as multiFile from './multiFile'
-import * as multiprocess from './multiprocess'
-import * as recording from './recording'
-import type { AppenderFunction, Configuration, AppenderConfig } from '../types/core'
+import util from 'util'
+import debugModule from 'debug'
+import { levels } from '../core/levels'
+import { layouts } from '../core/layouts'
+import { AppenderType } from './base'
+import { clustering } from '../core/clustering'
+import { modifyConfig } from './adapters'
+import { configuration } from '../core/configuration'
+import { configure as configureTcp } from './tcp'
+import { configure as configureFile } from './file'
+import { configure as configureStdout } from './stdout'
+import { configure as configureStderr } from './stderr'
+import { configure as configureConsole } from './console'
+import { configure as configureDateFile } from './dateFile'
+import { configure as configureFileSync } from './fileSync'
+import { configure as configureRecording } from './recording'
+import { configure as configureMultiFile } from './multiFile'
+import { configure as configureTcpServer } from './tcp-server'
+import { configure as configureNoLogFilter } from './noLogFilter'
+import { configure as configureMultiprocess } from './multiprocess'
+import { configure as configureLogLevelFilter } from './logLevelFilter'
+import { configure as configureCategoryFilter } from './categoryFilter'
 
-// Extended appender config that might have a type with configure method
-interface ExtendedAppenderConfig {
-  type: string | { configure: (...args: unknown[]) => AppenderFunction }
-  [key: string]: unknown
+import type { Colour } from '../core/levels'
+import type { TcpAppenderConfig } from './tcp'
+import type { FileAppenderConfig } from './file'
+import type { StdoutAppenderConfig } from './stdout'
+import type { StderrAppenderConfig } from './stderr'
+import type { ConsoleAppenderConfig } from './console'
+import type { DateFileAppenderConfig } from './dateFile'
+import type { FileSyncAppenderConfig } from './fileSync'
+import type { RecordingAppenderConfig } from './recording'
+import type { MultiFileAppenderConfig } from './multiFile'
+import type { AppenderFunction, Configure } from './base'
+import type { TcpServerAppenderConfig } from './tcp-server'
+import type { NoLogFilterAppenderConfig } from './noLogFilter'
+import type { MultiprocessAppenderConfig } from './multiprocess'
+import type { LogLevelFilterAppenderConfig } from './logLevelFilter'
+import type { CategoryFilterAppenderConfig } from './categoryFilter'
+
+const debug = debugModule('log4js:appenders')
+
+/**
+ * 日志级别类型
+ */
+export type LogLevel = 'all' | 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal' | 'mark' | 'off'
+
+/**
+ * 所有内部 Appender 配置接口
+ */
+export interface InternalConfigAppenders {
+  console?: ConsoleAppenderConfig
+  stdout?: StdoutAppenderConfig
+  stderr?: StderrAppenderConfig
+  file?: FileAppenderConfig
+  dateFile?: DateFileAppenderConfig
+  fileSync?: FileSyncAppenderConfig
+  logLevelFilter?: LogLevelFilterAppenderConfig
+  categoryFilter?: CategoryFilterAppenderConfig
+  noLogFilter?: NoLogFilterAppenderConfig
+  recording?: RecordingAppenderConfig
+  multiFile?: MultiFileAppenderConfig
+  multiprocess?: MultiprocessAppenderConfig
+  tcp?: TcpAppenderConfig
+  'tcp-server'?: TcpServerAppenderConfig
 }
 
-// Module with potential legacy properties
-interface AppenderModule {
-  configure: (...args: unknown[]) => AppenderFunction
-  appender?: unknown
-  shutdown?: unknown
+export interface CustomConfigure {
+  /**
+   * Appender 类型
+   * @example
+   * ```ts
+   * type: 'console'
+   * ```
+   * 或自定义配置函数
+   * ```ts
+   * {
+   *   type: {
+   *     configure: Configure
+   *   } // 自定义 Appender 配置函数
+   * }
+   * ```
+   */
+  type: { configure: Configure<any> }
 }
 
-const debug = debugFactory('log4js:appenders')
+/**
+ * Appenders 配置值类型
+ * @description 包含了所有内部 Appender 配置和自定义配置
+ */
+export type ConfigAppendersValue =
+  | ConsoleAppenderConfig
+  | StdoutAppenderConfig
+  | StderrAppenderConfig
+  | FileAppenderConfig
+  | DateFileAppenderConfig
+  | FileSyncAppenderConfig
+  | LogLevelFilterAppenderConfig
+  | CategoryFilterAppenderConfig
+  | NoLogFilterAppenderConfig
+  | RecordingAppenderConfig
+  | MultiFileAppenderConfig
+  | MultiprocessAppenderConfig
+  | TcpAppenderConfig
+  | TcpServerAppenderConfig
+  | CustomConfigure
 
-// pre-load the core appenders so that webpack can find them
-const coreAppenders = new Map<string, { configure: (...args: unknown[]) => AppenderFunction | { shutdown: (cb: () => void) => void } }>()
-coreAppenders.set('stdout', stdout as any)
-coreAppenders.set('stderr', stderr as any)
-coreAppenders.set('console', console as any)
-coreAppenders.set('file', file as any)
-coreAppenders.set('dateFile', dateFile as any)
-coreAppenders.set('fileSync', fileSync as any)
-coreAppenders.set('tcp', tcp as any)
-coreAppenders.set('tcp-server', tcpServer as any)
-coreAppenders.set('logLevelFilter', logLevelFilter as any)
-coreAppenders.set('categoryFilter', categoryFilter as any)
-coreAppenders.set('noLogFilter', noLogFilter as any)
-coreAppenders.set('multiFile', multiFile as any)
-coreAppenders.set('multiprocess', multiprocess as any)
-coreAppenders.set('recording', recording as any)
+/**
+ * Appenders 配置类型
+ * @description 允许任意 string key，但 value 必须是指定的 appender 配置类型之一
+ */
+export type ConfigAppenders = {
+  [key: string]: ConfigAppendersValue
+}
 
-const appenders = new Map<string, AppenderFunction>()
-
-const tryLoading = (modulePath: string, config: Configuration): unknown => {
-  let resolvedPath: string
-  try {
-    const modulePathCJS = `${modulePath}.cjs`
-    resolvedPath = resolve(modulePathCJS)
-    debug('Loading module from ', modulePathCJS)
-  } catch (e) {
-    resolvedPath = modulePath
-    debug('Loading module from ', modulePath)
+/**
+ * 配置接口（带泛型约束）
+ * @template TAppenders - Appenders 配置对象类型
+ * @description 通过泛型自动推断 appender keys，确保 categories 中只能引用已定义的 appender
+ */
+export interface Config<
+  TAppenders extends Record<string, ConfigAppendersValue> = Record<string, ConfigAppendersValue>
+> {
+  /** Appenders 配置对象 */
+  appenders: TAppenders
+  /** 分类配置对象 */
+  categories: Record<string, CategoryConfig<Extract<keyof TAppenders, string>>> & {
+    default: CategoryConfig<Extract<keyof TAppenders, string>> // 必须有 default 分类
   }
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    return require(resolvedPath)
-  } catch (e: unknown) {
-    // if the module was found, and we still got an error, then raise it
-    const error = e as { code?: string }
-    configuration.throwExceptionIf(
-      config,
-      error.code !== 'MODULE_NOT_FOUND',
-      `appender "${modulePath}" could not be loaded (error was: ${e})`
-    )
-    return undefined
-  }
+  /** pm2是否启用 */
+  pm2?: boolean
+  /** pm2 环境变量名称 */
+  pm2InstanceVar?: string
+  /** 自定义日志级别配置 */
+  levels?: Record<string, {
+    /**
+     * 级别值
+     * @description 值越大，级别越高
+     * - all: Number.MIN_VALUE
+     * - trace: 5000
+     * - debug: 10000
+     * - info: 20000
+     * - warn: 30000
+     * - error: 40000
+     * - fatal: 50000
+     * - mark: 9007199254740992 // 2^53
+     * - off: Number.MAX_VALUE
+     */
+    value: number
+    /** 级别颜色 */
+    colour: Colour
+  }>
+  /** 是否禁用集群功能 */
+  disableClustering?: boolean
 }
 
-const loadAppenderModule = (type: string, config: Configuration): unknown => {
-  return coreAppenders.get(type) ||
-    tryLoading(`./${type}`, config) ||
-    tryLoading(type, config) ||
-    (process.mainModule &&
-      process.mainModule.filename &&
-      tryLoading(join(dirname(process.mainModule.filename), type), config)) ||
-    tryLoading(join(process.cwd(), type), config)
+/**
+ * 严格的配置类型 - 用于类型检查
+ * @description 这个类型会严格约束 categories.appenders 必须引用已定义的 appender key
+ * @deprecated 使用 Config<T> 即可，无需使用此类型
+ */
+export type StrictConfig<T extends Record<string, ConfigAppendersValue>> = Config<T>
+
+/**
+ * 分类配置接口
+ */
+export interface CategoryConfig<T> {
+  /**
+   * 使用的 appender 名称列表
+   * @description 至少需要一个 appender
+   */
+  appenders: [T, ...T[]]
+  /** 日志级别 */
+  level: LogLevel
+  /** 是否启用调用栈 */
+  enableCallStack?: boolean
+  /** 是否继承父分类配置 */
+  inherit?: boolean
+  /** 父分类配置 */
+  parent?: CategoryConfig<T>
 }
 
+/** 正在加载的 Appenders 集合，用于检测循环依赖 */
 const appendersLoading = new Set<string>()
+/** 已加载的 Appenders 集合 */
+const appenders = new Map<string, AppenderFunction<true> | AppenderFunction<false>>()
 
-const getAppender = (name: string, config: Configuration): AppenderFunction | false => {
+/**
+ * 加载 Appender 模块
+ * @param type - Appender 类型
+ * @param config - 配置对象
+ * @returns 加载的 Appender 模块或 undefined
+ */
+const loadAppenderModule = (type: AppenderType): { configure: Configure<any, any> } => {
+  switch (type) {
+    case 'console': return { configure: configureConsole }
+    case 'stdout': return { configure: configureStdout }
+    case 'stderr': return { configure: configureStderr }
+    case 'file': return { configure: configureFile }
+    case 'dateFile': return { configure: configureDateFile }
+    case 'fileSync': return { configure: configureFileSync }
+    case 'logLevelFilter': return { configure: configureLogLevelFilter }
+    case 'categoryFilter': return { configure: configureCategoryFilter }
+    case 'noLogFilter': return { configure: configureNoLogFilter }
+    case 'recording': return { configure: configureRecording }
+    case 'multiFile': return { configure: configureMultiFile }
+    case 'multiprocess': return { configure: configureMultiprocess }
+    case 'tcp': return { configure: configureTcp }
+    case 'tcp-server': return { configure: configureTcpServer }
+    default: throw new Error(`未知的 Appender 类型: ${type}`)
+  }
+}
+
+/**
+ * 获取 Appender
+ * @param name - Appender 名称
+ * @param config - 配置对象
+ * @returns Appender 函数或 false
+ */
+const getAppender = (name: AppenderType, config: Config): AppenderFunction => {
   if (appenders.has(name)) return appenders.get(name)!
-  if (!config.appenders || !config.appenders[name]) return false
-  if (appendersLoading.has(name)) { throw new Error(`Dependency loop detected for appender ${name}.`) }
+  if (!config.appenders[name]) {
+    throw new Error(`appender "${name}" not found`)
+  }
+  if (appendersLoading.has(name)) { throw new Error(`检测到 appender ${name} 的依赖循环。`) }
   appendersLoading.add(name)
 
-  debug(`Creating appender ${name}`)
+  debug(`正在创建 appender ${name}`)
   const appender = createAppender(name, config)
   appendersLoading.delete(name)
-  if (appender) {
-    appenders.set(name, appender)
-    return appender
-  }
-  return false
+  appenders.set(name, appender)
+  return appender
 }
 
-const createAppender = (name: string, config: Configuration): AppenderFunction | undefined => {
-  if (!config.appenders) return undefined
-  const appenderConfig = config.appenders[name] as ExtendedAppenderConfig
-  if (!appenderConfig) return undefined
+const getAppenderModule = (
+  appenderConfig: ConfigAppendersValue
+) => {
+  if (typeof appenderConfig?.type === 'object' && 'configure' in appenderConfig.type) {
+    return appenderConfig.type
+  }
 
-  const appenderModule = typeof appenderConfig.type === 'object' && 'configure' in appenderConfig.type
-    ? appenderConfig.type
-    : loadAppenderModule(appenderConfig.type as string, config)
+  if (typeof appenderConfig?.type !== 'string') {
+    throw new Error(`appender type must be a string or a configure object, got ${typeof appenderConfig?.type}`)
+  }
+  return loadAppenderModule(appenderConfig.type as AppenderType)
+}
+
+/**
+ * 创建 Appender
+ * @param name - Appender 名称
+ * @param config - 配置对象
+ * @returns Appender 函数
+ */
+const createAppender = (name: AppenderType, config: Config) => {
+  const appenderConfig = config.appenders[name]
+  if (!appenderConfig) {
+    throw new Error(`appender "${name}" not found`)
+  }
+  const appenderModule = getAppenderModule(appenderConfig)
   configuration.throwExceptionIf(
     config,
     configuration.not(appenderModule),
-    `appender "${name}" is not valid (type "${typeof appenderConfig.type === 'string' ? appenderConfig.type : 'object'}" could not be found)`
+    `appender "${name}" 无效（类型 "${appenderConfig?.type}" 未找到）`
   )
-
-  const moduleWithAppender = appenderModule as AppenderModule
-  if (moduleWithAppender.appender) {
-    process.emitWarning(
-      `Appender ${appenderConfig.type} exports an appender function.`,
-      'DeprecationWarning',
-      'log4js-node-DEP0001'
-    )
-    debug(
-      '[log4js-node-DEP0001]',
-      `DEPRECATION: Appender ${appenderConfig.type} exports an appender function.`
-    )
-  }
-  if (moduleWithAppender.shutdown) {
-    process.emitWarning(
-      `Appender ${appenderConfig.type} exports a shutdown function.`,
-      'DeprecationWarning',
-      'log4js-node-DEP0002'
-    )
-    debug(
-      '[log4js-node-DEP0002]',
-      `DEPRECATION: Appender ${appenderConfig.type} exports a shutdown function.`
-    )
-  }
 
   debug(`${name}: clustering.isMaster ? ${clustering.isMaster()}`)
   debug(
-    `${name}: appenderModule is ${JSON.stringify(appenderModule)}`
+    `${name}: appenderModule 是 ${util.inspect(appenderModule)}`
   )
   return clustering.onlyOnMaster(
     () => {
       debug(
-        `calling appenderModule.configure for ${name} / ${appenderConfig.type}`
+        `为 ${name} / ${appenderConfig?.type} 调用 appenderModule.configure`
       )
-      const configForAdapter = {
-        ...appenderConfig,
-        type: typeof appenderConfig.type === 'string' ? appenderConfig.type : appenderConfig.type.constructor.name || 'custom',
-      }
-      return moduleWithAppender.configure(
-        adapters.modifyConfig(configForAdapter as AppenderConfig),
+      return appenderModule.configure(
+        modifyConfig(appenderConfig),
         layouts,
-        (appender: string) => getAppender(appender, config),
-        Level
+        (appender: string) => getAppender(appender as AppenderType, config),
+        levels
       )
     },
-    /* istanbul ignore next: fn never gets called by non-master yet needed to pass config validation */
-    () => { }
+    () => {
+      throw new Error('istanbul ignore next: fn never gets called by non-master yet needed to pass config validation')
+    }
   )
 }
 
-const setup = (config?: Configuration): void => {
+/**
+ * 设置 Appenders
+ * @param config - 配置对象
+ */
+const setup = (config?: Config) => {
   appenders.clear()
   appendersLoading.clear()
   if (!config) {
     return
   }
 
-  const usedAppenders: string[] = []
-  Object.values(config.categories || {}).forEach((category) => {
-    usedAppenders.push(...category.appenders)
-  })
-  Object.keys(config.appenders || {}).forEach((name) => {
-    // dodgy hard-coding of special case for tcp-server and multiprocess which may not have
-    // any categories associated with it, but needs to be started up anyway
+  /** 全部使用的 Appenders 列表 */
+  const usedAppenders = Object.values(config.categories).map(category => category.appenders).flat()
+  Object.keys(config.appenders).forEach((name: string) => {
+    // 对 tcp-server 和 multiprocess 的特殊情况进行硬编码处理
+    // 它们可能没有关联的分类，但仍需要启动
     if (
-      usedAppenders.includes(name) ||
-      config.appenders?.[name]?.type === 'tcp-server' ||
-      config.appenders?.[name]?.type === 'multiprocess'
+      usedAppenders.includes(name as AppenderType) ||
+      config.appenders[name as AppenderType]?.type === 'tcp-server' ||
+      config.appenders[name as AppenderType]?.type === 'multiprocess'
     ) {
-      getAppender(name, config)
+      getAppender(name as AppenderType, config)
     }
   })
 }
 
-const init = (): void => {
-  setup()
-}
+/**
+ * 初始化 Appenders
+ */
+const init = () => setup()
 init()
 
-configuration.addListener((config) => {
+configuration.addListener((config: Config) => {
   configuration.throwExceptionIf(
     config,
     configuration.not(configuration.anObject(config.appenders)),
-    'must have a property "appenders" of type object.'
+    '必须有一个类型为 object 的属性 "appenders"。'
   )
-  const appenderNames = Object.keys(config.appenders || {})
+  const appenderNames = Object.keys(config.appenders)
   configuration.throwExceptionIf(
     config,
     configuration.not(appenderNames.length),
-    'must define at least one appender.'
+    '必须至少定义一个 appender。'
   )
 
   appenderNames.forEach((name) => {
     configuration.throwExceptionIf(
       config,
-      configuration.not(config.appenders && config.appenders[name] && config.appenders[name].type),
-      `appender "${name}" is not valid (must be an object with property "type")`
+      configuration.not(config.appenders[name as AppenderType]?.type),
+      `appender "${name}" 无效（必须是具有 "type" 属性的对象）`
     )
   })
 })
 
 configuration.addListener(setup)
 
-const get = (name: string): AppenderFunction | undefined => appenders.get(name) as AppenderFunction | undefined
-const values = (): IterableIterator<AppenderFunction> => appenders.values() as IterableIterator<AppenderFunction>
-
-export {
-  get,
-  values,
-  init,
-}
-
-export default appenders
+export { init, appenders }
+export default Object.assign(appenders, { init })

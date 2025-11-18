@@ -1,24 +1,28 @@
+import type { Configure, AppenderConfigBase } from './base'
+
+const consoleLog = console.log.bind(console)
+
 /**
- * Console appender - 输出到stdout/stderr
+ * 控制台 Appender 配置接口
  */
-import LoggingEvent from '../LoggingEvent'
-import type { AppenderFunction, LayoutsParam } from '../types/core'
-import type { ConsoleAppender } from '../types/appenders'
-
-const configure = (config: ConsoleAppender, layouts: LayoutsParam): AppenderFunction => {
-  const layoutType = (config.layout?.type as string) || 'colored'
-  const layout = layouts.layout(layoutType, config.layout as Record<string, unknown>) || layouts.colouredLayout
-
-  return (loggingEvent: LoggingEvent): void => {
-    // ERROR和FATAL级别输出到stderr，其他输出到stdout
-    if (loggingEvent.level.isGreaterThanOrEqualTo('ERROR')) {
-      process.stderr.write(layout(loggingEvent) + '\n')
-    } else {
-      process.stdout.write(layout(loggingEvent) + '\n')
-    }
-  }
+export interface ConsoleAppenderConfig extends AppenderConfigBase {
+  type: 'console'
+  /**
+   * @deprecated sb 鸟用没有这个参数
+   */
+  timezoneOffset?: number
 }
 
-export {
-  configure,
+/**
+ * 配置控制台 Appender
+ * @param config - Appender 配置对象
+ * @param layouts - 布局管理器
+ * @returns 配置好的控制台 Appender
+ */
+export const configure: Configure<ConsoleAppenderConfig> = (config, layouts) => {
+  const layout = config.layout
+    ? layouts.layout(config.layout.type, config.layout) || layouts.colouredLayout
+    : layouts.colouredLayout
+
+  return (loggingEvent) => consoleLog(layout(loggingEvent))
 }

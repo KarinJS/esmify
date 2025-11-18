@@ -1,57 +1,77 @@
-import debugFactory from 'debug'
-import { createConnection, Socket } from 'node:net'
-import type LoggingEvent from '../LoggingEvent'
-import type { AppenderFunction, LayoutFunction, LayoutsParam } from '../types/core'
-import type { TCPAppender } from '../types/appenders'
+import net from 'net'
+import debugModule from 'debug'
 
-const debug = debugFactory('log4js:tcp')
+import type { LoggingEvent } from '../core/LoggingEvent'
+import type { Configure, AppenderConfigBase } from './base'
 
-interface AppenderWithShutdown extends AppenderFunction {
-  shutdown: (cb: () => void) => void
+const debug = debugModule('log4js:tcp')
+
+/**
+ * TCP Appender 配置接口
+ */
+export interface TcpAppenderConfig extends AppenderConfigBase {
+  type: 'tcp'
+  /** 服务器主机地址 */
+  host?: string
+  /** 服务器端口 */
+  port?: number
+  /** 消息结束标记 */
+  endMsg?: string
 }
 
-function appender (config: TCPAppender, layout: LayoutFunction): AppenderWithShutdown {
+/**
+ * 配置 TCP Appender
+ * @param config - Appender 配置对象
+ * @param layouts - 布局管理器
+ * @returns 配置好的 TCP Appender
+ */
+export const configure: Configure<TcpAppenderConfig, true> = (config, layouts) => {
+  debug(`使用配置进行配置 = ${config}`)
+
+  const layout = config.layout
+    ? layouts.layout(config.layout.type, config.layout) || ((loggingEvent: LoggingEvent) => loggingEvent.serialise())
+    : (loggingEvent: LoggingEvent) => loggingEvent.serialise()
+
   let canWrite = false
   const buffer: LoggingEvent[] = []
-  let socket: Socket
+  let socket: net.Socket
   let shutdownAttempts = 3
   const endMsg = config.endMsg || '__LOG4JS__'
 
-  function write (loggingEvent: LoggingEvent): void {
-    debug('Writing log event to socket')
+  const write = (loggingEvent: LoggingEvent) => {
+    debug('将日志事件写入 socket')
     canWrite = socket.write(`${layout(loggingEvent)}${endMsg}`, 'utf8')
   }
 
-  function emptyBuffer (): void {
+  const emptyBuffer = () => {
     let evt: LoggingEvent | undefined
-    debug('emptying buffer')
+    debug('清空缓冲区')
     while ((evt = buffer.shift())) {
       write(evt)
     }
   }
 
-  function createSocket (): void {
+  const createSocket = () => {
     debug(
-      `appender creating socket to ${config.host || 'localhost'}:${config.port || 5000
-      }`
+      `appender 创建 socket 连接到 ${config.host || 'localhost'}:${config.port || 5000}`
     )
-    socket = createConnection(
+    socket = net.createConnection(
       config.port || 5000,
       config.host || 'localhost'
     )
     socket.on('connect', () => {
-      debug('socket connected')
+      debug('socket 已连接')
       emptyBuffer()
       canWrite = true
     })
     socket.on('drain', () => {
-      debug('drain event received, emptying buffer')
+      debug('收到 drain 事件，清空缓冲区')
       canWrite = true
       emptyBuffer()
     })
-    socket.on('timeout', () => socket.end())
+    socket.on('timeout', socket.end.bind(socket))
     socket.on('error', (e: Error) => {
-      debug('connection error', e)
+      debug('连接错误', e)
       canWrite = false
       emptyBuffer()
     })
@@ -60,41 +80,31 @@ function appender (config: TCPAppender, layout: LayoutFunction): AppenderWithShu
 
   createSocket()
 
-  const log = function (loggingEvent: LoggingEvent): void {
-    if (canWrite) {
-      write(loggingEvent)
-    } else {
-      debug('buffering log event because it cannot write at the moment')
-      buffer.push(loggingEvent)
+  const app = Object.assign(
+    (loggingEvent: LoggingEvent) => {
+      if (canWrite) {
+        write(loggingEvent)
+      } else {
+        debug('由于当前无法写入，缓冲日志事件')
+        buffer.push(loggingEvent)
+      }
+    },
+    {
+      shutdown: (cb: () => void) => {
+        debug('调用 shutdown')
+        if (buffer.length && shutdownAttempts) {
+          debug('缓冲区有数据，等待 100ms 清空')
+          shutdownAttempts -= 1
+          setTimeout(() => {
+            app.shutdown(cb)
+          }, 100)
+        } else {
+          socket.removeAllListeners('close')
+          socket.end(cb)
+        }
+      },
     }
-  } as AppenderWithShutdown
+  )
 
-  log.shutdown = function (cb: () => void): void {
-    debug('shutdown called')
-    if (buffer.length && shutdownAttempts) {
-      debug('buffer has items, waiting 100ms to empty')
-      shutdownAttempts -= 1
-      setTimeout(() => {
-        log.shutdown(cb)
-      }, 100)
-    } else {
-      socket.removeAllListeners('close')
-      socket.end(cb)
-    }
-  }
-
-  return log
+  return app
 }
-
-function configure (config: TCPAppender, layouts: LayoutsParam): AppenderFunction {
-  debug(`configure with config = ${JSON.stringify(config)}`)
-  let layout: LayoutFunction = (loggingEvent: LoggingEvent) => {
-    return loggingEvent.serialise()
-  }
-  if (config.layout) {
-    layout = layouts.layout(config.layout.type, config.layout as Record<string, unknown>) || layout
-  }
-  return appender(config, layout)
-}
-
-export { configure }

@@ -1,172 +1,204 @@
-import debugFactory from 'debug'
-import { normalize, sep } from 'node:path'
-import streamroller from 'streamroller'
-import type { RollingFileStream } from 'streamroller'
-import { homedir, EOL } from 'node:os'
-import type LoggingEvent from '../LoggingEvent'
-import type { AppenderFunction, LayoutFunction, LayoutsParam } from '../types/core'
-import type { FileAppender } from '../types/appenders'
+import os from 'os'
+import path from 'path'
+import debugModule from 'debug'
+import { RollingFileStream } from '../streamroller'
 
-const { RollingFileStream: RollingFileStreamClass } = streamroller
+import type { LoggingEvent } from '../core/LoggingEvent'
+import type { Configure, AppenderConfigBase } from './base'
+import type { RollingFileWriteStreamOptions } from '../streamroller'
 
-const debug = debugFactory('log4js:file')
-
-let mainSighupListenerStarted = false
-const sighupListeners = new Set<AppenderFunctionWithExtras>()
-
-function mainSighupHandler (): void {
-  sighupListeners.forEach((app) => {
-    app.sighupHandler()
-  })
-}
-
-interface AppenderFunctionWithExtras extends AppenderFunction {
-  reopen: () => void
-  sighupHandler: () => void
-  shutdown: (complete: () => void) => void
-}
+const debug = debugModule('log4js:file')
 
 /**
- * File Appender writing the logs to a text file. Supports rolling of logs by size.
- *
- * @param file the file log messages will be written to
- * @param layout a function that takes a logEvent and returns a string
- * @param logSize - the maximum size (in bytes) for a log file
- * @param numBackups - the number of log files to keep after logSize has been reached
- * @param options - options to be passed to the underlying stream
- * @param timezoneOffset - optional timezone offset in minutes
+ * 文件 Appender 类
  */
-function fileAppender (
-  file: string,
-  layout: LayoutFunction,
-  logSize?: number | string,
-  numBackups?: number,
-  options?: Record<string, unknown>,
-  timezoneOffset?: number
-): AppenderFunctionWithExtras {
-  if (typeof file !== 'string' || file.length === 0) {
-    throw new Error(`Invalid filename: ${file}`)
-  }
-  if (file.endsWith(sep)) {
-    throw new Error(`Filename is a directory: ${file}`)
-  }
-  if (file.indexOf(`~${sep}`) === 0) {
-    // handle ~ expansion: https://github.com/nodejs/node/issues/684
-    // exclude ~ and ~filename as these can be valid files
-    file = file.replace('~', homedir())
-  }
+class FileAppender {
+  /** 行尾符 */
+  private static readonly eol = os.EOL
 
-  file = normalize(file)
-  numBackups = !numBackups && numBackups !== 0 ? 5 : numBackups
+  /** 主 SIGHUP 监听器是否已启动 */
+  private static mainSighupListenerStarted = false
 
-  debug(
-    'Creating file appender (',
-    file,
-    ', ',
-    logSize,
-    ', ',
-    numBackups,
-    ', ',
-    options,
-    ', ',
-    timezoneOffset,
-    ')'
-  )
+  /** SIGHUP 监听器集合 */
+  private static sighupListeners = new Set<FileAppender>()
 
-  function openTheStream (
-    filePath: string,
-    fileSize?: number | string,
-    numFiles?: number,
-    opt?: Record<string, unknown>
-  ): RollingFileStream {
-    const stream = new RollingFileStreamClass(
-      filePath,
-      fileSize,
-      numFiles,
-      opt
-    )
-    stream.on('error', (err: Error) => {
-      console.error(
-        'log4js.fileAppender - Writing to file %s, error happened ',
-        filePath,
-        err
-      )
+  /**
+   * 主 SIGHUP 处理器
+   * 当接收到 SIGHUP 信号时，调用所有注册的 appender 的处理器
+   */
+  private static mainSighupHandler (): void {
+    FileAppender.sighupListeners.forEach((app) => {
+      app.sighupHandler()
     })
-    stream.on('drain', () => {
-      // @ts-ignore - custom event
+  }
+
+  private writer: RollingFileStream
+  private layout: (loggingEvent: LoggingEvent, timezoneOffset?: number) => string
+  private file: string
+  private config: FileAppenderConfig
+  private numBackups: number
+
+  constructor (
+    file: string,
+    layout: (loggingEvent: LoggingEvent, timezoneOffset?: number) => string,
+    config: FileAppenderConfig,
+    numBackups: number
+  ) {
+    this.file = file
+    this.layout = layout
+    this.config = config
+    this.numBackups = numBackups
+    this.writer = this.createWriter()
+
+    // 注册 SIGHUP 监听器
+    FileAppender.sighupListeners.add(this)
+    if (!FileAppender.mainSighupListenerStarted) {
+      process.on('SIGHUP', FileAppender.mainSighupHandler)
+      FileAppender.mainSighupListenerStarted = true
+    }
+  }
+
+  /**
+   * 创建滚动文件流
+   */
+  private createWriter () {
+    const writer = new RollingFileStream(
+      this.file,
+      this.config.maxLogSize,
+      this.numBackups,
+      this.config
+    )
+    writer.on('error', (err: Error) => {
+      console.error('log4js.fileAppender - 写入文件 %s 时发生错误 ', this.file, err)
+    })
+    writer.on('drain', () => {
       process.emit('log4js:pause', false)
     })
-    return stream
+    return writer
   }
 
-  let writer = openTheStream(file, logSize, numBackups, options)
-
-  const app = function (loggingEvent: LoggingEvent): void {
-    if (!writer.writable) {
+  /**
+   * 写入日志事件
+   */
+  log (loggingEvent: LoggingEvent): void {
+    if (!this.writer.writable) {
       return
     }
-    if (options?.removeColor === true) {
-      // Remove ANSI color codes
-      const regex = /\x1b\[[0-9;]*m/g
+    if (this.config.removeColor === true) {
+      // eslint-disable-next-line no-control-regex
+      const regex = /\x1b[[0-9;]*m/g
       loggingEvent.data = loggingEvent.data.map((d) => {
         if (typeof d === 'string') return d.replace(regex, '')
         return d
       })
     }
-    if (!writer.write(layout(loggingEvent, timezoneOffset) + EOL, 'utf8')) {
-      // @ts-ignore - custom event
+    if (!this.writer.write(this.layout(loggingEvent, this.config.timezoneOffset) + FileAppender.eol, 'utf8')) {
       process.emit('log4js:pause', true)
     }
-  } as AppenderFunctionWithExtras
+  }
 
-  app.reopen = function (): void {
-    writer.end(() => {
-      writer = openTheStream(file, logSize, numBackups, options)
+  /**
+   * 重新打开文件
+   */
+  reopen (): void {
+    this.writer.end(() => {
+      this.writer = this.createWriter()
     })
   }
 
-  app.sighupHandler = function (): void {
+  /**
+   * SIGHUP 信号处理器
+   */
+  sighupHandler (): void {
     debug('SIGHUP handler called.')
-    app.reopen()
+    this.reopen()
   }
 
-  app.shutdown = function (complete: () => void): void {
-    sighupListeners.delete(app)
-    if (sighupListeners.size === 0 && mainSighupListenerStarted) {
-      process.removeListener('SIGHUP', mainSighupHandler)
-      mainSighupListenerStarted = false
+  /**
+   * 关闭 Appender
+   */
+  shutdown (complete: () => void): void {
+    FileAppender.sighupListeners.delete(this)
+    if (FileAppender.sighupListeners.size === 0 && FileAppender.mainSighupListenerStarted) {
+      process.removeListener('SIGHUP', FileAppender.mainSighupHandler)
+      FileAppender.mainSighupListenerStarted = false
     }
-    writer.end('', 'utf-8', complete)
+    this.writer.end('', 'utf-8', complete)
   }
-
-  // On SIGHUP, close and reopen all files. This allows this appender to work with
-  // logrotate. Note that if you are using logrotate, you should not set `logSize`.
-  sighupListeners.add(app)
-  if (!mainSighupListenerStarted) {
-    process.on('SIGHUP', mainSighupHandler)
-    mainSighupListenerStarted = true
-  }
-
-  return app
 }
 
-function configure (config: FileAppender, layouts: LayoutsParam): AppenderFunction {
-  let layout = layouts.basicLayout
-  if (config.layout) {
-    layout = layouts.layout(config.layout.type, config.layout as Record<string, unknown>) || layout
+/**
+ * 文件 Appender 配置接口
+ */
+export interface FileAppenderConfig extends AppenderConfigBase, RollingFileWriteStreamOptions {
+  type: 'file'
+  /** 日志文件名 */
+  filename: string
+  /** 最大日志文件大小（字节） */
+  maxLogSize?: number
+  /** 备份文件数量 */
+  backups?: number
+  /** 时区偏移量（分钟） */
+  timezoneOffset?: number
+  /** 是否移除颜色代码 */
+  removeColor?: boolean
+}
+
+/**
+ * 配置文件 Appender
+ * @param config - Appender 配置对象
+ * @param layouts - 布局管理器
+ * @returns 配置好的文件 Appender
+ */
+export const configure: Configure<FileAppenderConfig, true> = (config, layouts) => {
+  const layout = config.layout
+    ? layouts.layout(config.layout.type, config.layout) || layouts.colouredLayout
+    : layouts.basicLayout
+
+  // 安全默认值（而不是依赖 streamroller 的默认值）
+  config.mode = config.mode || 0o600
+
+  // 处理文件路径
+  let file = config.filename
+  if (typeof file !== 'string' || file.length === 0) {
+    throw new Error(`无效的文件名: ${file}`)
+  } else if (file.endsWith(path.sep)) {
+    throw new Error(`文件名是一个目录: ${file}`)
+  } else if (file.indexOf(`~${path.sep}`) === 0) {
+    // 处理 ~ 扩展: https://github.com/nodejs/node/issues/684
+    // 排除 ~ 和 ~filename，因为这些可以是有效的文件
+    file = file.replace('~', os.homedir())
   }
+  file = path.normalize(file)
 
-  // security default (instead of relying on streamroller default)
-  const mode = config.mode ?? 0o600
+  const numBackups = !config.backups && config.backups !== 0 ? 5 : config.backups
 
-  return fileAppender(
-    config.filename,
-    layout,
+  debug(
+    'Creating file appender (',
+    file,
+    ', ',
     config.maxLogSize,
-    config.backups,
-    { ...config, mode } as Record<string, unknown>,
-    config.timezoneOffset
+    ', ',
+    numBackups,
+    ', ',
+    config,
+    ', ',
+    config.timezoneOffset,
+    ')'
+  )
+
+  // 创建 FileAppender 实例
+  const appender = new FileAppender(file, layout, config, numBackups)
+
+  // 在接收到 SIGHUP 信号时，关闭并重新打开所有文件
+  // 这使得此 appender 可以与 logrotate 配合使用
+  // 注意：如果使用 logrotate，则不应设置 `maxLogSize`
+
+  // 返回带有 shutdown 方法的函数
+  return Object.assign(
+    (loggingEvent: LoggingEvent) => appender.log(loggingEvent),
+    {
+      shutdown: (complete: () => void) => appender.shutdown(complete),
+    }
   )
 }
-
-export { configure }

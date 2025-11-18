@@ -1,61 +1,87 @@
-import type { AppenderConfig } from '../types/core'
+import type { ConfigAppendersValue } from '.'
 
-function maxFileSizeUnitTransform (maxLogSize: unknown): number {
+/**
+ * 单位定义
+ */
+interface Units {
+  K: number
+  M: number
+  G: number
+  [key: string]: number
+}
+
+/**
+ * 配置适配器类型
+ */
+type ConfigAdapter = {
+  [key: string]: (value: any) => any
+}
+
+/**
+ * 最大文件大小单位转换
+ * @param maxLogSize - 最大日志大小（可以是数字或带单位的字符串，如 "10M"）
+ * @returns 转换后的字节数
+ */
+function maxLogSize (maxLogSize: number | string) {
   if (typeof maxLogSize === 'number' && Number.isInteger(maxLogSize)) {
     return maxLogSize
   }
 
-  if (typeof maxLogSize !== 'string') {
-    throw Error(`maxLogSize: "${maxLogSize}" is invalid`)
-  }
-
-  const units: Record<string, number> = {
+  const units: Units = {
     K: 1024,
     M: 1024 * 1024,
     G: 1024 * 1024 * 1024,
   }
   const validUnit = Object.keys(units)
-  const unit = maxLogSize.slice(-1).toLocaleUpperCase()
-  const value = maxLogSize.slice(0, -1).trim()
+  const unit = (maxLogSize as string).slice(-1).toLocaleUpperCase()
+  const value = (maxLogSize as string).slice(0, -1).trim()
 
   if (validUnit.indexOf(unit) < 0 || !Number.isInteger(Number(value))) {
-    throw Error(`maxLogSize: "${maxLogSize}" is invalid`)
-  } else {
-    return Number(value) * units[unit]
+    throw Error(`maxLogSize: "${maxLogSize}" 无效`)
   }
+  return Number(value) * units[unit]
 }
 
-type ConfigTransformer = (value: unknown) => unknown
-
-interface FileAppenderConfig extends AppenderConfig {
-  maxLogSize?: string | number
-}
-
-function adapter<T extends AppenderConfig> (
-  configAdapter: Record<string, ConfigTransformer>,
-  config: T
-): T {
-  const newConfig = Object.assign({}, config) as T
+/**
+ * 配置适配器
+ * @param configAdapter - 配置适配器映射
+ * @param config - 原始配置
+ * @returns 适配后的配置
+ */
+function adapter (configAdapter: ConfigAdapter, config: ConfigAppendersValue): ConfigAppendersValue {
+  const cfg = Object.assign({}, config) as Record<string, any>
   Object.keys(configAdapter).forEach((key) => {
-    if (key in newConfig && newConfig[key as keyof T] !== undefined) {
-      (newConfig as Record<string, unknown>)[key] = configAdapter[key](newConfig[key as keyof T])
+    if (cfg[key]) {
+      if (typeof configAdapter[key] !== 'function') return
+      // @ts-ignore
+      cfg[key] = configAdapter[key](config[key])
     }
   })
-  return newConfig
+  return cfg as ConfigAppendersValue
 }
 
-function fileAppenderAdapter (config: FileAppenderConfig): FileAppenderConfig {
-  const configAdapter: Record<string, ConfigTransformer> = {
-    maxLogSize: maxFileSizeUnitTransform,
-  }
-  return adapter(configAdapter, config)
-}
+/**
+ * 文件 Appender 适配器
+ * @param config - 文件 Appender 配置
+ * @returns 适配后的配置
+ */
+const fileAppenderAdapter = (config: ConfigAppendersValue) => adapter({ maxLogSize }, config)
 
-const adapters: Record<string, (config: AppenderConfig) => AppenderConfig> = {
+/**
+ * Appender 适配器映射
+ */
+const adapters: Record<string, (config: ConfigAppendersValue) => ConfigAppendersValue> = {
   dateFile: fileAppenderAdapter,
   file: fileAppenderAdapter,
   fileSync: fileAppenderAdapter,
 }
 
-export const modifyConfig = (config: AppenderConfig): AppenderConfig =>
-  adapters[config.type] ? adapters[config.type](config) : config
+/**
+ * 修改配置
+ * @param config - Appender 配置
+ * @returns 修改后的配置
+ */
+export const modifyConfig = (config: ConfigAppendersValue) => {
+  if (typeof config?.type !== 'string') return config
+  return adapters[config.type] ? adapters[config.type](config) : config
+}

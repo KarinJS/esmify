@@ -1,6 +1,5 @@
 import { test } from 'tap'
-import log4js from '../src/log4js'
-import * as recording from '../src/appenders/recording'
+import log4js, { recordingModule as recording } from '../src/index'
 
 test('logger methods - real tests', (batch) => {
   batch.beforeEach(() => {

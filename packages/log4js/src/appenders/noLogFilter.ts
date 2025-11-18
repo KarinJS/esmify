@@ -1,57 +1,46 @@
-import debugFactory from 'debug'
-import type LoggingEvent from '../LoggingEvent'
-import type { AppenderFunction } from '../types/core'
-import type { NoLogFilterAppender } from '../types/appenders'
+import debugModule from 'debug'
+import { AppenderType } from './base'
 
-const debug = debugFactory('log4js:noLogFilter')
+import type { Configure, AppenderConfigBase } from './base'
+
+const debug = debugModule('log4js:noLogFilter')
 
 /**
- * The function removes empty or null regexp from the array
+ * 无日志过滤器 Appender 配置接口
  */
-function removeNullOrEmptyRegexp (regexp: (string | null | undefined)[]): string[] {
-  return regexp.filter((el): el is string => el != null && el !== '')
+export interface NoLogFilterAppenderConfig extends AppenderConfigBase {
+  type: 'noLogFilter'
+  /** 要过滤的目标 Appender 名称 */
+  appender: string
+  /** 要排除的正则表达式字符串或字符串数组 */
+  exclude: string | string[]
 }
 
 /**
- * Returns a function that will exclude the events in case they match
- * with the regular expressions provided
+ * 配置无日志过滤器 Appender
+ * @param config - Appender 配置对象
+ * @param layouts - 布局管理器
+ * @param findAppender - 查找 Appender 的函数
+ * @returns 配置好的无日志过滤器 Appender
  */
-function noLogFilter (
-  filters: string | string[],
-  appender: AppenderFunction
-): AppenderFunction {
-  return (logEvent: LoggingEvent): void => {
-    debug(`Checking data: ${logEvent.data} against filters: ${filters}`)
+export const configure: Configure<NoLogFilterAppenderConfig> = (
+  config,
+  _layouts,
+  findAppender
+) => {
+  const appender = findAppender(config.appender as unknown as AppenderType)
+  const filters = (typeof config.exclude === 'string' ? [config.exclude] : config.exclude)
+    .filter((el) => el != null && el !== '')
+  const regex = new RegExp(filters.join('|'), 'i')
 
-    let filterList = typeof filters === 'string' ? [filters] : filters
-    filterList = removeNullOrEmptyRegexp(filterList)
-
-    if (filterList.length === 0) {
-      debug('No filters, sending to appender')
-      appender(logEvent)
-      return
-    }
-
-    const regex = new RegExp(filterList.join('|'), 'i')
-    const hasMatch = logEvent.data.some((value) => regex.test(String(value)))
-
-    if (!hasMatch) {
-      debug('Not excluded, sending to appender')
+  return (logEvent) => {
+    debug(`正在检查数据：${logEvent.data} 是否匹配过滤器：${filters}`)
+    if (
+      filters.length === 0 ||
+      logEvent.data.findIndex((value) => regex.test(value)) < 0
+    ) {
+      debug('未排除，发送到 appender')
       appender(logEvent)
     }
   }
 }
-
-function configure (
-  config: NoLogFilterAppender,
-  _layouts: unknown,
-  findAppender: (name: string) => AppenderFunction | false
-): AppenderFunction {
-  const appender = findAppender(config.appender)
-  if (!appender) {
-    throw new Error(`Appender "${config.appender}" not found`)
-  }
-  return noLogFilter(config.exclude, appender)
-}
-
-export { configure }

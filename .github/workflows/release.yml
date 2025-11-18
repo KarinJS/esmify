@@ -6,6 +6,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  id-token: write
 jobs:
   release-please:
     runs-on: macos-latest
@@ -58,61 +59,61 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/lodash
-        run: pnpm i -F @karinjs/lodash && pnpm run build && pnpm run pub
+        run: pnpm i -F @karinjs/lodash && pnpm run build && pnpm publish --access public --provenance
       - name: 发布 express 包
         if: ${{ needs.release-please.outputs.express_release == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/express
-        run: pnpm i -F @karinjs/express && pnpm run build && pnpm run pub
+        run: pnpm i -F @karinjs/express && pnpm run build && pnpm publish --access public --provenance
       - name: 发布 dotenv 包
         if: ${{ needs.release-please.outputs.dotenv_release == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/dotenv
-        run: pnpm i -F @karinjs/dotenv && pnpm run build && pnpm run pub
+        run: pnpm i -F @karinjs/dotenv && pnpm run build && pnpm publish --access public --provenance
       - name: 发布 jsonwebtoken 包
         if: ${{ needs.release-please.outputs.jsonwebtoken_release == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/jsonwebtoken
-        run: pnpm i -F @karinjs/jsonwebtoken && pnpm run build && pnpm run pub
+        run: pnpm i -F @karinjs/jsonwebtoken && pnpm run build && pnpm publish --access public --provenance
       - name: 发布 log4js 包
         if: ${{ needs.release-please.outputs.log4js_release == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/log4js
-        run: pnpm i -F @karinjs/log4js && pnpm run build && pnpm run pub
+        run: pnpm i -F @karinjs/log4js && pnpm run build && pnpm publish --access public --provenance
       - name: 发布 redis 包
         if: ${{ needs.release-please.outputs.redis_release == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/redis
-        run: pnpm i -F @karinjs/redis && pnpm run build && pnpm run pub
+        run: pnpm i -F @karinjs/redis && pnpm run build && pnpm publish --access public --provenance
       - name: 发布 sqlite3-cjs 包
         if: ${{ needs.release-please.outputs.sqlite3-cjs_release == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/sqlite3-cjs
-        run: pnpm i -F @karinjs/sqlite3-cjs && pnpm run build && pnpm run pub
+        run: pnpm i -F @karinjs/sqlite3-cjs && pnpm run build && pnpm publish --access public --provenance
       - name: 发布 sqlite3 包
         if: ${{ needs.release-please.outputs.sqlite3_release == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/sqlite3
-        run: pnpm i -F @karinjs/sqlite3 && pnpm run build && pnpm run pub
+        run: pnpm i -F @karinjs/sqlite3 && pnpm run build && pnpm publish --access public --provenance
       - name: 发布 ws 包
         if: ${{ needs.release-please.outputs.ws_rerelease == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/ws
-        run: pnpm i -F @karinjs/ws && pnpm run build && pnpm run pub
+        run: pnpm i -F @karinjs/ws && pnpm run build && pnpm publish --access public --provenance
       - name: 发布 node-pty 包
         if: ${{ needs.release-please.outputs.node-pty_rerelease == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/node-pty
-        run: pnpm i -F @karinjs/node-pty && pnpm run build && pnpm run pub
+        run: pnpm i -F @karinjs/node-pty && pnpm run build && pnpm publish --access public --provenance
       # - name: 编译 form-data 包
       #   run: pnpm i -F @karinjs/form-data && pnpm run build
       #   working-directory: packages/form-data
@@ -129,19 +130,19 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/axios
-        run: pnpm i -F @karinjs/axios && pnpm run build && pnpm run pub
+        run: pnpm i -F @karinjs/axios && pnpm run build && pnpm publish --access public --provenance
       - name: 发布 qs 包
         if: ${{ needs.release-please.outputs.qs_rerelease == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/qs
-        run: pnpm i -F @karinjs/qs && pnpm run build && pnpm run pub
+        run: pnpm i -F @karinjs/qs && pnpm run build && pnpm publish --access public --provenance
       - name: 发布 long-timeout 包
         if: ${{ needs.release-please.outputs.long-timeout_rerelease == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/long-timeout
-        run: pnpm i -F @karinjs/long-timeout && pnpm run build && pnpm run pub
+        run: pnpm i -F @karinjs/long-timeout && pnpm run build && pnpm publish --access public --provenance
       - name: 编译 cron-parser 包
         run: pnpm i -F @karinjs/cron-parser && pnpm run build
         working-directory: packages/cron-parser
@@ -152,10 +153,10 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/cron-parser
-        run: pnpm run pub
+        run: pnpm publish --access public --provenance
       - name: 发布 node-schedule 包
         if: ${{ needs.release-please.outputs.node-schedule_rerelease == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/node-schedule
-        run: pnpm i -F @karinjs/node-schedule && pnpm run build && pnpm run pub
+        run: pnpm i -F @karinjs/node-schedule && pnpm run build && pnpm publish --access public --provenance

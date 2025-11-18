@@ -1,211 +1,289 @@
-import debugFactory from 'debug'
-import { createServer, createConnection, Server, Socket } from 'node:net'
-import LoggingEvent from '../LoggingEvent'
-import type { AppenderFunction, Levels } from '../types/core'
-import type { MultiprocessAppender } from '../types/appenders'
+import net from 'net'
+import debugModule from 'debug'
+import { AppenderType } from './base'
+import { LoggingEvent } from '../core/LoggingEvent'
 
-const debug = debugFactory('log4js:multiprocess')
+import type { Level, Levels } from '../core/levels'
+import type { LoggingEvent as LoggingEventType } from '../core/LoggingEvent'
+import type { Configure, AppenderFunction, AppenderConfigBase } from './base'
 
+const debug = debugModule('log4js:multiprocess')
+
+/** 日志消息结束标记 */
 const END_MSG = '__LOG4JS__'
 
-interface AppenderWithShutdown extends AppenderFunction {
-  shutdown: (cb: () => void) => void
+/**
+ * 扩展的日志事件（包含远程连接信息）
+ */
+interface RemoteLoggingEvent extends LoggingEventType {
+  remoteAddress?: string
+  remotePort?: number
 }
 
 /**
- * Creates a server, listening on config.loggerPort, config.loggerHost.
- * Output goes to actualAppender (config.appender is used to set up that appender).
+ * 错误日志事件
  */
-function logServer (
-  config: MultiprocessAppender,
-  actualAppender: AppenderFunction,
-  levels: Levels
-): AppenderWithShutdown {
-  /**
-   * Takes a utf-8 string, returns an object with the correct log properties.
-   */
-  function deserializeLoggingEvent (clientSocket: Socket, msg: string): LoggingEvent {
-    debug('(master) deserialising log event')
-    const loggingEvent = LoggingEvent.deserialise(msg)
-      ; (loggingEvent as unknown as Record<string, unknown>).remoteAddress = clientSocket.remoteAddress
-      ; (loggingEvent as unknown as Record<string, unknown>).remotePort = clientSocket.remotePort
+interface ErrorLoggingEvent {
+  startTime: Date
+  categoryName: string
+  level: Level
+  data: [string, Error]
+  remoteAddress?: string | undefined
+  remotePort?: number | undefined
+}
 
+/**
+ * 多进程 Appender 配置接口
+ */
+export interface MultiprocessAppenderConfig extends AppenderConfigBase {
+  type: 'multiprocess'
+  /** 模式：master（主进程）或 worker（工作进程） */
+  mode: 'master' | 'worker'
+  /** 日志服务器主机地址（默认：localhost） */
+  loggerHost?: string
+  /** 日志服务器端口（默认：5000） */
+  loggerPort?: number
+  /** master 模式下的实际 Appender 名称 */
+  appender: string
+}
+
+/**
+ * 主进程 Appender 类
+ * 创建日志服务器，监听来自工作进程的日志消息
+ */
+class MasterAppender {
+  private server: net.Server
+  private actualAppender: AppenderFunction
+  private levels: Levels
+
+  constructor (
+    config: MultiprocessAppenderConfig,
+    actualAppender: AppenderFunction,
+    levels: Levels
+  ) {
+    this.actualAppender = actualAppender
+    this.levels = levels
+    this.server = this.createServer(config)
+  }
+
+  /**
+   * 创建日志服务器
+   */
+  private createServer (config: MultiprocessAppenderConfig) {
+    const server = net.createServer((clientSocket: net.Socket) => {
+      debug('(主进程) 收到连接')
+      clientSocket.setEncoding('utf8')
+      let logMessage = ''
+
+      const chunkReceived = (chunk?: string) => {
+        debug('(主进程) 收到数据块')
+        logMessage += chunk || ''
+        if (logMessage.indexOf(END_MSG) > -1) {
+          const event = logMessage.slice(0, logMessage.indexOf(END_MSG))
+          this.logTheMessage(clientSocket, event)
+          logMessage = logMessage.slice(event.length + END_MSG.length) || ''
+          // 检查是否还有更多数据，可能是一个大块
+          chunkReceived()
+        }
+      }
+
+      const handleError = (error: Error) => {
+        const loggingEvent: ErrorLoggingEvent = {
+          startTime: new Date(),
+          categoryName: 'log4js',
+          level: this.levels.ERROR,
+          data: ['工作进程日志进程意外挂起', error],
+          remoteAddress: clientSocket.remoteAddress,
+          remotePort: clientSocket.remotePort,
+        }
+        this.actualAppender(loggingEvent as unknown as LoggingEventType)
+      }
+
+      clientSocket.on('data', chunkReceived)
+      clientSocket.on('end', chunkReceived)
+      clientSocket.on('error', handleError)
+    })
+
+    server.listen(
+      config.loggerPort || 5000,
+      config.loggerHost || 'localhost',
+      (e?: Error) => {
+        debug('(主进程) 主服务器正在监听，错误：', e)
+        // 允许进程退出，如果这是唯一活动的套接字
+        server.unref()
+      }
+    )
+
+    return server
+  }
+
+  /**
+   * 反序列化日志事件
+   */
+  private deserializeLoggingEvent (clientSocket: net.Socket, msg: string) {
+    debug('(主进程) 反序列化日志事件')
+    const loggingEvent: RemoteLoggingEvent = LoggingEvent.deserialise(msg)
+    loggingEvent.remoteAddress = clientSocket.remoteAddress
+    loggingEvent.remotePort = clientSocket.remotePort
     return loggingEvent
   }
 
-  const server: Server = createServer((clientSocket: Socket) => {
-    debug('(master) connection received')
-    clientSocket.setEncoding('utf8')
-    let logMessage = ''
-
-    function logTheMessage (msg: string): void {
-      debug('(master) deserialising log event and sending to actual appender')
-      actualAppender(deserializeLoggingEvent(clientSocket, msg))
-    }
-
-    function chunkReceived (chunk?: string): void {
-      debug('(master) chunk of data received')
-      let event: string
-      logMessage += chunk || ''
-      if (logMessage.indexOf(END_MSG) > -1) {
-        event = logMessage.slice(0, logMessage.indexOf(END_MSG))
-        logTheMessage(event)
-        logMessage = logMessage.slice(event.length + END_MSG.length) || ''
-        // check for more, maybe it was a big chunk
-        chunkReceived()
-      }
-    }
-
-    function handleError (error: Error): void {
-      const loggingEvent = new LoggingEvent(
-        'log4js',
-        levels.ERROR,
-        ['A worker log process hung up unexpectedly', error],
-        {}
-      )
-        ; (loggingEvent as unknown as Record<string, unknown>).remoteAddress = clientSocket.remoteAddress
-        ; (loggingEvent as unknown as Record<string, unknown>).remotePort = clientSocket.remotePort
-      actualAppender(loggingEvent)
-    }
-
-    clientSocket.on('data', chunkReceived)
-    clientSocket.on('end', chunkReceived)
-    clientSocket.on('error', handleError)
-  })
-
-  server.listen(
-    config.loggerPort || 5000,
-    config.loggerHost || 'localhost',
-    () => {
-      debug('(master) master server listening')
-      // allow the process to exit, if this is the only socket active
-      server.unref()
-    }
-  )
-
-  const app = function (event: LoggingEvent): void {
-    debug('(master) log event sent directly to actual appender (local event)')
-    return actualAppender(event)
-  } as AppenderWithShutdown
-
-  app.shutdown = function (cb: () => void): void {
-    debug('(master) master shutdown called, closing server')
-    server.close(cb)
+  /**
+   * 记录消息
+   */
+  private logTheMessage (clientSocket: net.Socket, msg: string) {
+    debug('(主进程) 反序列化日志事件并发送到实际 appender')
+    this.actualAppender(this.deserializeLoggingEvent(clientSocket, msg))
   }
 
-  return app
+  /**
+   * 记录日志事件（本地事件）
+   */
+  log (event: LoggingEventType) {
+    debug('(主进程) 日志事件直接发送到实际 appender（本地事件）')
+    this.actualAppender(event)
+  }
+
+  /**
+   * 关闭服务器
+   */
+  shutdown (cb: (err?: Error) => void) {
+    debug('(主进程) 主进程关闭调用，正在关闭服务器')
+    this.server.close(cb)
+  }
 }
 
-function workerAppender (config: MultiprocessAppender): AppenderWithShutdown {
-  let canWrite = false
-  const buffer: LoggingEvent[] = []
-  let socket: Socket
-  let shutdownAttempts = 3
+/**
+ * 工作进程 Appender 类
+ * 连接到主进程日志服务器，发送日志消息
+ */
+class WorkerAppender {
+  private canWrite = false
+  private buffer: LoggingEventType[] = []
+  private socket!: net.Socket
+  private shutdownAttempts = 3
+  private config: MultiprocessAppenderConfig
 
-  function write (loggingEvent: LoggingEvent): void {
-    debug('(worker) Writing log event to socket')
-    socket.write(loggingEvent.serialise(), 'utf8')
-    socket.write(END_MSG, 'utf8')
+  constructor (config: MultiprocessAppenderConfig) {
+    this.config = config
+    this.createSocket()
   }
 
-  function emptyBuffer (): void {
-    let evt: LoggingEvent | undefined
-    debug('(worker) emptying worker buffer')
-    while ((evt = buffer.shift())) {
-      write(evt)
-    }
-  }
-
-  function createSocket (): void {
+  /**
+   * 创建套接字连接
+   */
+  private createSocket () {
     debug(
-      `(worker) worker appender creating socket to ${config.loggerHost || 'localhost'
-      }:${config.loggerPort || 5000}`
+      `(工作进程) 工作进程 appender 正在创建套接字连接到 ${this.config.loggerHost || 'localhost'}:${this.config.loggerPort || 5000}`
     )
-    socket = createConnection(
-      config.loggerPort || 5000,
-      config.loggerHost || 'localhost'
+    this.socket = net.createConnection(
+      this.config.loggerPort || 5000,
+      this.config.loggerHost || 'localhost'
     )
-    socket.on('connect', () => {
-      debug('(worker) worker socket connected')
-      emptyBuffer()
-      canWrite = true
+    this.socket.on('connect', () => {
+      debug('(工作进程) 工作进程套接字已连接')
+      this.emptyBuffer()
+      this.canWrite = true
     })
-    socket.on('timeout', () => socket.end())
-    socket.on('error', (e: Error) => {
-      debug('connection error', e)
-      canWrite = false
-      emptyBuffer()
+    this.socket.on('timeout', this.socket.end.bind(this.socket))
+    this.socket.on('error', (e: Error) => {
+      debug('连接错误', e)
+      this.canWrite = false
+      this.emptyBuffer()
     })
-    socket.on('close', createSocket)
+    this.socket.on('close', () => this.createSocket())
   }
 
-  createSocket()
+  /**
+   * 写入日志事件到套接字
+   */
+  private write (loggingEvent: LoggingEventType) {
+    debug('(工作进程) 将日志事件写入套接字')
+    this.socket.write(loggingEvent.serialise(), 'utf8')
+    this.socket.write(END_MSG, 'utf8')
+  }
 
-  const log = function (loggingEvent: LoggingEvent): void {
-    if (canWrite) {
-      write(loggingEvent)
-    } else {
-      debug(
-        '(worker) worker buffering log event because it cannot write at the moment'
-      )
-      buffer.push(loggingEvent)
+  /**
+   * 清空缓冲区
+   */
+  private emptyBuffer () {
+    let evt: LoggingEventType | undefined
+    debug('(工作进程) 正在清空工作进程缓冲区')
+    while ((evt = this.buffer.shift())) {
+      this.write(evt)
     }
-  } as AppenderWithShutdown
+  }
 
-  log.shutdown = function (cb: () => void): void {
-    debug('(worker) worker shutdown called')
-    if (buffer.length && shutdownAttempts) {
-      debug('(worker) worker buffer has items, waiting 100ms to empty')
-      shutdownAttempts -= 1
+  /**
+   * 记录日志事件
+   */
+  log (loggingEvent: LoggingEventType) {
+    if (this.canWrite) {
+      this.write(loggingEvent)
+    } else {
+      debug('(工作进程) 工作进程正在缓冲日志事件，因为当前无法写入')
+      this.buffer.push(loggingEvent)
+    }
+  }
+
+  /**
+   * 关闭工作进程 Appender
+   */
+  shutdown (cb: (err?: Error) => void) {
+    debug('(工作进程) 工作进程关闭调用')
+    if (this.buffer.length && this.shutdownAttempts) {
+      debug('(工作进程) 工作进程缓冲区有项目，等待 100ms 清空')
+      this.shutdownAttempts -= 1
       setTimeout(() => {
-        log.shutdown(cb)
+        this.shutdown(cb)
       }, 100)
     } else {
-      socket.removeAllListeners('close')
-      socket.end(cb)
+      this.socket.removeAllListeners('close')
+      this.socket.end(cb)
     }
   }
-  return log
 }
 
-function createAppender (
-  config: MultiprocessAppender,
-  appender: AppenderFunction,
-  levels: Levels
-): AppenderWithShutdown {
-  if (config.mode === 'master') {
-    debug('Creating master appender')
-    return logServer(config, appender, levels)
-  }
+/**
+ * 配置多进程 Appender
+ * @param config - Appender 配置对象
+ * @param layouts - 布局管理器
+ * @param findAppender - 查找 Appender 的函数
+ * @param levels - 级别管理器
+ * @returns 配置好的多进程 Appender
+ */
+export const configure: Configure<MultiprocessAppenderConfig, true> = (
+  config,
+  _layouts,
+  findAppender,
+  levels
+) => {
+  debug(`配置模式 = ${config.mode}`)
 
-  debug('Creating worker appender')
-  return workerAppender(config)
-}
-
-async function configure (
-  config: MultiprocessAppender,
-  _layouts: unknown,
-  findAppender: (name: string) => Promise<AppenderFunction | false>,
-  levels: Levels
-): Promise<AppenderFunction> {
-  let appender: AppenderFunction | false = false
-  debug(`configure with mode = ${config.mode}`)
+  let appender: MasterAppender | WorkerAppender
 
   if (config.mode === 'master') {
     if (!config.appender) {
-      debug(`no appender found in config ${JSON.stringify(config)}`)
-      throw new Error('multiprocess master must have an "appender" defined')
+      debug(`配置中未找到 appender ${config}`)
+      throw new Error('多进程主进程必须定义 "appender"')
     }
-    debug(`actual appender is ${config.appender}`)
-    appender = await findAppender(config.appender)
-    if (!appender) {
-      debug(`actual appender "${config.appender}" not found`)
-      throw new Error(
-        `multiprocess master appender "${config.appender}" not defined`
-      )
+    debug(`实际 appender 是 ${config.appender}`)
+    const actualAppender = findAppender(config.appender as unknown as AppenderType)
+    if (!actualAppender) {
+      debug(`未找到实际 appender "${config.appender}"`)
+      throw new Error(`多进程主进程 appender "${config.appender}" 未定义`)
     }
+    debug('正在创建主进程 appender')
+    appender = new MasterAppender(config, actualAppender, levels)
+  } else {
+    debug('正在创建工作进程 appender')
+    appender = new WorkerAppender(config)
   }
-  return createAppender(config, appender as AppenderFunction, levels)
-}
 
-export { configure }
+  return Object.assign(
+    (loggingEvent: LoggingEventType) => appender.log(loggingEvent),
+    {
+      shutdown: (cb: (err?: Error) => void) => appender.shutdown(cb),
+    }
+  )
+}

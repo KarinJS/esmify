@@ -1,27 +1,39 @@
-import debugFactory from 'debug'
-import { createServer, Server, Socket } from 'node:net'
-import * as clustering from '../clustering'
-import LoggingEvent from '../LoggingEvent'
-import type { TCPServerAppender } from '../types/appenders'
+import net from 'net'
+import debugModule from 'debug'
+import { LoggingEvent } from '../core/LoggingEvent'
+import { clustering } from '../core/clustering'
 
-const debug = debugFactory('log4js:tcp-server')
+import type { Configure, AppenderConfigBase } from './base'
+
+const debug = debugModule('log4js:tcp-server')
 
 const DELIMITER = '__LOG4JS__'
 
-interface AppenderWithShutdown {
-  shutdown: (cb: () => void) => void
+/**
+ * TCP 服务器 Appender 配置接口
+ */
+export interface TcpServerAppenderConfig extends AppenderConfigBase {
+  type: 'tcp-server'
+  /** 服务器主机地址 */
+  host?: string
+  /** 服务器端口 */
+  port?: number
 }
 
-function configure (config: TCPServerAppender): AppenderWithShutdown {
-  debug('configure called with', config)
+/**
+ * 配置 TCP 服务器 Appender
+ * @param config - Appender 配置对象
+ * @returns 配置好的 TCP 服务器 Appender
+ */
+export const configure: Configure<TcpServerAppenderConfig, true> = (config) => {
+  debug('configure called with ', config)
 
-  const server: Server = createServer((socket: Socket) => {
+  const server = net.createServer((socket) => {
     let dataSoFar = ''
-
-    const send = (data?: string): void => {
+    const send = (data?: string) => {
       if (data) {
         dataSoFar += data
-        if (dataSoFar.indexOf(DELIMITER) !== -1) {
+        if (dataSoFar.indexOf(DELIMITER)) {
           const events = dataSoFar.split(DELIMITER)
           if (!dataSoFar.endsWith(DELIMITER)) {
             dataSoFar = events.pop() || ''
@@ -29,7 +41,7 @@ function configure (config: TCPServerAppender): AppenderWithShutdown {
             dataSoFar = ''
           }
           events
-            .filter((e) => e.length > 0)
+            .filter((e) => e.length)
             .forEach((e) => {
               clustering.send(LoggingEvent.deserialise(e))
             })
@@ -38,7 +50,6 @@ function configure (config: TCPServerAppender): AppenderWithShutdown {
         }
       }
     }
-
     socket.setEncoding('utf8')
     socket.on('data', send)
     socket.on('end', send)
@@ -49,12 +60,15 @@ function configure (config: TCPServerAppender): AppenderWithShutdown {
     server.unref()
   })
 
-  return {
-    shutdown: (cb: () => void): void => {
-      debug('shutdown called.')
-      server.close(cb)
+  return Object.assign(
+    () => {
+      // TCP server appender 不需要主动记录日志，只接收
     },
-  }
+    {
+      shutdown: (cb: (err?: Error) => void) => {
+        debug('shutdown called.')
+        server.close(cb)
+      },
+    }
+  )
 }
-
-export { configure }

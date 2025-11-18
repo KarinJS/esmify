@@ -1,5 +1,5 @@
 import { test } from 'tap'
-import log4js from '../src/log4js'
+import log4js from '../src/index'
 
 test('configuration validation - real tests', (batch) => {
   batch.test('should reject configuration without appenders', (t) => {
@@ -9,7 +9,7 @@ test('configuration validation - real tests', (batch) => {
           default: { appenders: ['console'], level: 'info' },
         },
       } as any)
-    }, /must have a property "appenders"/, 'should throw error for missing appenders')
+    }, /必须有一个类型为 object 的属性 "appenders"/, 'should throw error for missing appenders')
 
     log4js.shutdown()
     t.end()
@@ -22,7 +22,7 @@ test('configuration validation - real tests', (batch) => {
           console: { type: 'console' },
         },
       } as any)
-    }, /must have a property "categories"/, 'should throw error for missing categories')
+    }, /Cannot convert undefined or null to object/, 'should throw error for missing categories')
 
     log4js.shutdown()
     t.end()
@@ -38,7 +38,7 @@ test('configuration validation - real tests', (batch) => {
           custom: { appenders: ['console'], level: 'info' },
         },
       })
-    }, /must define a "default" category/, 'should throw error for missing default category')
+    }, /必须定义一个 "default" 分类/, 'should throw error for missing default category')
 
     log4js.shutdown()
     t.end()
@@ -54,7 +54,7 @@ test('configuration validation - real tests', (batch) => {
           default: { appenders: ['nonexistent'], level: 'info' },
         },
       })
-    }, /appender "nonexistent" is not defined/, 'should throw error for undefined appender')
+    }, /appender "nonexistent" 未定义/, 'should throw error for undefined appender')
 
     log4js.shutdown()
     t.end()
@@ -70,7 +70,7 @@ test('configuration validation - real tests', (batch) => {
           default: { appenders: ['console'], level: 'INVALID_LEVEL' },
         },
       })
-    }, /level "INVALID_LEVEL" not recognised/, 'should throw error for invalid level')
+    }, /未知的日志级别: INVALID_LEVEL/, 'should throw error for invalid level')
 
     log4js.shutdown()
     t.end()
@@ -86,7 +86,7 @@ test('configuration validation - real tests', (batch) => {
           default: { appenders: ['broken'], level: 'info' },
         },
       })
-    }, /must be an object with property "type"/, 'should throw error for appender without type')
+    }, /必须是具有 "type" 属性的对象/, 'should throw error for appender without type')
 
     log4js.shutdown()
     t.end()
@@ -102,7 +102,7 @@ test('configuration validation - real tests', (batch) => {
           default: { appenders: ['broken'], level: 'info' },
         },
       })
-    }, /could not be (found|loaded)/, 'should throw error for invalid appender type')
+    }, /未知的 Appender 类型/, 'should throw error for invalid appender type')
 
     log4js.shutdown()
     t.end()
@@ -205,7 +205,7 @@ test('configuration validation - real tests', (batch) => {
           },
         },
       })
-    }, /enableCallStack must be boolean/, 'should throw error for non-boolean enableCallStack')
+    }, /enableCallStack 必须是布尔类型/, 'should throw error for non-boolean enableCallStack')
 
     log4js.shutdown()
     t.end()
@@ -241,7 +241,7 @@ test('configuration validation - real tests', (batch) => {
           default: { appenders: [], level: 'info' },
         },
       })
-    }, /must contain at least one appender/, 'should throw error for empty appenders array')
+    }, /appenders 必须至少包含一个 appender 名称/, 'should throw error for empty appenders array')
 
     log4js.shutdown()
     t.end()
@@ -257,7 +257,7 @@ test('configuration validation - real tests', (batch) => {
           default: { appenders: 'out' as any, level: 'info' },
         },
       })
-    }, /must be an array/, 'should throw error for non-array appenders')
+    }, /appenders 必须是 appender 名称的数组/, 'should throw error for non-array appenders')
 
     log4js.shutdown()
     t.end()

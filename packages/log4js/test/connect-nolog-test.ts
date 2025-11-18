@@ -2,7 +2,7 @@
 
 import { test } from 'tap'
 import { EventEmitter } from 'events'
-import Level from '../src/levels'
+import { Level } from '../src/index'
 
 class MockLogger {
   messages: Array<{ level: any; message: any }>
@@ -66,7 +66,7 @@ class MockResponse extends EventEmitter {
 }
 
 test('log4js connect logger', async (batch) => {
-  const { default: clm } = await import('../src/connect-logger')
+  const { connect: clm } = await import('../src/index')
 
   batch.test('with nolog config', (t) => {
     const ml = new MockLogger()

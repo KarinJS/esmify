@@ -1,5 +1,5 @@
 import { test } from 'tap'
-import log4js from '../src/log4js'
+import log4js from '../src/index'
 
 test('log4js basic API test', (t) => {
   // 测试主要导出

@@ -1,16 +1,16 @@
 import { test } from 'tap'
-import log4js from '../src/log4js.js'
+import log4js from '../src/index'
 
 test('default settings functionality', (t) => {
   // Test that log4js has sensible defaults
   t.equal(typeof log4js.configure, 'function', 'configure should exist')
   t.equal(typeof log4js.getLogger, 'function', 'getLogger should exist')
   t.equal(typeof log4js.shutdown, 'function', 'shutdown should exist')
-  
+
   // Test isConfigured default state
   const initialState = log4js.isConfigured()
   t.equal(typeof initialState, 'boolean', 'isConfigured should return boolean')
-  
+
   t.end()
 })
 
@@ -25,7 +25,7 @@ test('default logger creation', (t) => {
   } catch (error) {
     t.ok(true, `Expected error due to incomplete appender system: ${error.message}`)
   }
-  
+
   t.end()
 })
 
@@ -39,10 +39,10 @@ test('default configuration structure', (t) => {
       default: { appenders: ['out'], level: 'info' },
     },
   }
-  
+
   t.ok(defaultConfig.appenders, 'should have appenders')
   t.ok(defaultConfig.categories, 'should have categories')
   t.ok(defaultConfig.categories.default, 'should have default category')
-  
+
   t.end()
 })

@@ -1,19 +1,26 @@
-import type LoggingEvent from '../LoggingEvent'
-import type { AppenderFunction, LayoutFunction, LayoutsParam } from '../types/core'
-import type { StandardErrorAppender } from '../types/appenders'
+import type { Configure, AppenderConfigBase } from './base'
 
-function stderrAppender (layout: LayoutFunction, timezoneOffset?: number): AppenderFunction {
-  return (loggingEvent: LoggingEvent) => {
-    process.stderr.write(`${layout(loggingEvent, timezoneOffset)}\n`)
-  }
+/**
+ * 标准错误输出 Appender 配置接口
+ */
+export interface StderrAppenderConfig extends AppenderConfigBase {
+  type: 'stderr'
+  /** 时区偏移量（分钟） */
+  timezoneOffset?: number
 }
 
-function configure (config: StandardErrorAppender, layouts: LayoutsParam): AppenderFunction {
-  let layout = layouts.colouredLayout
-  if (config.layout) {
-    layout = layouts.layout(config.layout.type, config.layout as Record<string, unknown>) || layout
-  }
-  return stderrAppender(layout, config.timezoneOffset)
-}
+/**
+ * 配置标准错误输出 Appender
+ * @param config - Appender 配置对象
+ * @param layouts - 布局管理器
+ * @returns 配置好的标准错误输出 Appender
+ */
+export const configure: Configure<StderrAppenderConfig> = (config, layouts) => {
+  const layout = config.layout
+    ? layouts.layout(config.layout.type, config.layout) || layouts.colouredLayout
+    : layouts.colouredLayout
 
-export { configure }
+  return (loggingEvent) => {
+    process.stderr.write(`${layout(loggingEvent)}\n`)
+  }
+}

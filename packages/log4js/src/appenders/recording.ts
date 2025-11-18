@@ -1,44 +1,53 @@
-import debugFactory from 'debug'
-import type LoggingEvent from '../LoggingEvent'
-import type { AppenderFunction } from '../types/core'
-import type { RecordingAppender } from '../types/appenders'
+import debugModule from 'debug'
 
-const debug = debugFactory('log4js:recording')
+import type { LoggingEvent } from '../core/LoggingEvent'
+import type { Configure, AppenderConfigBase } from './base'
 
-const events: LoggingEvent[] = []
+const debug = debugModule('log4js:recording')
 
-function configure (config: RecordingAppender): AppenderFunction {
-  return function (logEvent: LoggingEvent): void {
-    debug(`received logEvent, number of events now ${events.length + 1}`)
-    debug('log event was', logEvent)
+/**
+ * 记录 Appender 配置接口
+ */
+export interface RecordingAppenderConfig extends AppenderConfigBase {
+  type: 'recording'
+}
 
-    if (config.maxLength && events.length >= config.maxLength) {
-      events.shift()
-    }
-    events.push(logEvent)
+/** 记录的日志事件数组 */
+const recordedEvents: LoggingEvent[] = []
+
+/**
+ * 配置记录 Appender
+ * @returns 记录 Appender 函数
+ */
+export const configure: Configure<RecordingAppenderConfig> = () => {
+  return (logEvent) => {
+    debug(
+      `收到日志事件，当前事件数量：${recordedEvents.length + 1}`
+    )
+    debug('日志事件内容：', logEvent)
+    recordedEvents.push(logEvent)
   }
 }
 
-function shutdown (cb: (error?: Error) => void): void {
-  events.length = 0
-  cb()
+/**
+ * 重放记录的日志事件
+ * @returns 记录的日志事件数组的副本
+ */
+function replay (): LoggingEvent[] {
+  return recordedEvents.slice()
 }
 
-export {
+/**
+ * 重置记录的日志事件
+ */
+function reset (): void {
+  recordedEvents.length = 0
+}
+
+export const recording = {
   configure,
-  shutdown,
+  replay,
+  playback: replay,
+  reset,
+  erase: reset,
 }
-
-export function playback (): LoggingEvent[] {
-  return events.slice()
-}
-
-export function reset (): void {
-  events.length = 0
-}
-
-export function replay (): LoggingEvent[] {
-  return events.slice()
-}
-
-export const erase = reset

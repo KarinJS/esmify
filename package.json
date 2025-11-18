@@ -16,7 +16,7 @@
     "@types/node": "^18.19.86",
     "neostandard": "^0.12.1",
     "terser": "^5.39.0",
-    "tsdown": "^0.15.10",
+    "tsdown": "^0.16.5",
     "tsup": "^8.4.0",
     "tsx": "^4.19.3",
     "typescript": "^5.9.3",

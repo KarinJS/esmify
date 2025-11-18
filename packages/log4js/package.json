@@ -54,6 +54,5 @@
     "tap": "^16.3.4",
     "tsdown": "^0.16.5",
     "typescript": "^5.9.3"
-  },
-  "source": "a02c81622b6dbb843ca84c22ef83ed5806edbe97"
+  }
 }

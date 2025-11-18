@@ -1,0 +1,51 @@
+name: PR Preview
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - '**'
+    tags:
+      - '!**'
+  issue_comment:
+    types: [created]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    # 只在 PR 评论且评论内容包含 /pkg-pr-new 时运行
+    if: |
+      (github.event_name == 'pull_request' || github.event_name == 'push') ||
+      (github.event_name == 'issue_comment' && 
+       github.event.issue.pull_request && 
+       contains(github.event.comment.body, '/pkg-pr-new'))
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          # 对于评论触发,需要检出 PR 的 head ref
+          ref: ${{ github.event_name == 'issue_comment' && format('refs/pull/{0}/head', github.event.issue.number) || github.ref }}
+
+      - name: 设置 pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: 安装依赖
+        run: pnpm install
+
+      - name: 构建所有包
+        run: pnpm -r build
+
+      - name: 发布预览包
+        run: pnpm dlx pkg-pr-new publish --pnpm --comment=update './packages/*'

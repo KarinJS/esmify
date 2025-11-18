@@ -4,7 +4,7 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-pnpmfileChecksum: mj47wyrn5u5jwwocdyfijl5h44
+pnpmfileChecksum: imvfufzeqsj3j4k2qoldxs6gvy
 
 importers:
 
@@ -273,6 +273,9 @@ importers:
       redis:
         specifier: ^4.7.0
         version: 4.7.1
+      tsup:
+        specifier: ^8.4.0
+        version: 8.5.0(jiti@2.6.1)(postcss@8.5.6)(tsx@4.20.6)(typescript@5.9.3)(yaml@2.8.1)
 
   packages/sqlite3:
     devDependencies:

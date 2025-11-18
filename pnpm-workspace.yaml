@@ -1,5 +1,8 @@
 packages:
   - packages/*
+  - "!packages/axios"
+  - "!packages/redis"
+  - "!packages/jsonwebtoken"
 
 neverBuiltDependencies:
   - "@karinjs/sqlite3"

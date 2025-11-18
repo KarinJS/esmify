@@ -53,7 +53,14 @@ jobs:
         with:
           version: 9
       - name: 安装全局依赖
-        run: pnpm i -F esmify
+        run: |
+          for i in 1 2 3; do
+            pnpm i -F esmify && break || {
+              echo "安装全局依赖失败,第 $i 次尝试"
+              [ $i -eq 3 ] && exit 1
+              sleep 5
+            }
+          done
       - name: 发布 lodash 包
         if: ${{ needs.release-please.outputs.lodash_release == 'true' }}
         env:

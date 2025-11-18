@@ -45,16 +45,22 @@ jobs:
       - name: 设置 pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 9
+          version: 9.15.9
 
       - name: 设置 Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: "pnpm"
+          node-version: 22
 
       - name: 安装依赖
         run: pnpm install --no-frozen-lockfile
+
+      - name: 验证 workspace 配置
+        run: |
+          echo "=== pnpm-workspace.yaml 内容 ==="
+          cat pnpm-workspace.yaml
+          echo "=== Workspace 包列表 ==="
+          pnpm ls -r --depth -1
 
       - name: 构建所有包
         run: pnpm -r build

@@ -4,9 +4,9 @@ on:
     types: [opened, synchronize, reopened]
   push:
     branches:
-      - '**'
+      - "**"
     tags:
-      - '!**'
+      - "!**"
   issue_comment:
     types: [created]
 
@@ -54,7 +54,7 @@ jobs:
           cache: "pnpm"
 
       - name: 安装依赖
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       - name: 构建所有包
         run: pnpm -r build

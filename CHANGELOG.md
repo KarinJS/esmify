@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.13.0](https://github.com/KarinJS/esmify/compare/esmify-v1.12.7...esmify-v1.13.0) (2025-11-18)
+
+
+### ✨ Features
+
+* 完全重构log4js 新增日志追踪相关api ([afd0317](https://github.com/KarinJS/esmify/commit/afd03177e52f4bc52d036aa3eb7cea698689173a))
+
+
+### 🐛 Bug Fixes
+
+* ci ([f17fcd4](https://github.com/KarinJS/esmify/commit/f17fcd4e90b6b044c10a3a7d7de70fde21701aec))
+
+
+### 🎡 Continuous Integration
+
+* 修改为更简洁的指令 ([8088055](https://github.com/KarinJS/esmify/commit/8088055cc46e352635ba47e7dce4313431e3399b))
+* 添加依赖安装重试机制 ([793f474](https://github.com/KarinJS/esmify/commit/793f474d2aa72b504a90c2e3d8a27bb8680e77ea))
+
 ## [1.12.7](https://github.com/KarinJS/esmify/compare/esmify-v1.12.6...esmify-v1.12.7) (2025-11-02)
 
 

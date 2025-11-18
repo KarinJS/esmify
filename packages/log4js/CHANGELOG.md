@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.4.0](https://github.com/KarinJS/esmify/compare/log4js-v1.3.4...log4js-v1.4.0) (2025-11-18)
+
+
+### ✨ Features
+
+* 完全重构log4js 新增日志追踪相关api ([afd0317](https://github.com/KarinJS/esmify/commit/afd03177e52f4bc52d036aa3eb7cea698689173a))
+
+
+### 🐛 Bug Fixes
+
+* ci ([f17fcd4](https://github.com/KarinJS/esmify/commit/f17fcd4e90b6b044c10a3a7d7de70fde21701aec))
+
 ## [1.3.4](https://github.com/KarinJS/esmify/compare/log4js-v1.3.3...log4js-v1.3.4) (2025-11-02)
 
 

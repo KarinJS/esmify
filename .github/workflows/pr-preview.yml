@@ -17,12 +17,12 @@ permissions:
 jobs:
   preview:
     runs-on: ubuntu-latest
-    # 只在 PR 评论且评论内容包含 /pkg-pr-new 时运行
+    # 只在 PR 评论且评论内容包含 /pkg 时运行
     if: |
       (github.event_name == 'pull_request' || github.event_name == 'push') ||
       (github.event_name == 'issue_comment' && 
        github.event.issue.pull_request && 
-       contains(github.event.comment.body, '/pkg-pr-new'))
+       contains(github.event.comment.body, '/pkg'))
     steps:
       - name: 添加眼睛 emoji 反应
         if: github.event_name == 'issue_comment'

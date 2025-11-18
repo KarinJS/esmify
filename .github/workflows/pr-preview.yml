@@ -24,6 +24,18 @@ jobs:
        github.event.issue.pull_request && 
        contains(github.event.comment.body, '/pkg-pr-new'))
     steps:
+      - name: 添加眼睛 emoji 反应
+        if: github.event_name == 'issue_comment'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'eyes'
+            });
+
       - name: 检出代码
         uses: actions/checkout@v4
         with:

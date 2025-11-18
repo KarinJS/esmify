@@ -3,7 +3,9 @@ packages:
   - "!packages/axios"
   - "!packages/redis"
   - "!packages/jsonwebtoken"
+  - "!packages/form-data"
 
 neverBuiltDependencies:
   - "@karinjs/sqlite3"
   - "@karinjs/sqlite3-cjs"
+  - "packages/sqlite3-cjs"

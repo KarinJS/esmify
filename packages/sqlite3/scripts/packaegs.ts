@@ -92,13 +92,13 @@ const mapOsAndCpu = (platform: string, arch: string) => {
 /**
  * 构建对应平台包的package.json
  */
-const createPkg = (target: string) => {
+const createPkg = (target: string, version: string) => {
   const { platform, arch, napi } = parsePlatform(target)
   const { os, cpu, libc } = mapOsAndCpu(platform, arch)
 
   const pkg: any = {
     name: `@karinjs/sqlite3-napi-${napi}-${platform}-${arch}`,
-    version: '0.1.3',
+    version,
     license: 'MIT',
     author: 'shijin',
     main: '',
@@ -226,14 +226,15 @@ const writePackageJson = (pkgPath: string, pkg: any) => {
 const processPlatformPackage = async (
   target: { name: string; url: string },
   dir: string,
-  dirTemp: string
+  dirTemp: string,
+  version: string
 ) => {
   // 去掉.tar.gz后缀作为包目录名
   const pkgDirName = target.name.replace('.tar.gz', '')
   const pkgDir = path.join(dir, pkgDirName)
   const distDir = path.join(pkgDir, 'dist')
   const tarFile = path.join(dirTemp, target.name)
-  const pkg = createPkg(target.name)
+  const pkg = createPkg(target.name, version)
 
   // 创建包目录
   if (!fs.existsSync(pkgDir)) {
@@ -422,6 +423,12 @@ const checkNpmPublishFiles = async (dir: string) => {
  * 主函数
  */
 const main = async () => {
+  // 读取主包版本号
+  const mainPkgPath = fileURLToPath(new URL('../package.json', import.meta.url))
+  const mainPkg = JSON.parse(fs.readFileSync(mainPkgPath, 'utf-8'))
+  const currentVersion = mainPkg.version
+  console.log(`主包版本号: ${currentVersion}`)
+
   // 从 URL 获取 JSON 列表
   const json = await fetchJsonList()
 
@@ -442,7 +449,7 @@ const main = async () => {
 
   for (const target of targets) {
     try {
-      const result = await processPlatformPackage(target, dir, dirTemp)
+      const result = await processPlatformPackage(target, dir, dirTemp, currentVersion)
       results.push({ target, result })
       console.log('---')
     } catch (error) {
@@ -505,28 +512,20 @@ const main = async () => {
   console.log(pkgNames)
 
   // 更新主包的 package.json，添加 optionalDependencies
-  const mainPkgPath = fileURLToPath(new URL('../package.json', import.meta.url))
-  if (fs.existsSync(mainPkgPath)) {
-    const mainPkg = JSON.parse(fs.readFileSync(mainPkgPath, 'utf-8'))
-    const currentVersion = mainPkg.version
-
-    // 构建 optionalDependencies 对象
-    const optionalDependencies: Record<string, string> = {}
-    for (const pkgName of pkgNames) {
-      optionalDependencies[pkgName] = currentVersion
-    }
-
-    // 更新 package.json
-    mainPkg.optionalDependencies = optionalDependencies
-
-    // 写回文件
-    fs.writeFileSync(mainPkgPath, JSON.stringify(mainPkg, null, 2) + '\n')
-    console.log('\n✓ 已更新主包 package.json 的 optionalDependencies 字段')
-    console.log(`  版本号: ${currentVersion}`)
-    console.log(`  包数量: ${pkgNames.length}`)
-  } else {
-    console.log('\n❌ 未找到主包 package.json')
+  // 构建 optionalDependencies 对象
+  const optionalDependencies: Record<string, string> = {}
+  for (const pkgName of pkgNames) {
+    optionalDependencies[pkgName] = currentVersion
   }
+
+  // 更新 package.json
+  mainPkg.optionalDependencies = optionalDependencies
+
+  // 写回文件
+  fs.writeFileSync(mainPkgPath, JSON.stringify(mainPkg, null, 2) + '\n')
+  console.log('\n✓ 已更新主包 package.json 的 optionalDependencies 字段')
+  console.log(`  版本号: ${currentVersion}`)
+  console.log(`  包数量: ${pkgNames.length}`)
 }
 
 // 执行主函数

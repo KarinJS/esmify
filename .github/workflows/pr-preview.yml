@@ -13,6 +13,7 @@ on:
 permissions:
   pull-requests: write
   contents: read
+  issues: write
 
 jobs:
   preview:
@@ -73,4 +74,31 @@ jobs:
         run: pnpm -r build
 
       - name: 发布预览包
-        run: pnpm dlx pkg-pr-new publish --pnpm --comment=update './packages/*'
+        id: publish
+        run: pnpm dlx pkg-pr-new publish --pnpm --packageManager=pnpm --comment=update './packages/*'
+
+      - name: 移除眼睛 emoji 反应
+        if: always() && github.event_name == 'issue_comment'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              const reactions = await github.rest.reactions.listForIssueComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: context.payload.comment.id
+              });
+              
+              const eyesReaction = reactions.data.find(r => r.content === 'eyes' && r.user.type === 'Bot');
+              
+              if (eyesReaction) {
+                await github.rest.reactions.deleteForIssueComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: context.payload.comment.id,
+                  reaction_id: eyesReaction.id
+                });
+              }
+            } catch (error) {
+              console.log('移除 emoji 反应失败:', error.message);
+            }

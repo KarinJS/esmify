@@ -26,7 +26,7 @@ const tryRequire = () => {
 /**
  * SQLite3
  */
-export const sqlite3 = tryRequire()
+export const sqlite3 = tryRequire() as Sqlite3
 
 export interface Sqlite3 {
   OPEN_READONLY: number

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.0](https://github.com/KarinJS/esmify/compare/esmify-v1.15.0...esmify-v1.16.0) (2025-11-19)
+
+
+### ✨ Features
+
+* sqlte3 cjs ([2ab7901](https://github.com/KarinJS/esmify/commit/2ab790125a6fdef7684b80c9605589c4abf7dd53))
+
 ## [1.15.0](https://github.com/KarinJS/esmify/compare/esmify-v1.14.4...esmify-v1.15.0) (2025-11-19)
 
 

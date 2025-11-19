@@ -363,11 +363,11 @@ class Logger {
    * ```
    */
   public runContext<T> (fn: () => T): T {
+    const id = crypto.randomUUID()
     try {
-      const id = crypto.randomUUID()
       return this.contextStore.run({ id }, fn)
     } finally {
-      this.destroyContext()
+      this.destroyContext(id)
     }
   }
 
@@ -385,12 +385,18 @@ class Logger {
 
   /**
    * 结束当前上下文的日志收集
+   * @param id - 上下文ID
+   * @description 此方法一般不需要手动 如果需要调用，请参考如下示例
+   * @example
+   * ```ts
+   * logger.runContext(() => {
+   *   const id = logger.contextStore.getStore()?.id;
+   *   logger.destroyContext(id!); // 手动销毁上下文日志收集器（通常不需要）
+   * });
+   * ```
    */
-  public destroyContext () {
-    const store = this.contextStore.getStore()
-    if (store) {
-      this.collectors[store.id] && delete this.collectors[store.id]
-    }
+  public destroyContext (id: string) {
+    this.collectors[id] && delete this.collectors[id]
   }
 
   /**

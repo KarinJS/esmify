@@ -220,6 +220,7 @@ async function processTask(taskId: string) {
 ### Logger 方法
 
 #### 日志级别方法
+
 - `logger.trace(message, ...args)` - 追踪级别日志
 - `logger.debug(message, ...args)` - 调试级别日志
 - `logger.info(message, ...args)` - 信息级别日志
@@ -229,6 +230,7 @@ async function processTask(taskId: string) {
 - `logger.mark(message, ...args)` - 标记级别日志
 
 #### 级别检查
+
 - `logger.isLevelEnabled(level)` - 检查是否启用了指定级别
 - `logger.isTraceEnabled()` - 是否启用 TRACE 级别
 - `logger.isDebugEnabled()` - 是否启用 DEBUG 级别
@@ -238,11 +240,13 @@ async function processTask(taskId: string) {
 - `logger.isFatalEnabled()` - 是否启用 FATAL 级别
 
 #### 上下文管理
+
 - `logger.addContext(key, value)` - 添加上下文信息
 - `logger.removeContext(key)` - 移除上下文信息
 - `logger.clearContext()` - 清空上下文信息
 
 #### 上下文追踪（新增）
+
 - `logger.runContext(fn, ms?)` - 在上下文中运行函数
 - `logger.getContextLogs()` - 获取当前上下文的日志
 - `logger.setContextLayouts(name, config?)` - 设置上下文日志格式

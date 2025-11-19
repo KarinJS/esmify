@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/KarinJS/esmify/compare/sqlite3-v0.4.0...sqlite3-v0.4.1) (2025-11-19)
+
+
+### 🐛 Bug Fixes
+
+* 该死的速率限制 ([1ccc8fe](https://github.com/KarinJS/esmify/commit/1ccc8fe496d71fe02c7b3f043732b393ad2849f8))
+
 ## [0.4.0](https://github.com/KarinJS/esmify/compare/sqlite3-v0.3.0...sqlite3-v0.4.0) (2025-11-19)
 
 

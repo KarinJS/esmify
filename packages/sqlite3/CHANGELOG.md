@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/KarinJS/esmify/compare/sqlite3-v0.2.0...sqlite3-v0.2.1) (2025-11-19)
+
+
+### 🐛 Bug Fixes
+
+* 该死的pnpm ([e004b69](https://github.com/KarinJS/esmify/commit/e004b69fe615bbb060f1066ecaba0236ea3ec8f7))
+
 ## [0.2.0](https://github.com/KarinJS/esmify/compare/sqlite3-v0.1.3...sqlite3-v0.2.0) (2025-11-19)
 
 

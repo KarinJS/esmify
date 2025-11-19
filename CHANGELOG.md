@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.1](https://github.com/KarinJS/esmify/compare/esmify-v1.14.0...esmify-v1.14.1) (2025-11-19)
+
+
+### 🐛 Bug Fixes
+
+* 该死的pnpm ([e004b69](https://github.com/KarinJS/esmify/commit/e004b69fe615bbb060f1066ecaba0236ea3ec8f7))
+
 ## [1.14.0](https://github.com/KarinJS/esmify/compare/esmify-v1.13.0...esmify-v1.14.0) (2025-11-19)
 
 

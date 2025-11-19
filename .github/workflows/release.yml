@@ -64,7 +64,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/dotenv
-        run: pnpm i -F @karinjs/dotenv && pnpm run build && pnpm publish --access public --provenance
+        run: pnpm i -F @karinjs/dotenv && pnpm run build && pnpm publish --access public --provenance --no-git-checks
 
   publish-log4js:
     needs: release-please
@@ -95,7 +95,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/log4js
-        run: pnpm i -F @karinjs/log4js && pnpm run build && pnpm publish --access public --provenance
+        run: pnpm i -F @karinjs/log4js && pnpm run build && pnpm publish --access public --provenance --no-git-checks
 
   publish-sqlite3:
     needs: release-please
@@ -135,10 +135,12 @@ jobs:
             if [ -d "$dir" ] && [ -f "$dir/package.json" ]; then
               echo "发布包: $dir"
               cd "$dir"
-              pnpm publish --access public --provenance
+              pnpm publish --access public --provenance --no-git-checks
               cd ..
             fi
           done
+          cd ..
+          pnpm publish --access public --provenance --no-git-checks
 
   publish-ws:
     needs: release-please
@@ -169,7 +171,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/ws
-        run: pnpm i -F @karinjs/ws && pnpm run build && pnpm publish --access public --provenance
+        run: pnpm i -F @karinjs/ws && pnpm run build && pnpm publish --access public --provenance --no-git-checks
 
   publish-qs:
     needs: release-please
@@ -200,7 +202,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/qs
-        run: pnpm i -F @karinjs/qs && pnpm run build && pnpm publish --access public --provenance
+        run: pnpm i -F @karinjs/qs && pnpm run build && pnpm publish --access public --provenance --no-git-checks
 
   publish-long-timeout:
     needs: release-please
@@ -231,7 +233,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/long-timeout
-        run: pnpm i -F @karinjs/long-timeout && pnpm run build && pnpm publish --access public --provenance
+        run: pnpm i -F @karinjs/long-timeout && pnpm run build && pnpm publish --access public --provenance --no-git-checks
 
   publish-cron-parser:
     needs: release-please
@@ -262,7 +264,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/cron-parser
-        run: pnpm i -F @karinjs/cron-parser && pnpm run build && pnpm publish --access public --provenance
+        run: pnpm i -F @karinjs/cron-parser && pnpm run build && pnpm publish --access public --provenance --no-git-checks
 
   publish-node-schedule:
     needs: [release-please, publish-cron-parser]
@@ -296,4 +298,4 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/node-schedule
-        run: pnpm i -F @karinjs/node-schedule && pnpm run build && pnpm publish --access public --provenance
+        run: pnpm i -F @karinjs/node-schedule && pnpm run build && pnpm publish --access public --provenance --no-git-checks

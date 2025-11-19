@@ -479,11 +479,9 @@ const main = async () => {
 
   console.log('\n所有包验证通过! 🎉')
 
-  // 获取npm publish文件列表
   console.log('\n开始获取npm publish文件列表...')
   await checkNpmPublishFiles(dir)
 
-  // 删除temp目录
   if (fs.existsSync(dirTemp)) {
     fs.rmSync(dirTemp, { recursive: true, force: true })
     console.log('\n已删除临时目录')

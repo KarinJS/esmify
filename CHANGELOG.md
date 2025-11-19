@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.17.0](https://github.com/KarinJS/esmify/compare/esmify-v1.16.3...esmify-v1.17.0) (2025-11-19)
+
+
+### ✨ Features
+
+* **logger:** 添加 runContext 方法的 ms 参数以自定义上下文日志销毁时间 ([e3c6b81](https://github.com/KarinJS/esmify/commit/e3c6b817699a0310ff9d1230b12094aead2a8277))
+
+
+### 🐛 Bug Fixes
+
+* 更新 README.md，添加日志级别方法和上下文管理方法说明 ([55efccd](https://github.com/KarinJS/esmify/commit/55efccde65adbdf57c8909b171a2fb296f779c94))
+
 ## [1.16.3](https://github.com/KarinJS/esmify/compare/esmify-v1.16.2...esmify-v1.16.3) (2025-11-19)
 
 

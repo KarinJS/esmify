@@ -1,12 +1,7 @@
 name: PR Preview
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
-  push:
-    branches:
-      - "**"
-    tags:
-      - "!**"
+    types: [opened, synchronize, reopened, ready_for_review]
   issue_comment:
     types: [created]
 
@@ -18,9 +13,9 @@ permissions:
 jobs:
   preview:
     runs-on: ubuntu-latest
-    # 只在 PR 评论且评论内容包含 /pkg 时运行
+    # 只在非草稿 PR 或 PR 评论包含 /pkg 时运行
     if: |
-      (github.event_name == 'pull_request' || github.event_name == 'push') ||
+      (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
       (github.event_name == 'issue_comment' && 
        github.event.issue.pull_request && 
        contains(github.event.comment.body, '/pkg'))

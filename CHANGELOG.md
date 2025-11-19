@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.2](https://github.com/KarinJS/esmify/compare/esmify-v1.14.1...esmify-v1.14.2) (2025-11-19)
+
+
+### 🐛 Bug Fixes
+
+* pnpm lock ([2ef030a](https://github.com/KarinJS/esmify/commit/2ef030ae587c3dde9314101379c11ab263c47931))
+
 ## [1.14.1](https://github.com/KarinJS/esmify/compare/esmify-v1.14.0...esmify-v1.14.1) (2025-11-19)
 
 

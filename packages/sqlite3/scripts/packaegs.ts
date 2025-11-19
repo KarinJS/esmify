@@ -5,7 +5,7 @@ import { execSync } from 'node:child_process'
 import { extract } from 'tar'
 
 const name = 'sqlite3'
-const url = 'https://registry.npmmirror.com/-/binary/sqlite3/v5.1.7/'
+const url = 'https://api.github.com/repos/sj817/node-sqlite3/releases/tags/v5.1.8'
 
 // 'sqlite3-v5.1.7-napi-v3-linuxmusl-arm64.tar.gz'
 // name构成: sqlite3-v${version}-napi-v${napiVersion}-${platform}-${arch}.tar.gz
@@ -19,9 +19,46 @@ const fetchJsonList = async (): Promise<Array<{ name: string; url: string }>> =>
   if (!response.ok) {
     throw new Error(`获取 JSON 列表失败: ${response.statusText}`)
   }
-  const json = await response.json()
-  console.log(`获取到 ${json.length} 个文件`)
-  return json
+  const json = await response.json() as {
+    assets: Array<{
+      url: string,
+      id: number,
+      node_id: string,
+      name: string,
+      label: string,
+      uploader: {
+        login: string,
+        id: number,
+        node_id: string,
+        avatar_url: string,
+        gravatar_id: string,
+        url: string,
+        html_url: string,
+        followers_url: string,
+        following_url: string,
+        gists_url: string,
+        starred_url: string,
+        subscriptions_url: string,
+        organizations_url: string,
+        repos_url: string,
+        events_url: string,
+        received_events_url: string,
+        type: string,
+        user_view_type: string,
+        site_admin: boolean
+      },
+      content_type: string,
+      state: string,
+      size: number,
+      digest: string,
+      download_count: number,
+      created_at: string,
+      updated_at: string,
+      browser_download_url: string
+    }>
+  }
+  console.log(`获取到 ${json.assets.length} 个文件`)
+  return json.assets.map(asset => ({ name: asset.name, url: asset.browser_download_url }))
 }
 
 /**

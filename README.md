@@ -83,6 +83,20 @@ ESMify 是一个将 CommonJS 包转换成 ESM（ECMAScript Modules）模块的�
 
 > **🔥 标记说明**：带有 🔥 标记的包表示进行了完全的 TypeScript + ESM + Node.js 18+ 重构，而非简单的打包器转译。
 
+> [!WARNING]
+> **@karinjs/sqlite3-cjs 维护状态声明**
+>
+> `@karinjs/sqlite3-cjs` 已进入**不再维护状态**，请全面转向使用 `@karinjs/sqlite3`。
+>
+> **@karinjs/sqlite3 的现代化改进：**
+>
+> - ✨ **ESM 原生支持**：纯 ESM 模块，完美兼容现代 JavaScript 生态
+> - 🎯 **智能依赖管理**：使用 `optionalDependencies` 配合 `package.json` 中的 `cpu`、`os` 字段，实现环境自动识别
+> - 🚀 **自动安装机制**：现代化包管理器（npm/pnpm/yarn）会根据当前系统环境自动安装对应的 `.node` 二进制文件
+> - 🔧 **告别动态下载**：不再使用 hook 钩子进行动态下载，彻底解决 pnpm 10+ 拦截警告问题
+> - ⚡ **更快的安装体验**：无需运行时下载，安装即可使用
+> - 🛡️ **更安全可靠**：避免网络问题导致的安装失败，所有二进制文件在安装时已确定
+
 ## 特别声明
 
 对于`lodash`和`express`，推荐使用别名安装，因为需要处理类型问题。
@@ -185,6 +199,7 @@ app.listen(3000, () => {
 - **@karinjs/long-timeout** - 零依赖，突破 24.8 天定时器限制，体积减少 75.3%
 - **@karinjs/node-schedule** - 零依赖，完全迁移到当前仓库，纯 TypeScript 重写，体积减少 93%
 - **@karinjs/cron-parser** - 纯 ESM 模块，移除所有 CJS 代码，体积减少 77.8%
+- **@karinjs/sqlite3** - 现代化依赖管理，使用可选依赖 + 环境字段实现智能二进制文件安装，告别动态 hook 下载
 
 这些包不是简单的打包器转译，而是基于现代标准的完全重构。
 

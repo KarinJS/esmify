@@ -70,7 +70,15 @@ jobs:
           pnpm ls -r --depth -1
 
       - name: 构建所有包
-        run: pnpm -r build
+        run: |
+          pnpm build --filter @karinjs/cron-parser
+          pnpm build --filter @karinjs/dotenv
+          pnpm build --filter @karinjs/log4js
+          pnpm build --filter @karinjs/long-timeout
+          pnpm build --filter @karinjs/qs
+          pnpm build --filter @karinjs/node-schedule
+          pnpm build --filter @karinjs/sqlite3
+          pnpm build --filter @karinjs/ws
 
       - name: 发布预览包
         run: pnpm dlx pkg-pr-new publish --pnpm --comment=update './packages/*'

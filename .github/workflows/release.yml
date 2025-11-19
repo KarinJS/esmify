@@ -35,10 +35,9 @@ jobs:
         with:
           config-file: .release-please-config.json
           manifest-file: .release-please-manifest.json
-  publish:
+  publish-dotenv:
     needs: release-please
-    if: ${{ needs.release-please.outputs.releases_created == 'true' ||
-      needs.release-please.outputs.release_created == 'true' }}
+    if: ${{ needs.release-please.outputs.dotenv_release == 'true' }}
     runs-on: macos-latest
     steps:
       - name: 检出代码
@@ -52,7 +51,6 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 9
-
       - name: 安装全局依赖
         run: |
           for i in 1 2 3; do
@@ -62,58 +60,69 @@ jobs:
               sleep 5
             }
           done
-
-      # - name: 发布 lodash 包
-      #   if: ${{ needs.release-please.outputs.lodash_release == 'true' }}
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      #   working-directory: packages/lodash
-      #   run: pnpm i -F @karinjs/lodash && pnpm run build && pnpm publish --access public --provenance
-
-      # - name: 发布 express 包
-      #   if: ${{ needs.release-please.outputs.express_release == 'true' }}
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      #   working-directory: packages/express
-      #   run: pnpm i -F @karinjs/express && pnpm run build && pnpm publish --access public --provenance
-
       - name: 发布 dotenv 包
-        if: ${{ needs.release-please.outputs.dotenv_release == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/dotenv
         run: pnpm i -F @karinjs/dotenv && pnpm run build && pnpm publish --access public --provenance
 
-      # - name: 发布 jsonwebtoken 包
-      #   if: ${{ needs.release-please.outputs.jsonwebtoken_release == 'true' }}
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      #   working-directory: packages/jsonwebtoken
-      #   run: pnpm i -F @karinjs/jsonwebtoken && pnpm run build && pnpm publish --access public --provenance
-
+  publish-log4js:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.log4js_release == 'true' }}
+    runs-on: macos-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+      - name: 设置 node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+      - name: 设置 pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - name: 安装全局依赖
+        run: |
+          for i in 1 2 3; do
+            pnpm i -F esmify && break || {
+              echo "安装全局依赖失败,第 $i 次尝试"
+              [ $i -eq 3 ] && exit 1
+              sleep 5
+            }
+          done
       - name: 发布 log4js 包
-        if: ${{ needs.release-please.outputs.log4js_release == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/log4js
         run: pnpm i -F @karinjs/log4js && pnpm run build && pnpm publish --access public --provenance
 
-      # - name: 发布 redis 包
-      #   if: ${{ needs.release-please.outputs.redis_release == 'true' }}
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      #   working-directory: packages/redis
-      #   run: pnpm i -F @karinjs/redis && pnpm run build && pnpm publish --access public --provenance
-
-      # - name: 发布 sqlite3-cjs 包
-      #   if: ${{ needs.release-please.outputs.sqlite3-cjs_release == 'true' }}
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      #   working-directory: packages/sqlite3-cjs
-      #   run: pnpm i -F @karinjs/sqlite3-cjs && pnpm run build && pnpm publish --access public --provenance
-
+  publish-sqlite3:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.sqlite3_release == 'true' }}
+    runs-on: macos-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+      - name: 设置 node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+      - name: 设置 pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - name: 安装全局依赖
+        run: |
+          for i in 1 2 3; do
+            pnpm i -F esmify && break || {
+              echo "安装全局依赖失败,第 $i 次尝试"
+              [ $i -eq 3 ] && exit 1
+              sleep 5
+            }
+          done
       - name: 发布 sqlite3 包
-        if: ${{ needs.release-please.outputs.sqlite3_release == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/sqlite3
@@ -131,67 +140,159 @@ jobs:
             fi
           done
 
+  publish-ws:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.ws_rerelease == 'true' }}
+    runs-on: macos-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+      - name: 设置 node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+      - name: 设置 pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - name: 安装全局依赖
+        run: |
+          for i in 1 2 3; do
+            pnpm i -F esmify && break || {
+              echo "安装全局依赖失败,第 $i 次尝试"
+              [ $i -eq 3 ] && exit 1
+              sleep 5
+            }
+          done
       - name: 发布 ws 包
-        if: ${{ needs.release-please.outputs.ws_rerelease == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/ws
         run: pnpm i -F @karinjs/ws && pnpm run build && pnpm publish --access public --provenance
 
-      # - name: 发布 node-pty 包
-      #   if: ${{ needs.release-please.outputs.node-pty_rerelease == 'true' }}
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      #   working-directory: packages/node-pty
-      #   run: pnpm i -F @karinjs/node-pty && pnpm run build && pnpm publish --access public --provenance
-
-      # - name: 编译 form-data 包
-      #   run: pnpm i -F @karinjs/form-data && pnpm run build
-      #   working-directory: packages/form-data
-      #   if: ${{ needs.release-please.outputs.form-data_rerelease == 'true' ||
-      #     needs.release-please.outputs.axios_rerelease == 'true' }}
-      # - name: 发布 form-data 包
-      #   if: ${{ needs.release-please.outputs.form-data_rerelease == 'true' }}
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      #   working-directory: packages/form-data
-      # run: pnpm run pub
-      # - name: 发布 axios 包
-      #   if: ${{ needs.release-please.outputs.axios_rerelease == 'true' }}
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      #   working-directory: packages/axios
-      #   run: pnpm i -F @karinjs/axios && pnpm run build && pnpm publish --access public --provenance
-
+  publish-qs:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.qs_rerelease == 'true' }}
+    runs-on: macos-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+      - name: 设置 node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+      - name: 设置 pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - name: 安装全局依赖
+        run: |
+          for i in 1 2 3; do
+            pnpm i -F esmify && break || {
+              echo "安装全局依赖失败,第 $i 次尝试"
+              [ $i -eq 3 ] && exit 1
+              sleep 5
+            }
+          done
       - name: 发布 qs 包
-        if: ${{ needs.release-please.outputs.qs_rerelease == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/qs
         run: pnpm i -F @karinjs/qs && pnpm run build && pnpm publish --access public --provenance
 
+  publish-long-timeout:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.long-timeout_rerelease == 'true' }}
+    runs-on: macos-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+      - name: 设置 node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+      - name: 设置 pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - name: 安装全局依赖
+        run: |
+          for i in 1 2 3; do
+            pnpm i -F esmify && break || {
+              echo "安装全局依赖失败,第 $i 次尝试"
+              [ $i -eq 3 ] && exit 1
+              sleep 5
+            }
+          done
       - name: 发布 long-timeout 包
-        if: ${{ needs.release-please.outputs.long-timeout_rerelease == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/long-timeout
         run: pnpm i -F @karinjs/long-timeout && pnpm run build && pnpm publish --access public --provenance
 
-      - name: 编译 cron-parser 包
-        run: pnpm i -F @karinjs/cron-parser && pnpm run build
-        working-directory: packages/cron-parser
-        if: ${{ needs.release-please.outputs.cron-parser_rerelease == 'true' ||
-          needs.release-please.outputs.node-schedule_rerelease == 'true' }}
-
+  publish-cron-parser:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.cron-parser_rerelease == 'true' }}
+    runs-on: macos-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+      - name: 设置 node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+      - name: 设置 pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - name: 安装全局依赖
+        run: |
+          for i in 1 2 3; do
+            pnpm i -F esmify && break || {
+              echo "安装全局依赖失败,第 $i 次尝试"
+              [ $i -eq 3 ] && exit 1
+              sleep 5
+            }
+          done
       - name: 发布 cron-parser 包
-        if: ${{ needs.release-please.outputs.cron-parser_rerelease == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/cron-parser
-        run: pnpm publish --access public --provenance
+        run: pnpm i -F @karinjs/cron-parser && pnpm run build && pnpm publish --access public --provenance
 
+  publish-node-schedule:
+    needs: [release-please, publish-cron-parser]
+    if: |
+      always() &&
+      needs.release-please.outputs.node-schedule_rerelease == 'true' &&
+      (needs.publish-cron-parser.result == 'success' || needs.publish-cron-parser.result == 'skipped')
+    runs-on: macos-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+      - name: 设置 node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+      - name: 设置 pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - name: 安装全局依赖
+        run: |
+          for i in 1 2 3; do
+            pnpm i -F esmify && break || {
+              echo "安装全局依赖失败,第 $i 次尝试"
+              [ $i -eq 3 ] && exit 1
+              sleep 5
+            }
+          done
       - name: 发布 node-schedule 包
-        if: ${{ needs.release-please.outputs.node-schedule_rerelease == 'true' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: packages/node-schedule

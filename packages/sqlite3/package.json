@@ -38,15 +38,5 @@
   "devDependencies": {
     "tar": "^7.5.2",
     "tsx": "^4.20.6"
-  },
-  "optionalDependencies": {
-    "@karinjs/sqlite3-napi-v6-darwin-arm64": "0.1.3",
-    "@karinjs/sqlite3-napi-v6-darwin-x64": "0.1.3",
-    "@karinjs/sqlite3-napi-v6-linux-arm64": "0.1.3",
-    "@karinjs/sqlite3-napi-v6-linux-x64": "0.1.3",
-    "@karinjs/sqlite3-napi-v6-linuxmusl-arm64": "0.1.3",
-    "@karinjs/sqlite3-napi-v6-linuxmusl-x64": "0.1.3",
-    "@karinjs/sqlite3-napi-v6-win32-ia32": "0.1.3",
-    "@karinjs/sqlite3-napi-v6-win32-x64": "0.1.3"
   }
 }

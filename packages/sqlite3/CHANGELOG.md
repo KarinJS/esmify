@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/KarinJS/esmify/compare/sqlite3-v0.2.1...sqlite3-v0.2.2) (2025-11-19)
+
+
+### 🐛 Bug Fixes
+
+* pnpm lock ([2ef030a](https://github.com/KarinJS/esmify/commit/2ef030ae587c3dde9314101379c11ab263c47931))
+
 ## [0.2.1](https://github.com/KarinJS/esmify/compare/sqlite3-v0.2.0...sqlite3-v0.2.1) (2025-11-19)
 
 

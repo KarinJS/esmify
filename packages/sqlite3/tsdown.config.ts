@@ -10,12 +10,12 @@ export default defineConfig({
       }
     }
 
-    return { js: '.js', dts: '.d.ts' }
+    return { js: '.cjs', dts: '.d.ts' }
   },
   dts: {
     resolve: true,
   },
-  format: ['esm'],
+  format: ['esm', 'cjs'],
   target: 'node18',
   platform: 'node',
   sourcemap: false,

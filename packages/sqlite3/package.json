@@ -38,5 +38,12 @@
   "devDependencies": {
     "tar": "^7.5.2",
     "tsx": "^4.20.6"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
   }
 }

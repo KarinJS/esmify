@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.2](https://github.com/KarinJS/esmify/compare/esmify-v1.16.1...esmify-v1.16.2) (2025-11-19)
+
+
+### 🐛 Bug Fixes
+
+* 移除不再需要的 @types/tap 依赖 ([c0ba278](https://github.com/KarinJS/esmify/commit/c0ba2787f8cfa4d9b5723d79dcd31f701b2c5c00))
+
 ## [1.16.1](https://github.com/KarinJS/esmify/compare/esmify-v1.16.0...esmify-v1.16.1) (2025-11-19)
 
 

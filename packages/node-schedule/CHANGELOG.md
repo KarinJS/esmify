@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.3](https://github.com/KarinJS/esmify/compare/node-schedule-v1.1.2...node-schedule-v1.1.3) (2025-11-19)
+
+
+### 🐛 Bug Fixes
+
+* add provenance ([c4772b5](https://github.com/KarinJS/esmify/commit/c4772b57d4889dfc1f4aa04464905ce3cef34eba))
+* ci ([82f89c3](https://github.com/KarinJS/esmify/commit/82f89c3b88e643e126382c2110b380121a8d2490))
+
+
+### 🎫 Chores
+
+* Remove some packages ([6a53da2](https://github.com/KarinJS/esmify/commit/6a53da218bb52b75ee595ad654e532c277d98c1a))
+
 ## [1.1.2](https://github.com/KarinJS/esmify/compare/node-schedule-v1.1.1...node-schedule-v1.1.2) (2025-10-27)
 
 

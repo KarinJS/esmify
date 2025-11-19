@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.2.0](https://github.com/KarinJS/esmify/compare/sqlite3-v0.1.3...sqlite3-v0.2.0) (2025-11-19)
+
+
+### ✨ Features
+
+* esm + node package ([33ff7f6](https://github.com/KarinJS/esmify/commit/33ff7f62972f695c226af253c2ec857a94be2f64))
+
+
+### 🐛 Bug Fixes
+
+* add provenance ([c4772b5](https://github.com/KarinJS/esmify/commit/c4772b57d4889dfc1f4aa04464905ce3cef34eba))
+
+
+### 🎫 Chores
+
+* Remove some packages ([6a53da2](https://github.com/KarinJS/esmify/commit/6a53da218bb52b75ee595ad654e532c277d98c1a))
+
 ## [0.1.3](https://github.com/KarinJS/esmify/compare/sqlite3-v0.1.2...sqlite3-v0.1.3) (2025-04-17)
 
 

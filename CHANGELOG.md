@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.14.0](https://github.com/KarinJS/esmify/compare/esmify-v1.13.0...esmify-v1.14.0) (2025-11-19)
+
+
+### ✨ Features
+
+* esm + node package ([33ff7f6](https://github.com/KarinJS/esmify/commit/33ff7f62972f695c226af253c2ec857a94be2f64))
+
+
+### 🐛 Bug Fixes
+
+* add provenance ([c4772b5](https://github.com/KarinJS/esmify/commit/c4772b57d4889dfc1f4aa04464905ce3cef34eba))
+* ci ([82f89c3](https://github.com/KarinJS/esmify/commit/82f89c3b88e643e126382c2110b380121a8d2490))
+
+
+### 🎫 Chores
+
+* Remove some packages ([6a53da2](https://github.com/KarinJS/esmify/commit/6a53da218bb52b75ee595ad654e532c277d98c1a))
+
+
+### 🎡 Continuous Integration
+
+* fix pr ([9bbf2f7](https://github.com/KarinJS/esmify/commit/9bbf2f7544fc7a9d81f13ca439dc7c5fbe4322ba))
+* 优化ci触发条件 ([bfde89b](https://github.com/KarinJS/esmify/commit/bfde89b758bb34529ba1622ed9b9b7b5d65b4b3d))
+* 优化pr ([bbc5077](https://github.com/KarinJS/esmify/commit/bbc5077832cc1a803b4cc4b6d895b5981b7aec18))
+
 ## [1.13.0](https://github.com/KarinJS/esmify/compare/esmify-v1.12.7...esmify-v1.13.0) (2025-11-18)
 
 

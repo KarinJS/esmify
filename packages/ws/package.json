@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/ws",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Use vite+tsup to recompile ws into esm, which is smaller in size.",
   "keywords": [
     "karinjs",

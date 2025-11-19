@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/cron-parser",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Modern cron-parser, ts + esm + node v18+.",
   "keywords": [
     "karinjs",

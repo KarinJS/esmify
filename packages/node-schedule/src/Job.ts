@@ -3,7 +3,7 @@ import {
   CronExpressionParser,
   CronDate,
   type CronExpression as CronExpr,
-} from 'cron-parser'
+} from '@karinjs/cron-parser'
 
 import {
   scheduleNextRecurrence,
@@ -53,10 +53,10 @@ export class Job extends EventEmitter {
   readonly name!: string
   job: JobFunction
   callback: JobCallback | false
-  running: number = 0;
-  isOneTimeJob: boolean = false;
-  private pendingInvocations: Invocation[] = [];
-  private triggeredJobsCount: number = 0;
+  running: number = 0
+  isOneTimeJob: boolean = false
+  private pendingInvocations: Invocation[] = []
+  private triggeredJobsCount: number = 0
 
   constructor (name?: string | JobFunction, job?: JobFunction | JobCallback, callback?: JobCallback) {
     super()
@@ -259,7 +259,7 @@ export class Job extends EventEmitter {
     try {
       const res: CronExpr = CronExpressionParser.parse(spec as string, {
         currentDate: start?.toDate(),
-        tz: tz,
+        tz,
       })
       // Add recurs property for cron expressions so they continue scheduling
       // Using Object.defineProperty to add the property with proper typing
@@ -267,7 +267,7 @@ export class Job extends EventEmitter {
         value: true,
         writable: true,
         enumerable: false,
-        configurable: true
+        configurable: true,
       })
       inv = scheduleNextRecurrence(res, this, start, end)
       if (inv !== null) {

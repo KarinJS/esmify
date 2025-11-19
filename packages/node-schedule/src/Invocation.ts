@@ -1,7 +1,7 @@
 import {
   CronDate,
   type CronExpression as CronExpr,
-} from 'cron-parser'
+} from '@karinjs/cron-parser'
 import type { Job } from './Job'
 import * as lt from './utils/longTimeout'
 import * as sorted from './utils/sortedArray'
@@ -15,7 +15,7 @@ export class Invocation {
   fireDate: Date | CronDate
   endDate?: Date | CronDate
   recurrenceRule: RecurrenceRule | CronExpr
-  timerID: ReturnType<typeof lt.setTimeout> | null = null;
+  timerID: ReturnType<typeof lt.setTimeout> | null = null
 
   constructor (
     job: Job,
@@ -80,14 +80,14 @@ export type Timezone = string
 type RecurrenceValue = number | Range | (number | Range)[] | null
 
 export class RecurrenceRule {
-  recurs: boolean = true;
-  year: RecurrenceValue = null;
-  month: RecurrenceValue = null;
-  date: RecurrenceValue = null;
-  dayOfWeek: RecurrenceValue = null;
-  hour: RecurrenceValue = null;
-  minute: RecurrenceValue = null;
-  second: RecurrenceValue = null;
+  recurs: boolean = true
+  year: RecurrenceValue = null
+  month: RecurrenceValue = null
+  date: RecurrenceValue = null
+  dayOfWeek: RecurrenceValue = null
+  hour: RecurrenceValue = null
+  minute: RecurrenceValue = null
+  second: RecurrenceValue = null
   tz?: string
 
   constructor (
@@ -212,7 +212,7 @@ export class RecurrenceRule {
       return null
     }
 
-    let next = new CronDate(base.getTime(), this.tz)
+    const next = new CronDate(base.getTime(), this.tz)
     next.addSecond()
 
     while (true) {

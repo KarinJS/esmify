@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "target": "ES2020",
+    "module": "ES2020",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "strict": true,
@@ -23,10 +23,13 @@
     "declarationMap": false,
     "outDir": "dist",
     "rootDir": ".",
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "skipLibCheck": true
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "scripts/packages.ts"
   ],
   "exclude": [
     "node_modules",

@@ -6,34 +6,27 @@
     "karinjs",
     "sqlite3"
   ],
-  "homepage": "https://github.com/KarinJS/sqlite3",
+  "homepage": "https://github.com/KarinJS/esmify",
   "bugs": {
-    "url": "https://github.com/KarinJS/sqlite3/issues"
+    "url": "https://github.com/KarinJS/esmify/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/KarinJS/esmify"
+    "url": "git+https://github.com/KarinJS/esmify.git"
   },
   "license": "MIT",
   "author": "shijin",
   "type": "module",
-  "main": "./index.js",
+  "main": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist",
-    "index.js"
+    "dist"
   ],
-  "binary": {
-    "napi_versions": [
-      3,
-      6
-    ]
-  },
   "scripts": {
-    "build": "vite build && tsup",
+    "build": "tsc && tsdown",
     "pub": "npm publish --access public",
     "sync": "curl -X PUT \"https://registry-direct.npmmirror.com/-/package/@karinjs/sqlite3/syncs\"",
-    "install": "npx @karinjs/prebuild-install -r napi --pkg_version=5.1.7 --pkg_name=sqlite3"
+    "build:package": "tsx ./scripts/packaegs.ts"
   },
   "engines": {
     "node": ">=18"
@@ -43,6 +36,17 @@
     "registry": "https://registry.npmjs.org"
   },
   "devDependencies": {
-    "sqlite3": "5.1.7"
+    "tar": "^7.5.2",
+    "tsx": "^4.20.6"
+  },
+  "optionalDependencies": {
+    "@karinjs/sqlite3-napi-v6-darwin-arm64": "0.1.3",
+    "@karinjs/sqlite3-napi-v6-darwin-x64": "0.1.3",
+    "@karinjs/sqlite3-napi-v6-linux-arm64": "0.1.3",
+    "@karinjs/sqlite3-napi-v6-linux-x64": "0.1.3",
+    "@karinjs/sqlite3-napi-v6-linuxmusl-arm64": "0.1.3",
+    "@karinjs/sqlite3-napi-v6-linuxmusl-x64": "0.1.3",
+    "@karinjs/sqlite3-napi-v6-win32-ia32": "0.1.3",
+    "@karinjs/sqlite3-napi-v6-win32-x64": "0.1.3"
   }
 }

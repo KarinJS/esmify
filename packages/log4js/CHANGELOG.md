@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.3](https://github.com/KarinJS/esmify/compare/log4js-v1.4.2...log4js-v1.4.3) (2025-11-19)
+
+
+### 🐛 Bug Fixes
+
+* **log4js:** 销毁上下文错误 ([35da799](https://github.com/KarinJS/esmify/commit/35da799582b51517118f19463e764bb754996cef))
+
 ## [1.4.2](https://github.com/KarinJS/esmify/compare/log4js-v1.4.1...log4js-v1.4.2) (2025-11-19)
 
 

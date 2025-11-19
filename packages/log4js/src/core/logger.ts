@@ -348,6 +348,7 @@ class Logger {
   /**
    * @description 在一个上下文中运行函数，自动传播上下文ID
    * @param fn - 需要运行的函数
+   * @param ms - 任务完成后，自动销毁存储的上下文日志的时间（毫秒），默认 10 * 1000
    * @returns 函数的返回值
    * @example
    * ```ts
@@ -362,12 +363,12 @@ class Logger {
    * 可通过ID获取此上下文相关的日志
    * ```
    */
-  public runContext<T> (fn: () => T): T {
+  public runContext<T> (fn: () => T, ms = 10 * 1000): T {
     const id = crypto.randomUUID()
     try {
       return this.contextStore.run({ id }, fn)
     } finally {
-      this.destroyContext(id)
+      setTimeout(() => this.destroyContext(id), ms)
     }
   }
 

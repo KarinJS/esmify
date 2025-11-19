@@ -1,8 +1,8 @@
 {
-  ".": "1.14.2",
+  ".": "1.14.3",
   "packages/dotenv": "1.1.3",
   "packages/log4js": "1.4.1",
-  "packages/sqlite3": "0.2.2",
+  "packages/sqlite3": "0.2.3",
   "packages/ws": "1.2.1",
   "packages/qs": "0.1.2",
   "packages/long-timeout": "0.1.1",

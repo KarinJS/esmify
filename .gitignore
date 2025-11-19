@@ -5,3 +5,4 @@ build
 /packages/log4js/lib
 *.log
 /packages/log4js/logs
+/packages/sqlite3/packages

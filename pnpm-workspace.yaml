@@ -4,6 +4,7 @@ packages:
   - "!packages/redis"
   - "!packages/jsonwebtoken"
   - "!packages/form-data"
+  - "!@karinjs/sqlite3-cjs"
 
 neverBuiltDependencies:
   - "@karinjs/sqlite3"

@@ -1,7 +1,7 @@
 {
   "name": "@karinjs/sqlite3",
   "version": "0.2.1",
-  "description": "Use vite+tsup to recompile sqlite3 into esm, which is smaller in size.",
+  "description": "Distribute the node files along with the SQLite3 file in ESM format.",
   "keywords": [
     "karinjs",
     "sqlite3"

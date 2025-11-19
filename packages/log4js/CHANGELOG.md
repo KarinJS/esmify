@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/KarinJS/esmify/compare/log4js-v1.4.1...log4js-v1.4.2) (2025-11-19)
+
+
+### 🐛 Bug Fixes
+
+* 移除不再需要的 @types/tap 依赖 ([c0ba278](https://github.com/KarinJS/esmify/commit/c0ba2787f8cfa4d9b5723d79dcd31f701b2c5c00))
+
 ## [1.4.1](https://github.com/KarinJS/esmify/compare/log4js-v1.4.0...log4js-v1.4.1) (2025-11-19)
 
 

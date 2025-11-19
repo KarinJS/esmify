@@ -98,9 +98,6 @@ importers:
       '@types/node':
         specifier: ^18
         version: 18.19.130
-      '@types/tap':
-        specifier: ^18.0.0
-        version: 18.0.0(typescript@5.9.3)
       date-format:
         specifier: ^4.0.14
         version: 4.0.14
@@ -1063,10 +1060,6 @@ packages:
 
   '@types/stack-utils@2.0.3':
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
-
-  '@types/tap@18.0.0':
-    resolution: {integrity: sha512-caqy4dfOj/mdGpMdjRIsJc0HDCMUeCLCxbf1mlfAbpDGzOOqd5yQ4hRMxiER+sR7Wx1y3gNEPqFw0ySp4uI/jQ==}
-    deprecated: This is a stub types definition. tap provides its own type definitions, so you do not need this installed.
 
   '@types/tape@5.8.1':
     resolution: {integrity: sha512-vRjK+E1c+I4WRDSXcYfgepPjz2Knh+gulU3359LrR9H2KM8AyiMbNmX7W5aMlw7JFoXMpVOhq3bEIm78qakGbQ==}
@@ -5711,16 +5704,6 @@ snapshots:
   '@types/sinonjs__fake-timers@15.0.1': {}
 
   '@types/stack-utils@2.0.3': {}
-
-  '@types/tap@18.0.0(typescript@5.9.3)':
-    dependencies:
-      tap: 16.3.10(typescript@5.9.3)
-    transitivePeerDependencies:
-      - coveralls
-      - flow-remove-types
-      - supports-color
-      - ts-node
-      - typescript
 
   '@types/tape@5.8.1':
     dependencies:

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.4](https://github.com/KarinJS/esmify/compare/sqlite3-v0.2.3...sqlite3-v0.2.4) (2025-11-19)
+
+
+### 🐛 Bug Fixes
+
+* version ([caccd61](https://github.com/KarinJS/esmify/commit/caccd61b8ef8b92a411b1f20215bde483136a613))
+
 ## [0.2.3](https://github.com/KarinJS/esmify/compare/sqlite3-v0.2.2...sqlite3-v0.2.3) (2025-11-19)
 
 

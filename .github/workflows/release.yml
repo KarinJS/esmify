@@ -125,6 +125,7 @@ jobs:
       - name: 发布 sqlite3 包
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: packages/sqlite3
         run: |
           pnpm i -F @karinjs/sqlite3

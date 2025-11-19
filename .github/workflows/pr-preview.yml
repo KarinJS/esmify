@@ -66,6 +66,8 @@ jobs:
           pnpm ls -r --depth -1
 
       - name: 构建所有包
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm -r build
 
       - name: 发布预览包

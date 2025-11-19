@@ -1,3 +1,4 @@
+/* eslint-disable @stylistic/indent */
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -15,7 +16,17 @@ const url = 'https://api.github.com/repos/sj817/node-sqlite3/releases/tags/v5.1.
  */
 const fetchJsonList = async (): Promise<Array<{ name: string; url: string }>> => {
   console.log(`正在获取 JSON 列表: ${url}`)
-  const response = await fetch(url)
+  const options = process.env.GITHUB_TOKEN
+    ? {
+      headers: {
+        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+        Accept: 'application/vnd.github.v3+json',
+        'User-Agent': 'esmify-sqlite3-build-script',
+      },
+    }
+    : undefined
+  const response = await fetch(url, options)
+
   if (!response.ok) {
     throw new Error(`获取 JSON 列表失败: ${response.statusText}`)
   }

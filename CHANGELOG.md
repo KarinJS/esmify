@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.17.3](https://github.com/KarinJS/esmify/compare/esmify-v1.17.2...esmify-v1.17.3) (2025-11-20)
+
+
+### 🐛 Bug Fixes
+
+* **logger:** 更新上下文处理逻辑，支持异步函数并修复日志收集 ([d33b3e0](https://github.com/KarinJS/esmify/commit/d33b3e0e7e47ee9fa926765a83cba10bda3904bc))
+
 ## [1.17.2](https://github.com/KarinJS/esmify/compare/esmify-v1.17.1...esmify-v1.17.2) (2025-11-20)
 
 

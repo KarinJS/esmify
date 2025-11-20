@@ -253,6 +253,9 @@ class Logger {
       return this._log(logLevel, args)
     }
 
+    /** 对于日志追踪 就算没启用的日志等级 我们也收集日志 */
+    const loggingEvent = this.createLoggingEvent(logLevel, args)
+    this.collectorsLog(loggingEvent)
     debug(`日志级别未启用，跳过日志记录 (${logLevel}，${this.category})`)
   }
 
@@ -272,10 +275,26 @@ class Logger {
    */
   private _log (level: Level, data: any[]): void {
     debug(`发送日志数据 (${level}) 到 appenders`)
-    const error = data.find((item) => item instanceof Error) as Error | undefined
+    const loggingEvent = this.createLoggingEvent(level, data)
+    clustering.send(loggingEvent)
+    this.collectorsLog(loggingEvent)
+  }
+
+  /**
+   * 构造loggingEvent日志事件对象
+   * @param level - 日志级别
+   * @param data - 日志数据
+   */
+  createLoggingEvent (
+    level: Level,
+    data: any[]
+  ): LoggingEvent {
     let callStack: CallStack | null | undefined
     if (this.useCallStack) {
       try {
+        const error = data.find((item) => item instanceof Error) as
+          | Error
+          | undefined
         if (error) {
           callStack = this.parseCallStack(
             error,
@@ -294,17 +313,13 @@ class Logger {
           baseCallStackSkip
         )
     }
-    const loggingEvent = new LoggingEvent(
+    return new LoggingEvent(
       this.category,
       level,
       data,
       this.context,
-      callStack || undefined,
-      error
+      callStack || undefined
     )
-
-    clustering.send(loggingEvent)
-    this.collectorsLog(loggingEvent)
   }
 
   /**

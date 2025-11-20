@@ -82,11 +82,11 @@ import log4js from '@karinjs/log4js'
 
 const logger = log4js.getLogger()
 
-logger.runContext(() => {
+const context = logger.runContext(async () => {
   logger.info('请求开始')
   
   // 获取当前上下文的唯一 ID
-  const id = logger.contextStore.getStore()?.id
+  const id = context.id
   console.log(`上下文 ID: ${id}`)
   
   // 所有在此上下文中的日志都会被自动收集
@@ -94,10 +94,13 @@ logger.runContext(() => {
   logger.info('请求完成')
 })
 
-// 默认 10 秒后自动清理，可以自定义清理时间
-logger.runContext(() => {
+await context.run()
+
+// 自定义清理时间
+const context2 = logger.runContext(async () => {
   logger.info('这个上下文会在 5 秒后清理')
-}, 5000)
+}, { ms: 5000 })
+await context2.run()
 ```
 
 ### getContextLogs - 获取上下文日志
@@ -105,16 +108,18 @@ logger.runContext(() => {
 获取当前上下文收集的所有日志。
 
 ```typescript
-logger.runContext(() => {
+const context = logger.runContext(async () => {
   logger.info('日志 1')
   logger.warn('日志 2')
   logger.error('日志 3')
   
   // 获取当前上下文的所有日志
-  const logs = logger.getContextLogs()
+  const logs = context.logs()
   console.log('收集到的日志:', logs)
   // 输出格式化后的日志数组
 })
+
+await context.run()
 ```
 
 ### setContextLayouts - 设置上下文日志格式
@@ -133,11 +138,13 @@ logger.setContextLayouts('basic')
 // 使用 colored 布局
 logger.setContextLayouts('colored')
 
-logger.runContext(() => {
+const context = logger.runContext(async () => {
   logger.info('这条日志会使用自定义格式')
-  const logs = logger.getContextLogs()
+  const logs = context.logs()
   // logs 中的日志已经按照设置的 layout 格式化
 })
+
+await context.run()
 ```
 
 ### destroyContext - 销毁上下文
@@ -145,7 +152,7 @@ logger.runContext(() => {
 手动销毁指定上下文的日志收集器（通常不需要手动调用）。
 
 ```typescript
-logger.runContext(() => {
+const context = logger.runContext(async () => {
   const id = logger.contextStore.getStore()?.id
   
   logger.info('一些日志')
@@ -155,6 +162,8 @@ logger.runContext(() => {
     logger.destroyContext(id)
   }
 })
+
+await context.run()
 ```
 
 ### 实际应用场景
@@ -168,25 +177,30 @@ import log4js from '@karinjs/log4js'
 const app = express()
 const logger = log4js.getLogger('http')
 
-app.use((req, res, next) => {
-  logger.runContext(() => {
+app.use(async (req, res, next) => {
+  const context = logger.runContext(async () => {
     const contextId = logger.contextStore.getStore()?.id
     
     logger.info(`[${contextId}] ${req.method} ${req.url}`)
     
     // 在请求处理过程中的所有日志都会被收集
-    req.on('end', () => {
-      // 获取这个请求相关的所有日志
-      const requestLogs = logger.getContextLogs()
-      
-      // 可以将日志发送到监控系统、保存到数据库等
-      if (res.statusCode >= 400) {
-        console.error('请求失败，相关日志:', requestLogs)
-      }
+    await new Promise<void>((resolve) => {
+      req.on('end', () => {
+        // 获取这个请求相关的所有日志
+        const requestLogs = context.logs()
+        
+        // 可以将日志发送到监控系统、保存到数据库等
+        if (res.statusCode >= 400) {
+          console.error('请求失败，相关日志:', requestLogs)
+        }
+        resolve()
+      })
     })
     
     next()
-  }, 30000) // 30秒后清理
+  }, { ms: 30000 }) // 30秒后清理
+  
+  await context.run()
 })
 ```
 
@@ -194,7 +208,7 @@ app.use((req, res, next) => {
 
 ```typescript
 async function processTask(taskId: string) {
-  logger.runContext(() => {
+  const context = logger.runContext(async () => {
     logger.info(`任务 ${taskId} 开始`)
     
     try {
@@ -208,10 +222,12 @@ async function processTask(taskId: string) {
       logger.error(`任务 ${taskId} 失败`, error)
       
       // 任务失败时，获取所有相关日志用于调试
-      const logs = logger.getContextLogs()
+      const logs = context.logs()
       await saveErrorLogs(taskId, logs)
     }
   })
+  
+  await context.run()
 }
 ```
 
@@ -247,7 +263,7 @@ async function processTask(taskId: string) {
 
 #### 上下文追踪（新增）
 
-- `logger.runContext(fn, ms?)` - 在上下文中运行函数
+- `logger.runContext(fn, options?)` - 在上下文中运行函数
 - `logger.getContextLogs()` - 获取当前上下文的日志
 - `logger.setContextLayouts(name, config?)` - 设置上下文日志格式
 - `logger.destroyContext(id)` - 销毁指定上下文

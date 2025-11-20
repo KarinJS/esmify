@@ -147,31 +147,31 @@ class Logger {
   }
 
   trace (message: any, ...args: any[]) {
-    this.log(levels.TRACE, message, ...args)
+    this._log(levels.TRACE, message, ...args)
   }
 
   debug (message: any, ...args: any[]) {
-    this.log(levels.DEBUG, message, ...args)
+    this._log(levels.DEBUG, message, ...args)
   }
 
   info (message: any, ...args: any[]) {
-    this.log(levels.INFO, message, ...args)
+    this._log(levels.INFO, message, ...args)
   }
 
   warn (message: any, ...args: any[]) {
-    this.log(levels.WARN, message, ...args)
+    this._log(levels.WARN, message, ...args)
   }
 
   error (message: any, ...args: any[]) {
-    this.log(levels.ERROR, message, ...args)
+    this._log(levels.ERROR, message, ...args)
   }
 
   fatal (message: any, ...args: any[]) {
-    this.log(levels.FATAL, message, ...args)
+    this._log(levels.FATAL, message, ...args)
   }
 
   mark (message: any, ...args: any[]) {
-    this.log(levels.MARK, message, ...args)
+    this._log(levels.MARK, message, ...args)
   }
 
   /**
@@ -233,24 +233,24 @@ class Logger {
    * @param level - 日志级别或消息
    * @param args - 要记录的参数
    */
-  log (level: Level | string | any, ...args: any[]): void {
+  _log (level: Level | string | any, ...args: any[]): void {
     const logLevel = levels.getLevel(level)
     if (!logLevel) {
       if (configuration.validIdentifier(level) && args.length > 0) {
         // 未找到 logLevel 但具有有效签名，在回退到 INFO 之前发出警告
-        this.log(
+        this._log(
           levels.WARN,
           'log4js:logger.log: 未找到有效的日志级别作为第一个参数：',
           level
         )
-        return this.log(levels.INFO, `[${level}]`, ...args)
+        return this._log(levels.INFO, `[${level}]`, ...args)
       }
 
-      return this.log(levels.INFO, level, ...args)
+      return this._log(levels.INFO, level, ...args)
     }
 
     if (this.isLevelEnabled(logLevel)) {
-      return this._log(logLevel, args)
+      return this.writeLog(logLevel, args)
     }
 
     /** 对于日志追踪 就算没启用的日志等级 我们也收集日志 */
@@ -273,7 +273,7 @@ class Logger {
    * @param level - 日志级别
    * @param data - 日志数据
    */
-  private _log (level: Level, data: any[]): void {
+  private writeLog (level: Level, data: any[]): void {
     debug(`发送日志数据 (${level}) 到 appenders`)
     const loggingEvent = this.createLoggingEvent(level, data)
     clustering.send(loggingEvent)
@@ -362,28 +362,56 @@ class Logger {
 
   /**
    * @description 在一个上下文中运行函数，自动传播上下文ID
-   * @param fn - 需要运行的函数
-   * @param ms - 任务完成后，自动销毁存储的上下文日志的时间（毫秒），默认 10 * 1000
-   * @returns 函数的返回值
+   * @param fn - 需要运行的异步函数
+   * @param options - 配置选项
+   * @param options.ms - 任务完成后，自动销毁存储的上下文日志的时间（毫秒），默认 5000
+   * @returns 上下文对象，包含 run、destroy、logs 等方法
    * @example
    * ```ts
-   * logger.runContext(() => {
+   * const context = logger.runContext(async () => {
    *   logger.info('This log is within a context');
    * });
    *
+   * await context.run();
+   *
    * // 可以在上下文中获取唯一的ID
-   * const id = logger.contextStore.getStore()?.id;
+   * const id = context.id;
    * console.log(`上下文 ID: ${id}`);
    *
-   * 可通过ID获取此上下文相关的日志
+   * // 可通过ID获取此上下文相关的日志
+   * const logs = context.logs();
    * ```
    */
-  public runContext<T> (fn: () => T, ms = 10 * 1000): T {
+  public runContext<T> (fn: () => Promise<T>, options?: { ms?: number }) {
+    const ms = options?.ms ?? 5000
+    let timer: NodeJS.Timeout | null = null
     const id = crypto.randomUUID()
-    try {
-      return this.contextStore.run({ id }, fn)
-    } finally {
-      setTimeout(() => this.destroyContext(id), ms)
+    return {
+      /** 上下文id */
+      get id () {
+        return id
+      },
+      /** 执行任务 */
+      run: async () => {
+        return this.contextStore.run({ id }, fn)
+          .finally(() => {
+            timer = setTimeout(() => {
+              this.destroyContext(id)
+            }, ms)
+          })
+      },
+      /** 销毁上下文 */
+      destroy: () => {
+        if (timer) {
+          clearTimeout(timer)
+          timer = null
+        }
+        this.destroyContext(id)
+      },
+      /** 获取当前上下文的日志 */
+      logs: () => {
+        return this.collectors[id] || []
+      },
     }
   }
 
@@ -405,10 +433,11 @@ class Logger {
    * @description 此方法一般不需要手动 如果需要调用，请参考如下示例
    * @example
    * ```ts
-   * logger.runContext(() => {
+   * const context = logger.runContext(async () => {
    *   const id = logger.contextStore.getStore()?.id;
    *   logger.destroyContext(id!); // 手动销毁上下文日志收集器（通常不需要）
    * });
+   * await context.run();
    * ```
    */
   public destroyContext (id: string) {
@@ -451,6 +480,10 @@ class Logger {
 
     return this.collectorsLayouts
   }
+
+  log (...args: any[]): void {
+    this._log(levels.INFO, ...args)
+  }
 }
 
 /**
@@ -475,7 +508,7 @@ function addLevelMethods (target: Level | string): void {
 
   // @ts-ignore
   Logger.prototype[levelMethod] = function (this: Logger, ...args: any[]): void {
-    this.log(level, ...args)
+    this._log(level, ...args)
   }
 }
 

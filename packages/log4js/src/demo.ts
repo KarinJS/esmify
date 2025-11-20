@@ -88,6 +88,7 @@ const logger = configure({
 
 // logger.level
 
-logger.runContext(() => {
+logger.runContext(async () => {
   console.log(logger.handler('这是一个自定义级别的日志消息'))
+  return 'test'
 })

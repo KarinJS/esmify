@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/KarinJS/esmify/compare/log4js-v1.5.0...log4js-v1.5.1) (2025-11-20)
+
+
+### 🐛 Bug Fixes
+
+* **logger:** 修复日志收集功能，即使日志级别未启用 ([e301d79](https://github.com/KarinJS/esmify/commit/e301d7974329a17d76f04f090a87aa6cb02b2ea7))
+
 ## [1.5.0](https://github.com/KarinJS/esmify/compare/log4js-v1.4.3...log4js-v1.5.0) (2025-11-19)
 
 

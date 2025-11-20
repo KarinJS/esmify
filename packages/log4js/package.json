@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/log4js",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Modern TypeScript ESM version of log4js with Node.js 18+ support",
   "keywords": [
     "karinjs",

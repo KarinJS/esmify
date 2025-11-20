@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.3](https://github.com/KarinJS/esmify/compare/log4js-v1.5.2...log4js-v1.5.3) (2025-11-20)
+
+
+### 🐛 Bug Fixes
+
+* **streamroller:** 修复 RollingFileWriteStream 和 DateRollingFileStream 的逻辑一致性 ([957b2eb](https://github.com/KarinJS/esmify/commit/957b2ebd01aea688e3fb903f7b4d41466433815f))
+
 ## [1.5.2](https://github.com/KarinJS/esmify/compare/log4js-v1.5.1...log4js-v1.5.2) (2025-11-20)
 
 

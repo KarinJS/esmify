@@ -38,7 +38,8 @@ class DateRollingFileStream extends RollingFileWriteStream {
           'DeprecationWarning', 'streamroller-DEP0001'
         )
       }
-      extendedOptions.numBackups = options.daysToKeep ?? extendedOptions.daysToKeep
+      // 修复：应该直接赋值 extendedOptions.daysToKeep，与官方版本逻辑一致
+      extendedOptions.numBackups = extendedOptions.daysToKeep
     } else {
       extendedOptions.daysToKeep = extendedOptions.numBackups
     }

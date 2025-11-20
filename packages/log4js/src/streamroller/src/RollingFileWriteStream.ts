@@ -70,7 +70,7 @@ export interface RollingFileWriteStreamOptions extends WritableOptions {
 }
 
 interface ParsedOptions extends WritableOptions {
-  maxSize: number
+  maxSize?: number  // 修改为可选，因为当为 0 时会被删除
   numToKeep: number
   encoding: BufferEncoding
   mode: number
@@ -125,7 +125,7 @@ class RollingFileWriteStream extends Writable {
     this.fileFormatter = fileNameFormatter({
       file: this.fileObject,
       alwaysIncludeDate: this.options.alwaysIncludePattern,
-      needsIndex: this.options.maxSize < Number.MAX_SAFE_INTEGER,
+      needsIndex: this.options.maxSize! < Number.MAX_SAFE_INTEGER,
       compress: this.options.compress,
       keepFileExt: this.options.keepFileExt,
       fileNameSep: this.options.fileNameSep,
@@ -188,7 +188,9 @@ class RollingFileWriteStream extends Writable {
     }
     const options = Object.assign({}, defaultOptions, rawOptions) as ParsedOptions
     if (!options.maxSize) {
-      options.maxSize = 0
+      // 修复：当 maxSize 为 0 或未定义时，删除该属性（与官方版本一致）
+      // 这样 needsIndex 判断会正确（maxSize < Number.MAX_SAFE_INTEGER 会是 false）
+      delete (options as any).maxSize
     } else if (options.maxSize <= 0) {
       throw new Error(`options.maxSize (${options.maxSize}) should be > 0`)
     }
@@ -247,7 +249,7 @@ class RollingFileWriteStream extends Writable {
   }
 
   private _tooBig (): boolean {
-    return this.state.currentSize >= this.options.maxSize
+    return this.state.currentSize >= this.options.maxSize!
   }
 
   private _roll (): Promise<void> {

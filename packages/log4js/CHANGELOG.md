@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.2](https://github.com/KarinJS/esmify/compare/log4js-v1.5.1...log4js-v1.5.2) (2025-11-20)
+
+
+### 🐛 Bug Fixes
+
+* **logger:** 更新上下文处理逻辑，支持异步函数并修复日志收集 ([d33b3e0](https://github.com/KarinJS/esmify/commit/d33b3e0e7e47ee9fa926765a83cba10bda3904bc))
+
 ## [1.5.1](https://github.com/KarinJS/esmify/compare/log4js-v1.5.0...log4js-v1.5.1) (2025-11-20)
 
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.4](https://github.com/KarinJS/esmify/compare/log4js-v1.5.3...log4js-v1.5.4) (2025-11-21)
+
+
+### 🐛 Bug Fixes
+
+* **logger:** 使用 self 引用替代 this，确保上下文正确性 ([b049a91](https://github.com/KarinJS/esmify/commit/b049a910109956621e16fa9b43eb14076065a473))
+
 ## [1.5.3](https://github.com/KarinJS/esmify/compare/log4js-v1.5.2...log4js-v1.5.3) (2025-11-20)
 
 

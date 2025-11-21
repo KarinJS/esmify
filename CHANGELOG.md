@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.17.5](https://github.com/KarinJS/esmify/compare/esmify-v1.17.4...esmify-v1.17.5) (2025-11-21)
+
+
+### 🐛 Bug Fixes
+
+* **logger:** 使用 self 引用替代 this，确保上下文正确性 ([b049a91](https://github.com/KarinJS/esmify/commit/b049a910109956621e16fa9b43eb14076065a473))
+
 ## [1.17.4](https://github.com/KarinJS/esmify/compare/esmify-v1.17.3...esmify-v1.17.4) (2025-11-20)
 
 

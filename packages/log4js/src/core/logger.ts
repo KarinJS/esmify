@@ -386,6 +386,7 @@ class Logger {
     const ms = options?.ms ?? 5000
     let timer: NodeJS.Timeout | null = null
     const id = crypto.randomUUID()
+    const self = this
     return {
       /** 上下文id */
       get id () {
@@ -393,10 +394,10 @@ class Logger {
       },
       /** 执行任务 */
       run: async () => {
-        return this.contextStore.run({ id }, fn)
+        return self.contextStore.run({ id }, fn)
           .finally(() => {
             timer = setTimeout(() => {
-              this.destroyContext(id)
+              self.destroyContext(id)
             }, ms)
           })
       },
@@ -406,11 +407,11 @@ class Logger {
           clearTimeout(timer)
           timer = null
         }
-        this.destroyContext(id)
+        self.destroyContext(id)
       },
       /** 获取当前上下文的日志 */
       logs: () => {
-        return this.collectors[id] || []
+        return self.collectors[id] || []
       },
     }
   }

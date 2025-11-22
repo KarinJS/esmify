@@ -137,11 +137,16 @@ jobs:
               echo "发布包: $dir"
               cd "$dir"
               pnpm publish --access public --provenance --no-git-checks
+              PACKAGE_NAME=$(node -p "require('./package.json').name")
+              echo "同步包到 npmmirror: $PACKAGE_NAME"
+              curl -X PUT "https://registry-direct.npmmirror.com/-/package/$PACKAGE_NAME/syncs"
               cd ..
             fi
           done
           cd ..
           pnpm publish --access public --provenance --no-git-checks
+          echo "同步主包到 npmmirror: @karinjs/sqlite3"
+          curl -X PUT "https://registry-direct.npmmirror.com/-/package/@karinjs/sqlite3/syncs"
 
   publish-ws:
     needs: release-please

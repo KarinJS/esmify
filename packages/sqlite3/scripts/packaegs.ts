@@ -6,7 +6,7 @@ import { execSync } from 'node:child_process'
 import { extract } from 'tar'
 
 const name = 'sqlite3'
-const url = 'https://api.github.com/repos/sj817/node-sqlite3/releases/tags/v5.1.8'
+const url = 'https://api.github.com/repos/sj817/node-sqlite3/releases/tags/v5.1.9'
 
 // 'sqlite3-v5.1.7-napi-v3-linuxmusl-arm64.tar.gz'
 // name构成: sqlite3-v${version}-napi-v${napiVersion}-${platform}-${arch}.tar.gz

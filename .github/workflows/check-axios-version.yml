@@ -33,7 +33,9 @@ jobs:
           cache: "pnpm"
           registry-url: "https://registry.npmjs.org"
 
-      - name: 安装依赖
+      - name: 安装依赖并执行版本检查
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         run: |
           max_attempts=3
           attempt=1
@@ -41,9 +43,10 @@ jobs:
           while [ $attempt -le $max_attempts ]; do
             echo "尝试安装依赖 (第 $attempt 次)..."
             
-            if pnpm install -F esmify -F @karinjs/axios; then
+            cd packages/axios
+            if pnpm install; then
               echo "✅ 依赖安装成功"
-              exit 0
+              break
             else
               echo "❌ 第 $attempt 次安装失败"
               if [ $attempt -lt $max_attempts ]; then
@@ -54,14 +57,13 @@ jobs:
             fi
           done
 
-          echo "❌ 依赖安装失败，已尝试 $max_attempts 次"
-          exit 1
+          if [ $attempt -gt $max_attempts ]; then
+            echo "❌ 依赖安装失败，已尝试 $max_attempts 次"
+            exit 1
+          fi
 
-      - name: 执行版本检查
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-        working-directory: packages/axios
-        run: pnpm run check:version
+          echo "开始执行版本检查..."
+          pnpm run check:version
 
       - name: 检查文件变更
         id: git-check

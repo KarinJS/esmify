@@ -1,6 +1,6 @@
 {
   "name": "@karinjs/qs",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Modern qs, ts + esm + node v18+.",
   "keywords": [
     "karinjs",

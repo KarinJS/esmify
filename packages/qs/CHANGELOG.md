@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.0](https://github.com/KarinJS/esmify/compare/qs-v0.1.2...qs-v0.2.0) (2025-11-29)
+
+
+### ✨ Features
+
+* add comprehensive tests for utility functions in qs package ([d0fd117](https://github.com/KarinJS/esmify/commit/d0fd1174a7a76467afd5062301444914d0dcb4fe))
+* add TypeScript type definitions for qs package ([d0fd117](https://github.com/KarinJS/esmify/commit/d0fd1174a7a76467afd5062301444914d0dcb4fe))
+
+
+### 🎫 Chores
+
+* update pnpm-lock.yaml to include new dependencies ([d0fd117](https://github.com/KarinJS/esmify/commit/d0fd1174a7a76467afd5062301444914d0dcb4fe))
+
 ## [0.1.2](https://github.com/KarinJS/esmify/compare/qs-v0.1.1...qs-v0.1.2) (2025-11-19)
 
 

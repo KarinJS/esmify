@@ -1,56 +1,61 @@
 import getSideChannel from 'side-channel'
 import * as utils from './utils'
-import formats, { FormatType } from './formats'
+import * as formats from './formats'
+import type { IStringifyOptions, BooleanOptional, Encoder } from './types'
 
 const has = Object.prototype.hasOwnProperty
 
-const arrayPrefixGenerators = {
-  brackets: (prefix: string): string => {
+type ArrayFormat = 'indices' | 'brackets' | 'repeat' | 'comma'
+type GenerateArrayPrefix = ((prefix: string, key?: string) => string) | 'comma'
+
+const arrayPrefixGenerators: Record<string, GenerateArrayPrefix> = {
+  brackets: function brackets (prefix: string): string {
     return prefix + '[]'
   },
-  comma: 'comma' as const,
-  indices: (prefix: string, key: string): string => {
-    return prefix + '[' + key + ']'
+  comma: 'comma',
+  indices: function indices (prefix: string, key?: string): string {
+    return prefix + '[' + (key ?? '') + ']'
   },
-  repeat: (prefix: string): string => {
+  repeat: function repeat (prefix: string): string {
     return prefix
   },
 }
 
 const isArray = Array.isArray
 const push = Array.prototype.push
-const pushToArray = (arr: any[], valueOrArray: any): void => {
+const pushToArray = function (arr: any[], valueOrArray: any): void {
   push.apply(arr, isArray(valueOrArray) ? valueOrArray : [valueOrArray])
 }
 
 const toISO = Date.prototype.toISOString
 
-const defaultFormat = formats.default
+const defaultFormat = formats.defaultFormat
 
-export interface StringifyOptions {
-  addQueryPrefix: boolean
-  allowDots: boolean
-  allowEmptyArrays: boolean
-  arrayFormat: 'indices' | 'brackets' | 'repeat' | 'comma'
-  charset: string
-  charsetSentinel: boolean
-  commaRoundTrip: boolean
-  delimiter: string
-  encode: boolean
-  encodeDotInKeys: boolean
-  encoder: (str: any, defaultEncoder: any, charset: string, type: string, format: FormatType) => string
-  encodeValuesOnly: boolean
-  filter: any
-  format: FormatType
-  formatter: (value: string) => string
-  indices: boolean
-  serializeDate: (date: Date) => string
-  skipNulls: boolean
-  strictNullHandling: boolean
-  sort?: ((a: string, b: string) => number) | null
+// Internal options interface
+interface StringifyOptions {
+  addQueryPrefix?: boolean
+  allowDots?: boolean
+  allowEmptyArrays?: boolean
+  arrayFormat?: ArrayFormat
+  charset?: 'utf-8' | 'iso-8859-1'
+  charsetSentinel?: boolean
+  commaRoundTrip?: boolean
+  delimiter?: string
+  encode?: boolean
+  encodeDotInKeys?: boolean
+  encoder?: Encoder
+  encodeValuesOnly?: boolean
+  filter?: string[] | number[] | ((prefix: string, value: any) => any)
+  format?: formats.Format
+  formatter?: formats.Formatter
+  indices?: boolean
+  serializeDate?: (date: Date) => string
+  skipNulls?: boolean
+  sort?: (a: string, b: string) => number
+  strictNullHandling?: boolean
 }
 
-const defaults: StringifyOptions = {
+const defaults: Required<StringifyOptions> = {
   addQueryPrefix: false,
   allowDots: false,
   allowEmptyArrays: false,
@@ -63,19 +68,20 @@ const defaults: StringifyOptions = {
   encodeDotInKeys: false,
   encoder: utils.encode,
   encodeValuesOnly: false,
-  filter: undefined,
+  filter: undefined as any,
   format: defaultFormat,
   formatter: formats.formatters[defaultFormat],
   // deprecated
   indices: false,
-  serializeDate: (date: Date): string => {
+  serializeDate: function serializeDate (date: Date): string {
     return toISO.call(date)
   },
   skipNulls: false,
+  sort: undefined as any,
   strictNullHandling: false,
 }
 
-const isNonNullishPrimitive = (v: any): boolean => {
+const isNonNullishPrimitive = function isNonNullishPrimitive (v: any): boolean {
   return typeof v === 'string' ||
     typeof v === 'number' ||
     typeof v === 'boolean' ||
@@ -85,26 +91,26 @@ const isNonNullishPrimitive = (v: any): boolean => {
 
 const sentinel = {}
 
-const stringify = (
+const stringify = function stringify (
   object: any,
   prefix: string,
-  generateArrayPrefix: any,
+  generateArrayPrefix: GenerateArrayPrefix,
   commaRoundTrip: boolean,
   allowEmptyArrays: boolean,
   strictNullHandling: boolean,
   skipNulls: boolean,
   encodeDotInKeys: boolean,
-  encoder: any,
-  filter: any,
-  sort: any,
+  encoder: Encoder | null,
+  filter: StringifyOptions['filter'],
+  sort: StringifyOptions['sort'],
   allowDots: boolean,
   serializeDate: (date: Date) => string,
-  format: FormatType,
-  formatter: (value: string) => string,
+  format: formats.Format,
+  formatter: formats.Formatter,
   encodeValuesOnly: boolean,
   charset: string,
   sideChannel: any
-): string[] => {
+): string[] {
   let obj = object
 
   let tmpSc = sideChannel
@@ -131,7 +137,7 @@ const stringify = (
   } else if (obj instanceof Date) {
     obj = serializeDate(obj)
   } else if (generateArrayPrefix === 'comma' && isArray(obj)) {
-    obj = utils.maybeMap(obj, (value: any) => {
+    obj = utils.maybeMap(obj, function (value: any) {
       if (value instanceof Date) {
         return serializeDate(value)
       }
@@ -161,7 +167,7 @@ const stringify = (
     return values
   }
 
-  let objKeys: any[]
+  let objKeys: Array<string | { value: any }>
   if (generateArrayPrefix === 'comma' && isArray(obj)) {
     // we need to join elements in
     if (encodeValuesOnly && encoder) {
@@ -169,7 +175,7 @@ const stringify = (
     }
     objKeys = [{ value: obj.length > 0 ? obj.join(',') || null : undefined }]
   } else if (isArray(filter)) {
-    objKeys = filter
+    objKeys = filter as string[]
   } else {
     const keys = Object.keys(obj)
     objKeys = sort ? keys.sort(sort) : keys
@@ -187,7 +193,7 @@ const stringify = (
     const key = objKeys[j]
     const value = typeof key === 'object' && key && typeof key.value !== 'undefined'
       ? key.value
-      : obj[key]
+      : obj[key as string | number]
 
     if (skipNulls && value === null) {
       continue
@@ -226,7 +232,7 @@ const stringify = (
   return values
 }
 
-const normalizeStringifyOptions = (opts?: Partial<StringifyOptions>): StringifyOptions => {
+const normalizeStringifyOptions = function normalizeStringifyOptions (opts?: StringifyOptions): Required<StringifyOptions> {
   if (!opts) {
     return defaults
   }
@@ -248,12 +254,12 @@ const normalizeStringifyOptions = (opts?: Partial<StringifyOptions>): StringifyO
     throw new TypeError('The charset option must be either utf-8, iso-8859-1, or undefined')
   }
 
-  let format: FormatType = formats.default
+  let format: formats.Format = formats.defaultFormat
   if (typeof opts.format !== 'undefined') {
-    if (!has.call(formats.formatters, opts.format)) {
+    if (!has.call(formats.formatters, opts.format as string)) {
       throw new TypeError('Unknown format option provided.')
     }
-    format = opts.format
+    format = opts.format as formats.Format
   }
   const formatter = formats.formatters[format]
 
@@ -262,7 +268,7 @@ const normalizeStringifyOptions = (opts?: Partial<StringifyOptions>): StringifyO
     filter = opts.filter
   }
 
-  let arrayFormat: 'indices' | 'brackets' | 'repeat' | 'comma'
+  let arrayFormat: ArrayFormat
   if (opts.arrayFormat && opts.arrayFormat in arrayPrefixGenerators) {
     arrayFormat = opts.arrayFormat
   } else if ('indices' in opts) {
@@ -275,7 +281,7 @@ const normalizeStringifyOptions = (opts?: Partial<StringifyOptions>): StringifyO
     throw new TypeError('`commaRoundTrip` must be a boolean, or absent')
   }
 
-  const allowDots = typeof opts.allowDots === 'undefined' ? opts.encodeDotInKeys === true : !!opts.allowDots
+  const allowDots = typeof opts.allowDots === 'undefined' ? opts.encodeDotInKeys === true ? true : defaults.allowDots : !!opts.allowDots
 
   return {
     addQueryPrefix: typeof opts.addQueryPrefix === 'boolean' ? opts.addQueryPrefix : defaults.addQueryPrefix,
@@ -293,27 +299,27 @@ const normalizeStringifyOptions = (opts?: Partial<StringifyOptions>): StringifyO
     filter,
     format,
     formatter,
+    indices: arrayFormat === 'indices',
     serializeDate: typeof opts.serializeDate === 'function' ? opts.serializeDate : defaults.serializeDate,
     skipNulls: typeof opts.skipNulls === 'boolean' ? opts.skipNulls : defaults.skipNulls,
-    sort: typeof opts.sort === 'function' ? opts.sort : null,
+    sort: typeof opts.sort === 'function' ? opts.sort : defaults.sort,
     strictNullHandling: typeof opts.strictNullHandling === 'boolean' ? opts.strictNullHandling : defaults.strictNullHandling,
-    indices: defaults.indices,
   }
 }
 
-const stringifyFn = (object: any, opts?: Partial<StringifyOptions>): string => {
+function stringifyMain (object: any, opts?: IStringifyOptions<BooleanOptional>): string {
   let obj = object
-  const options = normalizeStringifyOptions(opts)
+  const options = normalizeStringifyOptions(opts as any)
 
-  let objKeys: string[]
-  let filter: any
+  let objKeys: string[] | undefined
+  let filter: StringifyOptions['filter']
 
   if (typeof options.filter === 'function') {
     filter = options.filter
     obj = filter('', obj)
   } else if (isArray(options.filter)) {
     filter = options.filter
-    objKeys = filter
+    objKeys = filter as string[]
   }
 
   const keys: string[] = []
@@ -322,10 +328,10 @@ const stringifyFn = (object: any, opts?: Partial<StringifyOptions>): string => {
     return ''
   }
 
-  const generateArrayPrefix = arrayPrefixGenerators[options.arrayFormat]
+  const generateArrayPrefix = arrayPrefixGenerators[options.arrayFormat] as GenerateArrayPrefix
   const commaRoundTrip = generateArrayPrefix === 'comma' && options.commaRoundTrip
 
-  if (!objKeys!) {
+  if (!objKeys) {
     objKeys = Object.keys(obj)
   }
 
@@ -379,4 +385,4 @@ const stringifyFn = (object: any, opts?: Partial<StringifyOptions>): string => {
   return joined.length > 0 ? prefix + joined : ''
 }
 
-export default stringifyFn
+export default stringifyMain

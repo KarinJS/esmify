@@ -1,33 +1,37 @@
 import * as utils from './utils'
+import type { IParseOptions, BooleanOptional, ParsedQs, Decoder } from './types'
 
 const has = Object.prototype.hasOwnProperty
 const isArray = Array.isArray
 
-export interface ParseOptions {
-  allowDots: boolean
-  allowEmptyArrays: boolean
-  allowPrototypes: boolean
-  allowSparse: boolean
-  arrayLimit: number
-  charset: string
-  charsetSentinel: boolean
-  comma: boolean
-  decodeDotInKeys: boolean
-  decoder: (str: string, decoder?: any, charset?: string, type?: string) => any
-  delimiter: string | RegExp
-  depth: number | false
-  duplicates: 'combine' | 'first' | 'last'
-  ignoreQueryPrefix: boolean
-  interpretNumericEntities: boolean
-  parameterLimit: number
-  parseArrays: boolean
-  plainObjects: boolean
-  strictDepth: boolean
-  strictNullHandling: boolean
-  throwOnLimitExceeded: boolean
+type Duplicates = 'combine' | 'first' | 'last'
+
+// Internal parse options interface
+interface ParseOptions {
+  allowDots?: boolean
+  allowEmptyArrays?: boolean
+  allowPrototypes?: boolean
+  allowSparse?: boolean
+  arrayLimit?: number
+  charset?: 'utf-8' | 'iso-8859-1'
+  charsetSentinel?: boolean
+  comma?: boolean
+  decodeDotInKeys?: boolean
+  decoder?: Decoder
+  delimiter?: string | RegExp
+  depth?: number | false
+  duplicates?: Duplicates
+  ignoreQueryPrefix?: boolean
+  interpretNumericEntities?: boolean
+  parameterLimit?: number
+  parseArrays?: boolean
+  plainObjects?: boolean
+  strictDepth?: boolean
+  strictNullHandling?: boolean
+  throwOnLimitExceeded?: boolean
 }
 
-const defaults: ParseOptions = {
+const defaults: Required<Omit<ParseOptions, 'depth'>> & { depth: number } = {
   allowDots: false,
   allowEmptyArrays: false,
   allowPrototypes: false,
@@ -51,13 +55,13 @@ const defaults: ParseOptions = {
   throwOnLimitExceeded: false,
 }
 
-const interpretNumericEntities = (str: string): string => {
-  return str.replace(/&#(\d+);/g, ($0: string, numberStr: string) => {
+const interpretNumericEntities = function (str: string): string {
+  return str.replace(/&#(\d+);/g, function ($0: string, numberStr: string) {
     return String.fromCharCode(parseInt(numberStr, 10))
   })
 }
 
-const parseArrayValue = (val: any, options: ParseOptions, currentArrayLength: number): any => {
+const parseArrayValue = function (val: any, options: NormalizedParseOptions, currentArrayLength: number): any {
   if (val && typeof val === 'string' && options.comma && val.indexOf(',') > -1) {
     return val.split(',')
   }
@@ -79,19 +83,21 @@ const isoSentinel = 'utf8=%26%2310003%3B' // encodeURIComponent('&#10003;')
 // These are the percent-encoded utf-8 octets representing a checkmark, indicating that the request actually is utf-8 encoded.
 const charsetSentinel = 'utf8=%E2%9C%93' // encodeURIComponent('✓')
 
-const parseValues = (str: string, options: ParseOptions): Record<string, any> => {
-  const obj = Object.create(null)
+type NormalizedParseOptions = Required<Omit<ParseOptions, 'depth'>> & { depth: number }
 
-  const cleanStr = options.ignoreQueryPrefix ? str.replace(/^\?/, '') : str
-  const cleanedStr = cleanStr.replace(/%5B/gi, '[').replace(/%5D/gi, ']')
+const parseValues = function parseQueryStringValues (str: string, options: NormalizedParseOptions): Record<string, any> {
+  const obj: Record<string, any> = Object.create(null)
+
+  let cleanStr = options.ignoreQueryPrefix ? str.replace(/^\?/, '') : str
+  cleanStr = cleanStr.replace(/%5B/gi, '[').replace(/%5D/gi, ']')
 
   const limit = options.parameterLimit === Infinity ? undefined : options.parameterLimit
-  const parts = cleanedStr.split(
+  const parts = cleanStr.split(
     options.delimiter as string,
-    options.throwOnLimitExceeded ? (limit ? limit + 1 : undefined) : limit
+    options.throwOnLimitExceeded ? (limit ?? 0) + 1 : limit
   )
 
-  if (options.throwOnLimitExceeded && limit && parts.length > limit) {
+  if (options.throwOnLimitExceeded && parts.length > (limit ?? 0)) {
     throw new RangeError('Parameter limit exceeded. Only ' + limit + ' parameter' + (limit === 1 ? '' : 's') + ' allowed.')
   }
 
@@ -122,7 +128,7 @@ const parseValues = (str: string, options: ParseOptions): Record<string, any> =>
     const bracketEqualsPos = part.indexOf(']=')
     const pos = bracketEqualsPos === -1 ? part.indexOf('=') : bracketEqualsPos + 1
 
-    let key: any
+    let key: string | null
     let val: any
     if (pos === -1) {
       key = options.decoder(part, defaults.decoder, charset, 'key')
@@ -130,16 +136,18 @@ const parseValues = (str: string, options: ParseOptions): Record<string, any> =>
     } else {
       key = options.decoder(part.slice(0, pos), defaults.decoder, charset, 'key')
 
-      val = utils.maybeMap(
-        parseArrayValue(
-          part.slice(pos + 1),
-          options,
-          isArray(obj[key]) ? obj[key].length : 0
-        ),
-        (encodedVal: string) => {
-          return options.decoder(encodedVal, defaults.decoder, charset, 'value')
-        }
-      )
+      if (key !== null) {
+        val = utils.maybeMap(
+          parseArrayValue(
+            part.slice(pos + 1),
+            options,
+            isArray(obj[key]) ? obj[key].length : 0
+          ),
+          function (encodedVal: any) {
+            return options.decoder(encodedVal, defaults.decoder, charset, 'value')
+          }
+        )
+      }
     }
 
     if (val && options.interpretNumericEntities && charset === 'iso-8859-1') {
@@ -150,18 +158,20 @@ const parseValues = (str: string, options: ParseOptions): Record<string, any> =>
       val = isArray(val) ? [val] : val
     }
 
-    const existing = has.call(obj, key)
-    if (existing && options.duplicates === 'combine') {
-      obj[key] = utils.combine(obj[key], val)
-    } else if (!existing || options.duplicates === 'last') {
-      obj[key] = val
+    if (key !== null) {
+      const existing = has.call(obj, key)
+      if (existing && options.duplicates === 'combine') {
+        obj[key] = utils.combine(obj[key], val)
+      } else if (!existing || options.duplicates === 'last') {
+        obj[key] = val
+      }
     }
   }
 
   return obj
 }
 
-const parseObject = (chain: string[], val: any, options: ParseOptions, valuesParsed?: boolean): any => {
+const parseObject = function (chain: string[], val: any, options: NormalizedParseOptions, valuesParsed: boolean): any {
   let currentArrayLength = 0
   if (chain.length > 0 && chain[chain.length - 1] === '[]') {
     const parentKey = chain.slice(0, -1).join('')
@@ -205,7 +215,7 @@ const parseObject = (chain: string[], val: any, options: ParseOptions, valuesPar
   return leaf
 }
 
-const parseKeys = (givenKey: string, val: any, options: ParseOptions, valuesParsed?: boolean): any => {
+const parseKeys = function parseQueryStringKeys (givenKey: string | undefined, val: any, options: NormalizedParseOptions, valuesParsed: boolean): any {
   if (!givenKey) {
     return
   }
@@ -220,7 +230,7 @@ const parseKeys = (givenKey: string, val: any, options: ParseOptions, valuesPars
 
   // Get the parent
 
-  let segment = (typeof options.depth === 'number' && options.depth > 0) ? brackets.exec(key) : null
+  let segment = options.depth > 0 && brackets.exec(key)
   const parent = segment ? key.slice(0, segment.index) : key
 
   // Stash the parent if it exists
@@ -240,7 +250,7 @@ const parseKeys = (givenKey: string, val: any, options: ParseOptions, valuesPars
   // Loop through children appending to the array until we hit depth
 
   let i = 0
-  while ((typeof options.depth === 'number' && options.depth > 0) && (segment = child.exec(key)) !== null && (typeof options.depth === 'number' && i < options.depth)) {
+  while (options.depth > 0 && (segment = child.exec(key)) !== null && i < options.depth) {
     i += 1
     if (!options.plainObjects && has.call(Object.prototype, segment[1].slice(1, -1))) {
       if (!options.allowPrototypes) {
@@ -262,7 +272,7 @@ const parseKeys = (givenKey: string, val: any, options: ParseOptions, valuesPars
   return parseObject(keys, val, options, valuesParsed)
 }
 
-const normalizeParseOptions = (opts?: Partial<ParseOptions>): ParseOptions => {
+const normalizeParseOptions = function normalizeParseOptions (opts?: ParseOptions): NormalizedParseOptions {
   if (!opts) {
     return defaults
   }
@@ -309,7 +319,8 @@ const normalizeParseOptions = (opts?: Partial<ParseOptions>): ParseOptions => {
     decodeDotInKeys: typeof opts.decodeDotInKeys === 'boolean' ? opts.decodeDotInKeys : defaults.decodeDotInKeys,
     decoder: typeof opts.decoder === 'function' ? opts.decoder : defaults.decoder,
     delimiter: typeof opts.delimiter === 'string' || utils.isRegExp(opts.delimiter) ? opts.delimiter : defaults.delimiter,
-    depth: (typeof opts.depth === 'number' || opts.depth === false) ? Number(opts.depth) : defaults.depth,
+    // eslint-disable-next-line no-implicit-coercion, no-extra-parens
+    depth: (typeof opts.depth === 'number' || opts.depth === false) ? +opts.depth : defaults.depth,
     duplicates,
     ignoreQueryPrefix: opts.ignoreQueryPrefix === true,
     interpretNumericEntities: typeof opts.interpretNumericEntities === 'boolean' ? opts.interpretNumericEntities : defaults.interpretNumericEntities,
@@ -322,15 +333,20 @@ const normalizeParseOptions = (opts?: Partial<ParseOptions>): ParseOptions => {
   }
 }
 
-const parse = (str: string | Record<string, string>, opts?: Partial<ParseOptions>): any => {
-  const options = normalizeParseOptions(opts)
+// Overload 1: When decoder is not provided or is undefined, return ParsedQs
+function parseMain (str: string, options?: IParseOptions<BooleanOptional> & { decoder?: never | undefined }): ParsedQs
+// Overload 2: When decoder is provided or input is Record, return generic object
+function parseMain (str: string | Record<string, string>, options?: IParseOptions<BooleanOptional>): { [key: string]: unknown }
+// Implementation
+function parseMain (str: string | Record<string, string>, opts?: IParseOptions<BooleanOptional>): ParsedQs | { [key: string]: unknown } {
+  const options = normalizeParseOptions(opts as any)
 
   if (str === '' || str === null || typeof str === 'undefined') {
     return options.plainObjects ? Object.create(null) : {}
   }
 
   const tempObj = typeof str === 'string' ? parseValues(str, options) : str
-  const obj = options.plainObjects ? Object.create(null) : {}
+  let obj: Record<string, any> = options.plainObjects ? Object.create(null) : {}
 
   // Iterate over the keys and setup the new object
 
@@ -338,8 +354,7 @@ const parse = (str: string | Record<string, string>, opts?: Partial<ParseOptions
   for (let i = 0; i < keys.length; ++i) {
     const key = keys[i]
     const newObj = parseKeys(key, tempObj[key], options, typeof str === 'string')
-    const merged = utils.merge(obj, newObj, options)
-    Object.assign(obj, merged)
+    obj = utils.merge(obj, newObj, options)
   }
 
   if (options.allowSparse === true) {
@@ -349,4 +364,4 @@ const parse = (str: string | Record<string, string>, opts?: Partial<ParseOptions
   return utils.compact(obj)
 }
 
-export default parse
+export default parseMain

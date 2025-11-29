@@ -166,6 +166,9 @@ importers:
       for-each:
         specifier: ^0.3.3
         version: 0.3.5
+      has-bigints:
+        specifier: ^1.1.0
+        version: 1.1.0
       has-override-mistake:
         specifier: ^1.0.1
         version: 1.0.1
@@ -175,6 +178,9 @@ importers:
       has-proto:
         specifier: ^1.1.0
         version: 1.2.0
+      has-symbols:
+        specifier: ^1.1.0
+        version: 1.1.0
       iconv-lite:
         specifier: ^0.6.3
         version: 0.6.3

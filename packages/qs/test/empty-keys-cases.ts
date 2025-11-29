@@ -1,12 +1,14 @@
-export interface EmptyTestCase {
+interface StringifyOutput {
+  brackets: string
+  indices: string
+  repeat: string
+}
+
+interface EmptyTestCase {
   input: string
-  withEmptyKeys: any
-  stringifyOutput: {
-    brackets: string
-    indices: string
-    repeat: string
-  }
-  noEmptyKeys: any
+  withEmptyKeys: Record<string, any>
+  stringifyOutput: StringifyOutput
+  noEmptyKeys: Record<string, any>
 }
 
 export const emptyTestCases: EmptyTestCase[] = [

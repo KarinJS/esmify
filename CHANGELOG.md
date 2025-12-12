@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.18.2](https://github.com/KarinJS/esmify/compare/esmify-v1.18.1...esmify-v1.18.2) (2025-12-12)
+
+
+### 🐛 Bug Fixes
+
+* ci ([7c8c962](https://github.com/KarinJS/esmify/commit/7c8c962bdc18ab7936383d762d6eac2634f0ae0f))
+
 ## [1.18.1](https://github.com/KarinJS/esmify/compare/esmify-v1.18.0...esmify-v1.18.1) (2025-12-12)
 
 

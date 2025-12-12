@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.6](https://github.com/KarinJS/esmify/compare/log4js-v1.5.5...log4js-v1.5.6) (2025-12-12)
+
+
+### 🐛 Bug Fixes
+
+* ci ([7c8c962](https://github.com/KarinJS/esmify/commit/7c8c962bdc18ab7936383d762d6eac2634f0ae0f))
+
 ## [1.5.5](https://github.com/KarinJS/esmify/compare/log4js-v1.5.4...log4js-v1.5.5) (2025-12-12)
 
 

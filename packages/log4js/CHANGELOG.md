@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.5](https://github.com/KarinJS/esmify/compare/log4js-v1.5.4...log4js-v1.5.5) (2025-12-12)
+
+
+### 🐛 Bug Fixes
+
+* crypto ([9bcd4ac](https://github.com/KarinJS/esmify/commit/9bcd4ac8e0e16aa8dfacf60dcc770e2d21f2d599))
+
 ## [1.5.4](https://github.com/KarinJS/esmify/compare/log4js-v1.5.3...log4js-v1.5.4) (2025-11-21)
 
 

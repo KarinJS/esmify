@@ -1,4 +1,5 @@
 import debugModule from 'debug'
+import crypto from 'node:crypto'
 import { levels } from './levels'
 import { LayoutCfg, layouts } from './layouts'
 import { clustering } from './clustering'

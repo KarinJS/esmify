@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.18.1](https://github.com/KarinJS/esmify/compare/esmify-v1.18.0...esmify-v1.18.1) (2025-12-12)
+
+
+### 🐛 Bug Fixes
+
+* axios ci ([acf525a](https://github.com/KarinJS/esmify/commit/acf525a6dddbf4ad0d317b87a4be99b869c60942))
+* crypto ([9bcd4ac](https://github.com/KarinJS/esmify/commit/9bcd4ac8e0e16aa8dfacf60dcc770e2d21f2d599))
+
+
+### 🎫 Chores
+
+* 移除 pnpm 相关配置，改用 npm 进行依赖管理 ([8480ff6](https://github.com/KarinJS/esmify/commit/8480ff6fa4013f0c531cd4a5b9948cd65b33cabf))
+
 ## [1.18.0](https://github.com/KarinJS/esmify/compare/esmify-v1.17.6...esmify-v1.18.0) (2025-11-29)
 
 

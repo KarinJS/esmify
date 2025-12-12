@@ -9,9 +9,9 @@
     "esm",
     "logging"
   ],
-  "homepage": "https://github.com/KarinJS/log4js",
+  "homepage": "https://github.com/KarinJS/esmify",
   "bugs": {
-    "url": "https://github.com/KarinJS/log4js/issues"
+    "url": "https://github.com/KarinJS/esmify/issues"
   },
   "repository": {
     "type": "git",

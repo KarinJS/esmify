@@ -91,11 +91,13 @@ jobs:
               sleep 5
             }
           done
+      - name: 更新npm到最新
+        run: npm install -g npm@latest
       - name: 发布 log4js 包
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: packages/log4js
-        run: pnpm i -F @karinjs/log4js && pnpm run build && pnpm publish --access public --provenance --no-git-checks
+        run: pnpm i -F @karinjs/log4js && pnpm run build && pnpm publish --access public --no-git-checks
 
   publish-sqlite3:
     needs: release-please
